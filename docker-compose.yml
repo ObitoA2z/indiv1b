@@ -3,7 +3,7 @@ version: "3.9"
 services:
   rabbitmq:
     image: rabbitmq:3.13-management-alpine
-    container_name: collector-rabbitmq
+    container_name: epouvante-rabbitmq
     ports:
       - "5672:5672"
       - "15672:15672"
@@ -15,7 +15,7 @@ services:
   backend:
     build:
       context: ./backend
-    container_name: collector-backend
+    container_name: epouvante-backend
     ports:
       - "4004:4003"
     command: sh -c "npx prisma migrate deploy && npx prisma db seed && npm run dev"
@@ -38,7 +38,7 @@ services:
       context: ./frontend
       args:
         - VITE_API_URL=http://localhost:4004
-    container_name: collector-frontend
+    container_name: epouvante-frontend
     ports:
       - "5173:80"
     depends_on:

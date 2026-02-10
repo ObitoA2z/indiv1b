@@ -79,7 +79,7 @@ export function CatalogPage({ onProductClick, userInterests }: CatalogPageProps)
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
             <input
               type="text"
-              placeholder="Rechercher un article..."
+              placeholder="Rechercher un objet..."
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
               className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
@@ -128,7 +128,7 @@ export function CatalogPage({ onProductClick, userInterests }: CatalogPageProps)
 
       <div className="mb-4">
         <p className="text-gray-600">
-          {sortedProducts.length} article{sortedProducts.length > 1 ? 's' : ''} trouvé
+          {sortedProducts.length} objet{sortedProducts.length > 1 ? 's' : ''} trouvé
           {sortedProducts.length > 1 ? 's' : ''}
         </p>
       </div>
@@ -147,7 +147,7 @@ export function CatalogPage({ onProductClick, userInterests }: CatalogPageProps)
       {sortedProducts.length === 0 && (
         <div className="text-center py-16">
           <Filter className="h-16 w-16 text-gray-300 mx-auto mb-4" />
-          <h3 className="text-gray-900 mb-2">Aucun article trouvé</h3>
+          <h3 className="text-gray-900 mb-2">Aucun objet trouvé</h3>
           <p className="text-gray-600">Essayez de modifier vos filtres ou votre recherche</p>
         </div>
       )}

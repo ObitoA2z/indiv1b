@@ -20,7 +20,7 @@ export function ChatWidget({ user, onClose }: ChatWidgetProps) {
     {
       id: '1',
       sender: 'other',
-      text: 'Bonjour ! Je suis intéressé par votre article.',
+      text: 'Bonjour ! Je suis intéressé par votre objet.',
       time: '10:30'
     },
     {
@@ -32,7 +32,7 @@ export function ChatWidget({ user, onClose }: ChatWidgetProps) {
     {
       id: '3',
       sender: 'other',
-      text: "L'article est-il toujours disponible ?",
+      text: "L'objet est-il toujours disponible ?",
       time: '10:33'
     }
   ]);

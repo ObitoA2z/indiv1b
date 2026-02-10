@@ -38,12 +38,12 @@ describe('RabbitMQ service', () => {
     expect(amqp.connect).toHaveBeenCalled();
     expect(mockConnection.createChannel).toHaveBeenCalled();
     expect(mockChannel.assertExchange).toHaveBeenCalledWith(
-      'collector-shop',
+      'petite-maison-epouvante',
       'topic',
       { durable: true }
     );
     expect(mockChannel.assertQueue).toHaveBeenCalledWith('orders', { durable: true });
-    expect(mockChannel.bindQueue).toHaveBeenCalledWith('orders', 'collector-shop', 'order.*');
+    expect(mockChannel.bindQueue).toHaveBeenCalledWith('orders', 'petite-maison-epouvante', 'order.*');
     expect(result).toHaveProperty('connection');
     expect(result).toHaveProperty('channel');
   });
@@ -54,7 +54,7 @@ describe('RabbitMQ service', () => {
     await rabbitmq.publish('order.created', data);
 
     expect(mockChannel.publish).toHaveBeenCalledWith(
-      'collector-shop',
+      'petite-maison-epouvante',
       'order.created',
       expect.any(Buffer),
       { persistent: true }

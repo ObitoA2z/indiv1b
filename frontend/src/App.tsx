@@ -40,7 +40,7 @@ function App() {
   const [selectedProductId, setSelectedProductId] = useState<string | null>(null);
   const [user, setUser] = useState<User | null>(() => {
     // Restaurer l'utilisateur depuis localStorage au chargement
-    const savedUser = localStorage.getItem('collector_user');
+    const savedUser = localStorage.getItem('epouvante_user');
     return savedUser ? JSON.parse(savedUser) : null;
   });
   const [showLoginModal, setShowLoginModal] = useState(false);
@@ -57,7 +57,7 @@ function App() {
       name: apiUser.name,
       email: apiUser.email,
       role: apiUser.role as UserRole,
-      interests: ['sneakers', 'star-wars', 'vintage-posters'],
+      interests: ['grimoires', 'poupees-hantees', 'affiches-horreur'],
       token,
       active: apiUser.active,
       address: apiUser.address ?? null,
@@ -65,7 +65,7 @@ function App() {
       gender: apiUser.gender ?? null,
     };
     setUser(loggedInUser);
-    localStorage.setItem('collector_user', JSON.stringify(loggedInUser));
+    localStorage.setItem('epouvante_user', JSON.stringify(loggedInUser));
     setShowLoginModal(false);
   };
 
@@ -95,7 +95,7 @@ function App() {
       name: apiUser.name,
       email: apiUser.email,
       role: apiUser.role as UserRole,
-      interests: ['sneakers', 'star-wars', 'vintage-posters'],
+      interests: ['grimoires', 'poupees-hantees', 'affiches-horreur'],
       token: undefined,
       active: apiUser.active,
       address: apiUser.address ?? null,
@@ -107,7 +107,7 @@ function App() {
 
   const handleLogout = () => {
     setUser(null);
-    localStorage.removeItem('collector_user');
+    localStorage.removeItem('epouvante_user');
     setCurrentPage('home');
   };
 
@@ -152,12 +152,12 @@ function App() {
 
   const handleAddProduct = (productData: ProductFormData) => {
     if (!user) {
-      alert('Vous devez être connecté pour publier un article');
+      alert('Vous devez être connecté pour publier un objet');
       return;
     }
 
     if (user.role === 'BUYER') {
-      alert('Seuls les vendeurs ou admins peuvent publier un article');
+      alert('Seuls les vendeurs ou admins peuvent publier un objet');
       return;
     }
 
@@ -171,11 +171,11 @@ function App() {
       user.token,
     )
       .then(() => {
-        alert('Votre article a été soumis pour validation. Vous serez notifié dans 24-48h.');
+        alert('Votre objet a été soumis pour validation. Vous serez notifié dans 24-48h.');
       })
       .catch((err) => {
         console.error(err);
-        alert("Erreur lors de la création de l'article");
+        alert("Erreur lors de la création de l'objet");
       });
   };
 

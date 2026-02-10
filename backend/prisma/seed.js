@@ -6,20 +6,22 @@ const prisma = new PrismaClient();
 
 function categoryNameFromId(id) {
   switch (id) {
-    case 'sneakers':
-      return 'Sneakers';
-    case 'star-wars':
-      return 'Star Wars';
-    case 'vinyl':
-      return 'Vinyles';
-    case 'vintage-posters':
-      return 'Posters Vintage';
-    case 'action-figures':
-      return 'Figurines';
-    case 'vintage-cameras':
-      return 'Appareils Photo';
-    case 'comic-books':
-      return 'BD & Comics';
+    case 'grimoires':
+      return 'Grimoires';
+    case 'poupees-hantees':
+      return 'Poupees hantees';
+    case 'affiches-horreur':
+      return "Affiches d'horreur";
+    case 'masques-rituels':
+      return 'Masques rituels';
+    case 'vinyles-hantes':
+      return 'Vinyles hantes';
+    case 'photographies-paranormales':
+      return 'Photographies paranormales';
+    case 'objets-maudits':
+      return 'Objets maudits';
+    case 'figurines-macabres':
+      return 'Figurines macabres';
     default:
       return id;
   }

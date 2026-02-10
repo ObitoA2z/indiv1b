@@ -63,10 +63,10 @@ export function DashboardPage({
       <div className="mb-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
           <h1 className="text-gray-900 mb-2">
-            Bonjour {user?.name || 'Collectionneur'}
+            Bonjour {user?.name || 'Explorateur'}
           </h1>
           <p className="text-gray-600">
-            Gérez vos articles, vos favoris et vos achats depuis cet espace.
+            Gere vos objets, vos favoris et vos achats depuis cet espace.
           </p>
         </div>
 
@@ -76,15 +76,15 @@ export function DashboardPage({
             className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg hover:border-indigo-600 hover:text-indigo-600 transition-colors"
           >
             <MessageCircle className="h-5 w-5" />
-            Contacter un acheteur
+            Contacter un visiteur
           </button>
-{user?.role === 'SELLER' ? (
+          {user?.role === 'SELLER' ? (
             <button
               onClick={onAddProduct}
               className="flex items-center gap-2 bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors"
             >
               <Plus className="h-5 w-5" />
-              Vendre un article
+              Publier un objet
             </button>
           ) : user?.role === 'BUYER' ? (
             <button
@@ -101,7 +101,7 @@ export function DashboardPage({
         <div className="bg-white rounded-lg p-4 border border-gray-200">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-gray-600 mb-1">Articles en vente</p>
+              <p className="text-gray-600 mb-1">Objets en vitrine</p>
               <p className="text-gray-900">{myProducts.length}</p>
             </div>
             <Package className="h-6 w-6 text-indigo-600" />
@@ -111,7 +111,7 @@ export function DashboardPage({
         <div className="bg-white rounded-lg p-4 border border-gray-200">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-gray-600 mb-1">Articles favoris</p>
+              <p className="text-gray-600 mb-1">Objets favoris</p>
               <p className="text-gray-900">{favoriteProducts.length}</p>
             </div>
             <Clock className="h-6 w-6 text-yellow-500" />
@@ -121,7 +121,7 @@ export function DashboardPage({
         <div className="bg-white rounded-lg p-4 border border-gray-200">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-gray-600 mb-1">Ventes réalisées</p>
+              <p className="text-gray-600 mb-1">Ventes realisees</p>
               <p className="text-gray-900">12</p>
             </div>
             <CheckCircle className="h-6 w-6 text-green-600" />
@@ -145,7 +145,7 @@ export function DashboardPage({
             onClick={() => setActiveTab('my-products')}
             className={`pb-4 border-b-2 ${activeTab === 'my-products' ? 'border-indigo-600 text-indigo-600' : 'border-transparent text-gray-600 hover:text-gray-900'}`}
           >
-            Mes articles
+            Mes objets
           </button>
           <button
             onClick={() => setActiveTab('favorites')}
@@ -178,16 +178,16 @@ export function DashboardPage({
           ) : (
             <div className="bg-white border border-gray-200 rounded-lg p-8 text-center">
               <Package className="h-16 w-16 text-gray-300 mx-auto mb-4" />
-              <h3 className="text-gray-900 mb-2">Vous n'avez pas encore d'article en vente</h3>
+              <h3 className="text-gray-900 mb-2">Vous n'avez pas encore d'objet en vitrine</h3>
               <p className="text-gray-600 mb-4">
-                Commencez à vendre vos pièces de collection en quelques clics.
+                Publiez vos objets d'epouvante en quelques clics.
               </p>
-{user?.role === 'SELLER' ? (
+              {user?.role === 'SELLER' ? (
                 <button
                   onClick={onAddProduct}
                   className="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition-colors"
                 >
-                  Vendre un article
+                  Publier un objet
                 </button>
               ) : user?.role === 'BUYER' ? (
                 <button
@@ -219,7 +219,7 @@ export function DashboardPage({
             <div className="bg-white border border-gray-200 rounded-lg p-8 text-center">
               <AlertTriangle className="h-16 w-16 text-gray-300 mx-auto mb-4" />
               <h3 className="text-gray-900 mb-2">Aucun favori pour le moment</h3>
-              <p className="text-gray-600">Ajoutez des articles à vos favoris pour les retrouver facilement.</p>
+              <p className="text-gray-600">Ajoutez des objets a vos favoris pour les retrouver facilement.</p>
             </div>
           )}
         </div>
@@ -229,18 +229,18 @@ export function DashboardPage({
         <div className="bg-white border border-gray-200 rounded-lg p-6">
           <div className="flex items-center gap-3 mb-4">
             <Clock className="h-6 w-6 text-indigo-600" />
-            <h3 className="text-gray-900">Historique des commandes</h3>
+            <h3 className="text-gray-900">Historique des achats</h3>
           </div>
           <p className="text-gray-600 mb-4">
-            L'historique des commandes sera disponible une fois l'intégration avec le système de paiement réalisée.
+            L'historique des achats sera disponible une fois l'integration avec le systeme de paiement realisee.
           </p>
           <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
             <p className="text-gray-700">
-              Exemple de données à afficher :
+              Exemple de donnees a afficher :
             </p>
             <ul className="list-disc list-inside text-gray-600 mt-2">
-              <li>Date de la commande</li>
-              <li>Articles achetés</li>
+              <li>Date de l'achat</li>
+              <li>Objets achetes</li>
               <li>Montant total</li>
               <li>Statut de livraison</li>
             </ul>

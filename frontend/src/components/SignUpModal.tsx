@@ -145,7 +145,7 @@ export function SignUpModal({ onClose, onRegister }: SignUpModalProps) {
           </button>
 
           <p className="text-gray-500 text-xs mt-2">
-            Votre compte sera soumis à validation par un administrateur avant d'être activé. Les vendeurs peuvent publier des articles après approbation.
+            Votre compte sera soumis à validation par un administrateur avant d'être activé. Les vendeurs peuvent publier des objets après approbation.
           </p>
         </form>
       </div>

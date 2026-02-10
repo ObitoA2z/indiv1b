@@ -30,7 +30,7 @@ export function CartDrawer({
       onLogin();
       return;
     }
-    alert('Paiement à implémenter avec intégration bancaire sécurisée');
+    alert('Paiement a implementer avec integration bancaire securisee');
   };
 
   return (
@@ -53,12 +53,12 @@ export function CartDrawer({
             <div className="text-center py-16">
               <ShoppingBag className="h-16 w-16 text-gray-300 mx-auto mb-4" />
               <h3 className="text-gray-900 mb-2">Votre panier est vide</h3>
-              <p className="text-gray-600 mb-4">Ajoutez des articles pour commencer vos achats</p>
+              <p className="text-gray-600 mb-4">Ajoutez des objets pour commencer vos achats</p>
               <button
                 onClick={onClose}
                 className="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition-colors"
               >
-                Continuer mes achats
+                Continuer la visite
               </button>
             </div>
           ) : (
@@ -124,7 +124,7 @@ export function CartDrawer({
                 <span>{shippingTotal.toFixed(2)} €</span>
               </div>
               <div className="flex justify-between text-gray-500">
-                <span>Commission Collector (5%)</span>
+                <span>Commission Maison de l'Épouvante (5%)</span>
                 <span>{commission.toFixed(2)} €</span>
               </div>
               <div className="border-t border-gray-200 pt-2 flex justify-between">
@@ -143,10 +143,10 @@ export function CartDrawer({
               onClick={handleCheckout}
               className="w-full bg-indigo-600 text-white py-3 rounded-lg hover:bg-indigo-700 transition-colors"
             >
-              {user ? 'Procéder au paiement' : 'Se connecter pour payer'}
+              {user ? 'Proceder au paiement' : 'Se connecter pour payer'}
             </button>
 
-            <p className="text-gray-500 text-center mt-3">Paiement 100% sécurisé</p>
+            <p className="text-gray-500 text-center mt-3">Paiement 100% securise</p>
           </div>
         )}
       </div>

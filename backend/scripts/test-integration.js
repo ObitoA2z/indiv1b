@@ -28,7 +28,7 @@ function run(cmd) {
 
 async function main() {
   // Use a temporary SQLite DB so the integration test is isolated
-  const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'collector-backend-it-'));
+  const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'epouvante-backend-it-'));
   const dbPath = path.join(tmpDir, 'test.db');
 
   // Prisma accepts absolute paths with the sqlite "file:" scheme

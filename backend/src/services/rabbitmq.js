@@ -4,7 +4,7 @@ let connection = null;
 let channel = null;
 
 const RABBITMQ_URL = process.env.RABBITMQ_URL || 'amqp://admin:admin123@localhost:5672';
-const EXCHANGE = 'collector-shop';
+const EXCHANGE = 'petite-maison-epouvante';
 const QUEUE_ORDERS = 'orders';
 
 /**

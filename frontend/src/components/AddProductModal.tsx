@@ -48,19 +48,19 @@ export function AddProductModal({ onClose, onSubmit }: AddProductModalProps) {
     if (!formData.description.trim()) {
       newErrors.description = 'La description est obligatoire';
     } else if (formData.description.length < 50) {
-      newErrors.description = 'La description doit contenir au moins 50 caractères';
+      newErrors.description = 'La description doit contenir au moins 50 caracteres';
     }
 
     if (formData.price <= 0) {
-      newErrors.price = 'Le prix doit être supérieur à 0';
+      newErrors.price = 'Le prix doit etre superieur a 0';
     }
 
     if (formData.shipping < 0) {
-      newErrors.shipping = 'Les frais de port ne peuvent pas être négatifs';
+      newErrors.shipping = 'Les frais de port ne peuvent pas etre negatifs';
     }
 
     if (!formData.category) {
-      newErrors.category = 'Veuillez sélectionner une catégorie';
+      newErrors.category = 'Veuillez selectionner une categorie';
     }
 
     if (formData.images.length === 0) {
@@ -125,7 +125,7 @@ export function AddProductModal({ onClose, onSubmit }: AddProductModalProps) {
     <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center p-4 z-50 overflow-y-auto">
       <div className="bg-white rounded-lg max-w-3xl w-full my-8">
         <div className="flex justify-between items-center p-6 border-b border-gray-200">
-          <h2 className="text-gray-900">Publier un article</h2>
+          <h2 className="text-gray-900">Publier un objet d'épouvante</h2>
           <button onClick={onClose} className="text-gray-400 hover:text-gray-600">
             <X className="h-6 w-6" />
           </button>
@@ -133,7 +133,7 @@ export function AddProductModal({ onClose, onSubmit }: AddProductModalProps) {
 
         <form onSubmit={handleSubmit} className="p-6 space-y-6">
           <div>
-            <label className="block text-gray-900 mb-2">Photos de l'article *</label>
+            <label className="block text-gray-900 mb-2">Photos de l'objet *</label>
             <input
               ref={fileInputRef}
               type="file"
@@ -170,47 +170,47 @@ export function AddProductModal({ onClose, onSubmit }: AddProductModalProps) {
               )}
             </div>
             {errors.images && <p className="text-red-600">{errors.images}</p>}
-            <p className="text-gray-500">Ajoutez jusqu'à 8 photos de qualité de votre article</p>
+            <p className="text-gray-500">Ajoutez jusqu'a 8 photos de qualite de votre objet</p>
           </div>
 
           <div>
-            <label className="block text-gray-900 mb-2">Titre de l'article *</label>
+            <label className="block text-gray-900 mb-2">Titre de l'objet *</label>
             <input
               type="text"
               value={formData.title}
               onChange={e => handleInputChange('title', e.target.value)}
               className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent ${errors.title ? 'border-red-500' : 'border-gray-300'}`}
-              placeholder="Ex: Nike Air Jordan 1 Retro High OG 'Chicago'"
+              placeholder="Ex: Grimoire d'initiation - Edition 1897"
               maxLength={100}
             />
             {errors.title && <p className="text-red-600 mt-1">{errors.title}</p>}
-            <p className="text-gray-500 mt-1">{formData.title.length}/100 caractères</p>
+            <p className="text-gray-500 mt-1">{formData.title.length}/100 caracteres</p>
           </div>
 
           <div>
-            <label className="block text-gray-900 mb-2">Description détaillée *</label>
+            <label className="block text-gray-900 mb-2">Description detaillee *</label>
             <textarea
               value={formData.description}
               onChange={e => handleInputChange('description', e.target.value)}
               rows={6}
               className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent ${errors.description ? 'border-red-500' : 'border-gray-300'}`}
-              placeholder="Décrivez votre article en détail : état, authenticité, histoire, défauts éventuels..."
+              placeholder="Decrivez votre objet d'epouvante : etat, origine, histoire, rituels associes..."
               maxLength={1000}
             />
             {errors.description && <p className="text-red-600 mt-1">{errors.description}</p>}
             <p className="text-gray-500 mt-1">
-              {formData.description.length}/1000 caractères (minimum 50)
+              {formData.description.length}/1000 caracteres (minimum 50)
             </p>
           </div>
 
           <div>
-            <label className="block text-gray-900 mb-2">Catégorie *</label>
+            <label className="block text-gray-900 mb-2">Categorie *</label>
             <select
               value={formData.category}
               onChange={e => handleInputChange('category', e.target.value)}
               className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent ${errors.category ? 'border-red-500' : 'border-gray-300'}`}
             >
-              <option value="">Sélectionnez une catégorie</option>
+              <option value="">Selectionnez une categorie</option>
               {categories.map(cat => (
                 <option key={cat.id} value={cat.id}>
                   {cat.name}
@@ -258,14 +258,14 @@ export function AddProductModal({ onClose, onSubmit }: AddProductModalProps) {
 
           {formData.price > 0 && (
             <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-              <h4 className="text-blue-900 mb-2">Récapitulatif</h4>
+              <h4 className="text-blue-900 mb-2">Recapitulatif</h4>
               <div className="space-y-1 text-blue-800">
                 <div className="flex justify-between">
                   <span>Prix de vente</span>
                   <span>{formData.price.toFixed(2)} €</span>
                 </div>
                 <div className="flex justify-between">
-                  <span>Commission Collector (5%)</span>
+                  <span>Commission Maison de l'Épouvante (5%)</span>
                   <span>- {(formData.price * 0.05).toFixed(2)} €</span>
                 </div>
                 <div className="flex justify-between border-t border-blue-300 pt-1 mt-1">
@@ -279,10 +279,10 @@ export function AddProductModal({ onClose, onSubmit }: AddProductModalProps) {
           <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
             <h4 className="text-yellow-900 mb-2">Informations importantes</h4>
             <ul className="text-yellow-800 space-y-1">
-              <li>• Votre article sera vérifié avant publication (24-48h)</li>
+              <li>• Votre objet sera verifie avant publication (24-48h)</li>
               <li>• Les paiements se font uniquement via la plateforme</li>
-              <li>• Ne communiquez jamais vos coordonnées personnelles</li>
-              <li>• Assurez-vous que votre article est authentique</li>
+              <li>• Ne communiquez jamais vos coordonnees personnelles</li>
+              <li>• Assurez-vous que votre objet est authentique</li>
             </ul>
           </div>
 
@@ -298,7 +298,7 @@ export function AddProductModal({ onClose, onSubmit }: AddProductModalProps) {
               type="submit"
               className="flex-1 bg-indigo-600 text-white py-3 rounded-lg hover:bg-indigo-700 transition-colors"
             >
-              Publier l'article
+              Publier l'objet
             </button>
           </div>
         </form>

@@ -100,7 +100,7 @@ export function ProductDetailPage({
 
   const handleBuyNow = async () => {
     if (!user) {
-      alert('Veuillez vous connecter pour acheter cet article');
+      alert('Veuillez vous connecter pour acheter cet objet');
       return;
     }
 
@@ -141,7 +141,7 @@ export function ProductDetailPage({
           <ArrowLeft className="h-5 w-5" />
           Retour
         </button>
-        <p className="text-red-600">{error || 'Produit non trouvé'}</p>
+        <p className="text-red-600">{error || 'Produit non trouve'}</p>
       </div>
     );
   }
@@ -268,7 +268,7 @@ export function ProductDetailPage({
               <div>
                 <h4 className="text-green-900 mb-1">Baisse de prix !</h4>
                 <p className="text-green-700">
-                  Prix réduit de {product.priceHistory[0].price.toFixed(2)} € à{' '}
+                  Prix reduit de {product.priceHistory[0].price.toFixed(2)} € a{' '}
                   {product.price.toFixed(2)} €
                 </p>
               </div>
@@ -301,10 +301,10 @@ export function ProductDetailPage({
               <AlertCircle className="h-5 w-5 text-orange-600 mt-0.5 flex-shrink-0" />
               <div>
                 <h4 className="text-orange-900 mb-1">
-                  Article en attente de validation
+                  Objet en attente de validation
                 </h4>
                 <p className="text-orange-700">
-                  Cet article est en cours de vérification par notre équipe
+                  Cet objet est en cours de verification par notre equipe
                   avant publication.
                 </p>
               </div>
@@ -313,8 +313,8 @@ export function ProductDetailPage({
 
           {product.status === 'sold' && (
             <div className="bg-gray-100 border border-gray-300 rounded-lg p-4 mb-6">
-              <h4 className="text-gray-900 mb-1">Article vendu</h4>
-              <p className="text-gray-600">Cet article n'est plus disponible.</p>
+              <h4 className="text-gray-900 mb-1">Objet vendu</h4>
+              <p className="text-gray-600">Cet objet n'est plus disponible.</p>
             </div>
           )}
 
@@ -330,7 +330,7 @@ export function ProductDetailPage({
               </p>
             )}
             <p className="text-gray-500 text-sm mt-2">
-              Commission Collector (5%) et TVA seront ajoutées au moment du
+              Commission Maison de l'Épouvante (5%) et TVA seront ajoutees au moment du
               paiement.
             </p>
           </div>
@@ -349,7 +349,7 @@ export function ProductDetailPage({
               <button
                 onClick={() => {
                   onAddToCart(product);
-                  alert('Article ajouté au panier !');
+                  alert('Objet ajoute au panier !');
                 }}
                 className="w-full bg:white text-indigo-600 border border-indigo-600 py-3 rounded-lg hover:bg-indigo-50 transition-colors flex items-center justify-center gap-2"
               >
@@ -399,11 +399,11 @@ export function ProductDetailPage({
           </div>
 
           <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mt-6">
-            <h4 className="text-blue-900 mb-2">Protection Collector.shop</h4>
+            <h4 className="text-blue-900 mb-2">Protection La Petite Maison de l’Épouvante</h4>
             <ul className="text-blue-700 space-y-1 text-sm">
-              <li>• Paiement 100% sécurisé</li>
-              <li>• Vendeur vérifié</li>
-              <li>• Article contrôlé avant mise en ligne</li>
+              <li>• Paiement 100% securise</li>
+              <li>• Vendeur verifie</li>
+              <li>• Objet controle avant mise en ligne</li>
               <li>• Service client disponible</li>
             </ul>
           </div>

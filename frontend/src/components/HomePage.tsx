@@ -61,27 +61,27 @@ export function HomePage({ onProductClick, onNavigateToCatalog }: HomePageProps)
           <div>
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gray-900 text-white text-xs mb-4">
               <Sparkles className="h-3 w-3" />
-              <span>Notre marketplace vérifie chaque pièce</span>
+              <span>Notre plateforme d'épouvante verifie chaque objet</span>
             </div>
 
             <h1 className="text-gray-900 mb-4">
-              La place de marché des passionnés de{' '}
-              <span className="text-indigo-600">objets de collection</span>
+              La plateforme des passionnes d{' '}
+              <span className="text-indigo-600">objets d'epouvante</span>
             </h1>
 
             <p className="text-gray-600 mb-6">
-              Sneakers, vinyles, affiches vintage, figurines, appareils photo... Achetez et vendez vos pièces
-              en toute confiance, avec un système de vérification et de messagerie sécurisé.
+              Grimoires, poupees, affiches d'horreur, masques rituels, photographies paranormales... Publiez et trouvez
+              vos objets d'epouvante en toute confiance, avec un systeme de verification et de messagerie securise.
             </p>
 
             <div className="flex flex-wrap gap-3 mb-6">
               <div className="flex items-center gap-2">
                 <ShieldCheck className="h-4 w-4 text-indigo-600" />
-                <span className="text-gray-700 text-sm">Paiements sécurisés</span>
+                <span className="text-gray-700 text-sm">Paiements securises</span>
               </div>
               <div className="flex items-center gap-2">
                 <ShieldCheck className="h-4 w-4 text-indigo-600" />
-                <span className="text-gray-700 text-sm">Vendeurs notés par la communauté</span>
+                <span className="text-gray-700 text-sm">Auteurs notes par la communaute</span>
               </div>
             </div>
 
@@ -90,11 +90,11 @@ export function HomePage({ onProductClick, onNavigateToCatalog }: HomePageProps)
                 onClick={onNavigateToCatalog}
                 className="inline-flex items-center gap-2 bg-gray-900 text-white px-4 py-2 rounded-full text-sm hover:bg-black transition-colors"
               >
-                Explorer les articles
+                Explorer les objets
                 <ArrowRight className="h-4 w-4" />
               </button>
               <button className="inline-flex items-center gap-2 border border-gray-300 text-gray-800 px-4 py-2 rounded-full text-sm hover:border-indigo-600 hover:text-indigo-600 transition-colors">
-                Comment ça marche ?
+                Comment ca marche ?
               </button>
             </div>
           </div>
@@ -112,12 +112,12 @@ export function HomePage({ onProductClick, onNavigateToCatalog }: HomePageProps)
                 <div className="p-3">
                   <p className="text-gray-900 text-sm line-clamp-2 mb-1">{product.title}</p>
                   <p className="text-gray-700 text-sm mb-1">{product.price.toFixed(2)} €</p>
-                  <p className="text-gray-500 text-xs mb-2">Vendu par {product.sellerName}</p>
+                  <p className="text-gray-500 text-xs mb-2">Publie par {product.sellerName}</p>
                   <button
                     onClick={() => onProductClick(product.id)}
                     className="w-full text-center text-xs text-indigo-600 hover:text-indigo-700"
                   >
-                    Voir le détail
+                    Voir le detail
                   </button>
                 </div>
               </div>
@@ -127,7 +127,7 @@ export function HomePage({ onProductClick, onNavigateToCatalog }: HomePageProps)
       </section>
 
       <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
-        <h2 className="text-gray-900 mb-4">Pièces récemment ajoutées</h2>
+        <h2 className="text-gray-900 mb-4">Objets recemment ajoutes</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {recentProducts.map(product => (
             <ProductCard

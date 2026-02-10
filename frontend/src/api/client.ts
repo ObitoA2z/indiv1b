@@ -249,7 +249,7 @@ export async function createProduct(payload: CreateProductPayload, token?: strin
   });
 
   if (!res.ok) {
-    throw new Error("Erreur lors de la création de l'article");
+    throw new Error("Erreur lors de la création de l'objet");
   }
 
   return res.json();
@@ -287,7 +287,7 @@ export async function approveProduct(id: string, token?: string): Promise<Produc
   });
 
   if (!res.ok) {
-    throw new Error("Erreur lors de l'approbation de l'article");
+    throw new Error("Erreur lors de l'approbation de l'objet");
   }
 
   return res.json();
@@ -305,7 +305,7 @@ export async function rejectProduct(id: string, token?: string): Promise<Product
   });
 
   if (!res.ok) {
-    throw new Error("Erreur lors du rejet de l'article");
+    throw new Error("Erreur lors du rejet de l'objet");
   }
 
   return res.json();
@@ -322,6 +322,6 @@ export async function deleteProductAdmin(id: string, token?: string): Promise<vo
   });
   if (!res.ok && res.status !== 204) {
     const data = await res.json().catch(() => null);
-    throw new Error(data?.error || "Erreur lors de la suppression de l'article");
+    throw new Error(data?.error || "Erreur lors de la suppression de l'objet");
   }
 }

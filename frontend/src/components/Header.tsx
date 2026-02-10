@@ -50,8 +50,8 @@ export function Header({
               <ShoppingBag className="h-5 w-5 text-white" />
             </div>
             <div>
-              <span className="block text-gray-900 text-base leading-tight">Collector.shop</span>
-              <span className="block text-gray-500 text-xs leading-tight">Votre marketplace de collection</span>
+              <span className="block text-gray-900 text-base leading-tight">La Petite Maison de l’Épouvante</span>
+              <span className="block text-gray-500 text-xs leading-tight">Votre plateforme d’épouvante</span>
             </div>
           </div>
         </div>
@@ -99,7 +99,7 @@ export function Header({
               onClick={onAddProduct}
               className="hidden md:inline-flex items-center px-3 py-2 rounded-full bg-gray-900 text-white text-xs hover:bg-black transition-colors"
             >
-              Vendre un article
+              Publier un objet
             </button>
           )}
 
@@ -196,7 +196,7 @@ export function Header({
               onClick={onAddProduct}
               className="block w-full text-left py-2 text-gray-700"
             >
-              Vendre un article
+              Publier un objet
             </button>
           )}
         </div>

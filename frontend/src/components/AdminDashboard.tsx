@@ -51,7 +51,7 @@ const [loading, setLoading] = useState(true);
       setProducts(prev => prev.map(p => (p.id === id ? updated : p)));
     } catch (e) {
       console.error(e);
-      alert("Erreur lors de l'approbation de l'article");
+      alert("Erreur lors de l'approbation de l'objet");
     }
   };
 
@@ -66,7 +66,7 @@ const [loading, setLoading] = useState(true);
       setProducts(prev => prev.map(p => (p.id === id ? updated : p)));
     } catch (e) {
       console.error(e);
-      alert("Erreur lors du rejet de l'article");
+      alert("Erreur lors du rejet de l'objet");
     }
   };
 
@@ -90,7 +90,7 @@ const [loading, setLoading] = useState(true);
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="mb-8">
         <h1 className="text-gray-900 mb-2">Tableau de bord administrateur</h1>
-        <p className="text-gray-600">Gérez votre plateforme Collector.shop</p>
+        <p className="text-gray-600">Gérez votre plateforme La Petite Maison de l��pouvante</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
@@ -107,7 +107,7 @@ const [loading, setLoading] = useState(true);
         <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-gray-600 mb-1">Articles</p>
+              <p className="text-gray-600 mb-1">Objets</p>
               <p className="text-gray-900">{totalProducts}</p>
             </div>
             <Package className="h-8 w-8 text-green-600" />
@@ -148,7 +148,7 @@ const [loading, setLoading] = useState(true);
             onClick={() => setActiveTab('products')}
             className={`pb-4 border-b-2 transition-colors ${activeTab === 'products' ? 'border-indigo-600 text-indigo-600' : 'border-transparent text-gray-600 hover:text-gray-900'}`}
           >
-            Validation articles ({pendingProducts.length})
+            Validation objets ({pendingProducts.length})
           </button>
 
           <button
@@ -206,8 +206,8 @@ const [loading, setLoading] = useState(true);
             <div className="space-y-3">
               <div className="flex items-center justify-between py-2 border-b border-gray-100">
                 <div>
-                  <p className="text-gray-900">Nouvel article ajouté</p>
-                  <p className="text-gray-600">Nike Air Jordan 1 par SneakerCollector</p>
+                  <p className="text-gray-900">Nouvel objet ajouté</p>
+                  <p className="text-gray-600">Grimoire d'initiation par ArchivisteNoir</p>
                 </div>
                 <span className="text-gray-500">Il y a 5 min</span>
               </div>
@@ -254,7 +254,7 @@ const [loading, setLoading] = useState(true);
 
       {activeTab === 'products' && (
         <div>
-          <h2 className="text-gray-900 mb-6">Tous les articles ({totalProducts})</h2>
+          <h2 className="text-gray-900 mb-6">Tous les objets ({totalProducts})</h2>
           {products.length > 0 ? (
             <div className="space-y-4">
               {products.map(product => (
@@ -308,13 +308,13 @@ const [loading, setLoading] = useState(true);
                               alert('Accès réservé aux administrateurs');
                               return;
                             }
-                            if (!confirm('Supprimer définitivement cet article ?')) return;
+                            if (!confirm('Supprimer définitivement cet objet ?')) return;
                             try {
                               await deleteProductAdmin(product.id, user.token);
                               setProducts(prev => prev.filter(p => p.id !== product.id));
                             } catch (e) {
                               console.error(e);
-                              alert("Erreur lors de la suppression de l'article");
+                              alert("Erreur lors de la suppression de l'objet");
                             }
                           }}
                           className="flex items-center gap-2 bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors"
@@ -331,8 +331,8 @@ const [loading, setLoading] = useState(true);
           ) : (
             <div className="text-center py-16 bg-gray-50 rounded-lg">
               <Package className="h-16 w-16 text-gray-300 mx-auto mb-4" />
-              <h3 className="text-gray-900 mb-2">Aucun article</h3>
-              <p className="text-gray-600">La liste des articles est vide</p>
+              <h3 className="text-gray-900 mb-2">Aucun objet</h3>
+              <p className="text-gray-600">La liste des objets est vide</p>
             </div>
           )}
         </div>
@@ -571,7 +571,7 @@ const [loading, setLoading] = useState(true);
                 <h3 className="text-yellow-900 mb-2">Alertes automatiques</h3>
                 <p className="text-yellow-700 mb-4">
                   Le système surveille automatiquement les changements de prix suspects, les vendeurs avec des notes faibles,
-                  et les articles potentiellement frauduleux.
+                  et les objets potentiellement frauduleux.
                 </p>
               </div>
             </div>
@@ -583,7 +583,7 @@ const [loading, setLoading] = useState(true);
                 <AlertTriangle className="h-5 w-5 text-red-600 mt-0.5" />
                 <div className="flex-1">
                   <h4 className="text-gray-900 mb-1">Changement de prix suspect</h4>
-                  <p className="text-gray-600 mb-2">L'article "Figurine rare" a vu son prix augmenter de 300% en 24h</p>
+                  <p className="text-gray-600 mb-2">L'objet "Figurine rare" a vu son prix augmenter de 300% en 24h</p>
                   <span className="text-gray-500">Vendeur: SuspectSeller • Il y a 30 min</span>
                 </div>
                 <button className="text-indigo-600 hover:text-indigo-700">Examiner</button>
@@ -619,3 +619,5 @@ const [loading, setLoading] = useState(true);
     </div>
   );
 }
+
+
