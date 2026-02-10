@@ -97,12 +97,16 @@ jobs:
     needs: [backend, frontend]
     env:
       REGISTRY: ghcr.io
-      IMAGE_BACKEND: ghcr.io/${{ github.repository_owner }}/collector-shop-full-backend
-      IMAGE_FRONTEND: ghcr.io/${{ github.repository_owner }}/collector-shop-full-frontend
-      IMAGE_TAG: ${{ github.sha }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Set image tags (lowercase owner)
+        run: |
+          echo "OWNER_LC=${GITHUB_REPOSITORY_OWNER,,}" >> $GITHUB_ENV
+          echo "IMAGE_BACKEND=ghcr.io/${GITHUB_REPOSITORY_OWNER,,}/collector-shop-full-backend" >> $GITHUB_ENV
+          echo "IMAGE_FRONTEND=ghcr.io/${GITHUB_REPOSITORY_OWNER,,}/collector-shop-full-frontend" >> $GITHUB_ENV
+          echo "IMAGE_TAG=${GITHUB_SHA}" >> $GITHUB_ENV
 
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v3
