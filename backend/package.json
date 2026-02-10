@@ -1,0 +1,35 @@
+{
+  "name": "collector-backend",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "node src/server.js",
+    "prisma:migrate": "prisma migrate dev --name init",
+    "prisma:seed": "prisma db seed",
+    "fix:images": "node scripts/fix-image-urls.js",
+    "test": "npm run test:unit && npm run test:integration",
+    "test:unit": "jest --runInBand tests/unit",
+    "test:integration": "node scripts/test-integration.js"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.19.0",
+    "amqplib": "^0.10.9",
+    "axios": "^1.6.0",
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.6.1",
+    "express": "^4.19.0",
+    "jsonwebtoken": "^9.0.2",
+    "jwk-to-pem": "^2.0.6",
+    "multer": "^2.0.2",
+    "stripe": "^20.0.0"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "prisma": "^6.19.0",
+    "supertest": "^6.3.4"
+  },
+  "prisma": {
+    "seed": "node prisma/seed.js"
+  }
+}
