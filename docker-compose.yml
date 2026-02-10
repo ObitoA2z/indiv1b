@@ -1,22 +1,37 @@
 version: "3.9"
 
 services:
+  rabbitmq:
+    image: rabbitmq:3.13-management-alpine
+    container_name: collector-rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: admin
+      RABBITMQ_DEFAULT_PASS: admin123
+    restart: unless-stopped
+
   backend:
     build:
       context: ./backend
     container_name: collector-backend
     ports:
       - "4004:4003"
+    command: sh -c "npx prisma migrate deploy && npx prisma db seed && npm run dev"
     environment:
       DATABASE_URL: "file:./dev.db"
       JWT_SECRET: ${JWT_SECRET}
       STRIPE_SECRET_KEY: ${STRIPE_SECRET_KEY}
       FRONTEND_URL: "http://localhost:5173"
+      RABBITMQ_URL: "amqp://admin:admin123@rabbitmq:5672"
     env_file:
       - .env
     volumes:
       - ./backend/prisma:/app/prisma
     restart: unless-stopped
+    depends_on:
+      - rabbitmq
 
   frontend:
     build:
