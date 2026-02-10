@@ -103,10 +103,11 @@ jobs:
 
       - name: Set image tags (lowercase owner)
         run: |
-          echo "OWNER_LC=${GITHUB_REPOSITORY_OWNER,,}" >> $GITHUB_ENV
-          echo "IMAGE_BACKEND=ghcr.io/${GITHUB_REPOSITORY_OWNER,,}/collector-shop-full-backend" >> $GITHUB_ENV
-          echo "IMAGE_FRONTEND=ghcr.io/${GITHUB_REPOSITORY_OWNER,,}/collector-shop-full-frontend" >> $GITHUB_ENV
-          echo "IMAGE_TAG=${GITHUB_SHA}" >> $GITHUB_ENV
+          OWNER_LC=$(echo "$GITHUB_REPOSITORY_OWNER" | tr '[:upper:]' '[:lower:]')
+          echo "OWNER_LC=$OWNER_LC" >> $GITHUB_ENV
+          echo "IMAGE_BACKEND=ghcr.io/$OWNER_LC/collector-shop-full-backend" >> $GITHUB_ENV
+          echo "IMAGE_FRONTEND=ghcr.io/$OWNER_LC/collector-shop-full-frontend" >> $GITHUB_ENV
+          echo "IMAGE_TAG=$GITHUB_SHA" >> $GITHUB_ENV
 
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v3
