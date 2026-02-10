@@ -58,7 +58,7 @@ export function CatalogPage({ onProductClick, userInterests }: CatalogPageProps)
   if (loading) {
     return (
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <p className="text-gray-600">Chargement des produits...</p>
+        <p className="text-slate-300">Chargement des produits...</p>
       </div>
     );
   }
@@ -66,7 +66,7 @@ export function CatalogPage({ onProductClick, userInterests }: CatalogPageProps)
   if (error) {
     return (
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <p className="text-red-600">{error}</p>
+        <p className="text-rose-300">{error}</p>
       </div>
     );
   }
@@ -76,39 +76,39 @@ export function CatalogPage({ onProductClick, userInterests }: CatalogPageProps)
       <div className="mb-8">
         <div className="flex flex-col md:flex-row gap-4 mb-6">
           <div className="flex-1 relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-500 h-5 w-5" />
             <input
               type="text"
               placeholder="Rechercher un objet..."
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+              className="w-full pl-10 pr-4 py-2 border border-slate-700 bg-slate-900/70 text-slate-100 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-transparent"
             />
           </div>
 
           <select
             value={sortBy}
             onChange={e => setSortBy(e.target.value as any)}
-            className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+            className="px-4 py-2 border border-slate-700 bg-slate-900/70 text-slate-100 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-transparent"
           >
-            <option value="recent">Plus récents</option>
+            <option value="recent">Plus recents</option>
             <option value="price-asc">Prix croissant</option>
-            <option value="price-desc">Prix décroissant</option>
+            <option value="price-desc">Prix decroissant</option>
           </select>
         </div>
 
         <div className="flex flex-wrap gap-2 mb-4">
           <button
             onClick={() => setSelectedCategory('all')}
-            className={`px-4 py-2 rounded-full transition-colors ${selectedCategory === 'all' ? 'bg-indigo-600 text-white' : 'bg-white text-gray-700 border border-gray-300 hover:border-indigo-600'}`}
+            className={`px-4 py-2 rounded-full transition-colors ${selectedCategory === 'all' ? 'bg-rose-600 text-white' : 'bg-slate-900/70 text-slate-200 border border-slate-700 hover:border-rose-500'}`}
           >
-            Toutes les catégories
+            Toutes les categories
           </button>
           {categories.map(category => (
             <button
               key={category.id}
               onClick={() => setSelectedCategory(category.id)}
-              className={`px-4 py-2 rounded-full transition-colors ${selectedCategory === category.id ? 'bg-indigo-600 text-white' : 'bg-white text-gray-700 border border-gray-300 hover:border-indigo-600'}`}
+              className={`px-4 py-2 rounded-full transition-colors ${selectedCategory === category.id ? 'bg-rose-600 text-white' : 'bg-slate-900/70 text-slate-200 border border-slate-700 hover:border-rose-500'}`}
             >
               {category.name}
             </button>
@@ -118,17 +118,17 @@ export function CatalogPage({ onProductClick, userInterests }: CatalogPageProps)
         {userInterests && userInterests.length > 0 && (
           <button
             onClick={() => setShowRecommended(!showRecommended)}
-            className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors ${showRecommended ? 'bg-yellow-100 text-yellow-800 border border-yellow-300' : 'bg-white text-gray-700 border border-gray-300 hover:border-yellow-400'}`}
+            className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors ${showRecommended ? 'bg-amber-500/20 text-amber-200 border border-amber-500/40' : 'bg-slate-900/70 text-slate-200 border border-slate-700 hover:border-amber-400'}`}
           >
-            <Star className={`h-5 w-5 ${showRecommended ? 'fill-yellow-500 text-yellow-500' : ''}`} />
-            Recommandés pour vous
+            <Star className={`h-5 w-5 ${showRecommended ? 'fill-amber-400 text-amber-400' : ''}`} />
+            Recommandes pour vous
           </button>
         )}
       </div>
 
       <div className="mb-4">
-        <p className="text-gray-600">
-          {sortedProducts.length} objet{sortedProducts.length > 1 ? 's' : ''} trouvé
+        <p className="text-slate-400">
+          {sortedProducts.length} objet{sortedProducts.length > 1 ? 's' : ''} trouve
           {sortedProducts.length > 1 ? 's' : ''}
         </p>
       </div>
@@ -146,9 +146,9 @@ export function CatalogPage({ onProductClick, userInterests }: CatalogPageProps)
 
       {sortedProducts.length === 0 && (
         <div className="text-center py-16">
-          <Filter className="h-16 w-16 text-gray-300 mx-auto mb-4" />
-          <h3 className="text-gray-900 mb-2">Aucun objet trouvé</h3>
-          <p className="text-gray-600">Essayez de modifier vos filtres ou votre recherche</p>
+          <Filter className="h-16 w-16 text-slate-700 mx-auto mb-4" />
+          <h3 className="text-slate-100 mb-2">Aucun objet trouve</h3>
+          <p className="text-slate-400">Essayez de modifier vos filtres ou votre recherche</p>
         </div>
       )}
     </div>

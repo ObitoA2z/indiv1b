@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ShoppingBag, User as UserIcon, LogIn, LogOut, LayoutDashboard, Shield, Menu, X } from 'lucide-react';
+import { ShoppingBag, LogIn, LogOut, LayoutDashboard, Shield, Menu, X } from 'lucide-react';
 import type { User, PageView } from '../App';
 
 interface HeaderProps {
@@ -33,25 +33,25 @@ export function Header({
   };
 
   return (
-    <header className="bg-white border-b border-gray-200 sticky top-0 z-40">
+    <header className="bg-slate-950/80 border-b border-slate-800 sticky top-0 z-40 backdrop-blur">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between gap-4">
         <div className="flex items-center gap-2">
           <button
-            className="lg:hidden text-gray-600 hover:text-gray-900"
+            className="lg:hidden text-slate-300 hover:text-rose-200"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           >
             {isMobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
           </button>
           <div
-            className="flex items-center gap-2 cursor-pointer"
+            className="flex items-center gap-3 cursor-pointer"
             onClick={() => handleNavigate('home')}
           >
-            <div className="w-9 h-9 rounded-full bg-indigo-600 flex items-center justify-center">
+            <div className="w-9 h-9 rounded-full bg-rose-600/90 shadow-[0_0_20px_rgba(244,63,94,0.35)] flex items-center justify-center">
               <ShoppingBag className="h-5 w-5 text-white" />
             </div>
             <div>
-              <span className="block text-gray-900 text-base leading-tight">La Petite Maison de l’Épouvante</span>
-              <span className="block text-gray-500 text-xs leading-tight">Votre plateforme d’épouvante</span>
+              <span className="block text-rose-200 text-base leading-tight">La Petite Maison de l’Épouvante</span>
+              <span className="block text-slate-400 text-xs leading-tight">Objets, rituels, curiosites interdites</span>
             </div>
           </div>
         </div>
@@ -61,13 +61,13 @@ export function Header({
             <>
               <button
                 onClick={() => handleNavigate('home')}
-                className={`text-sm transition-colors ${currentPage === 'home' ? 'text-indigo-600' : 'text-gray-600 hover:text-gray-900'}`}
+                className={`text-sm transition-colors ${currentPage === 'home' ? 'text-rose-200' : 'text-slate-300 hover:text-rose-200'}`}
               >
                 Accueil
               </button>
               <button
                 onClick={() => handleNavigate('catalog')}
-                className={`text-sm transition-colors ${currentPage === 'catalog' ? 'text-indigo-600' : 'text-gray-600 hover:text-gray-900'}`}
+                className={`text-sm transition-colors ${currentPage === 'catalog' ? 'text-rose-200' : 'text-slate-300 hover:text-rose-200'}`}
               >
                 Catalogue
               </button>
@@ -76,7 +76,7 @@ export function Header({
           {user && user.role !== 'ADMIN' && (
             <button
               onClick={() => handleNavigate('dashboard')}
-              className={`flex items-center gap-1 text-sm transition-colors ${currentPage === 'dashboard' ? 'text-indigo-600' : 'text-gray-600 hover:text-gray-900'}`}
+              className={`flex items-center gap-1 text-sm transition-colors ${currentPage === 'dashboard' ? 'text-rose-200' : 'text-slate-300 hover:text-rose-200'}`}
             >
               <LayoutDashboard className="h-4 w-4" />
               Mon espace
@@ -85,7 +85,7 @@ export function Header({
           {user?.role === 'ADMIN' && (
             <button
               onClick={() => handleNavigate('admin')}
-              className={`flex items-center gap-1 text-sm transition-colors ${currentPage === 'admin' ? 'text-indigo-600' : 'text-gray-600 hover:text-gray-900'}`}
+              className={`flex items-center gap-1 text-sm transition-colors ${currentPage === 'admin' ? 'text-rose-200' : 'text-slate-300 hover:text-rose-200'}`}
             >
               <Shield className="h-4 w-4" />
               Admin
@@ -94,10 +94,10 @@ export function Header({
         </nav>
 
         <div className="flex items-center gap-2">
-{(!user || user.role === 'SELLER') && (
+          {(!user || user.role === 'SELLER') && (
             <button
               onClick={onAddProduct}
-              className="hidden md:inline-flex items-center px-3 py-2 rounded-full bg-gray-900 text-white text-xs hover:bg-black transition-colors"
+              className="hidden md:inline-flex items-center px-3 py-2 rounded-full bg-rose-600 text-white text-xs hover:bg-rose-500 transition-colors"
             >
               Publier un objet
             </button>
@@ -105,11 +105,11 @@ export function Header({
 
           <button
             onClick={onOpenCart}
-            className="relative p-2 rounded-full hover:bg-gray-100 transition-colors"
+            className="relative p-2 rounded-full hover:bg-slate-800/70 transition-colors"
           >
-            <ShoppingBag className="h-5 w-5 text-gray-700" />
+            <ShoppingBag className="h-5 w-5 text-slate-200" />
             {cartItemCount > 0 && (
-              <span className="absolute -top-1 -right-1 bg-indigo-600 text-white text-xs rounded-full min-w-[18px] h-[18px] flex items-center justify-center px-1">
+              <span className="absolute -top-1 -right-1 bg-rose-500 text-white text-xs rounded-full min-w-[18px] h-[18px] flex items-center justify-center px-1">
                 {cartItemCount}
               </span>
             )}
@@ -118,58 +118,58 @@ export function Header({
           {user ? (
             <div className="flex items-center gap-2">
               <div className="hidden sm:flex flex-col items-end">
-                <span className="text-xs text-gray-500">Connecté en tant que</span>
-                <span className="text-sm text-gray-900 font-medium flex items-center gap-2">
+                <span className="text-xs text-slate-400">Connecte en tant que</span>
+                <span className="text-sm text-slate-100 font-medium flex items-center gap-2">
                   {user.name}
                   {user.role === 'SELLER' && (
-                    <span className="px-2 py-0.5 text-xs rounded-full bg-indigo-100 text-indigo-700">Compte vendeur</span>
+                    <span className="px-2 py-0.5 text-xs rounded-full bg-rose-500/20 text-rose-200 border border-rose-500/40">Vendeur</span>
                   )}
                   {user.role === 'ADMIN' && (
-                    <span className="px-2 py-0.5 text-xs rounded-full bg-red-100 text-red-700">Admin</span>
+                    <span className="px-2 py-0.5 text-xs rounded-full bg-amber-500/20 text-amber-200 border border-amber-500/40">Admin</span>
                   )}
                 </span>
               </div>
               <button
                 onClick={onLogout}
-                className="flex items-center gap-1 px-3 py-1.5 rounded-full border border-gray-300 text-xs text-gray-700 hover:border-red-500 hover:text-red-600 transition-colors"
+                className="flex items-center gap-1 px-3 py-1.5 rounded-full border border-slate-700 text-xs text-slate-200 hover:border-rose-400 hover:text-rose-200 transition-colors"
               >
                 <LogOut className="h-4 w-4" />
-                Déconnexion
+                Deconnexion
               </button>
             </div>
           ) : (
             <div className="flex items-center gap-2">
               <button
                 onClick={onLogin}
-                className="flex items-center gap-1 px-3 py-1.5 rounded-full border border-gray-300 text-xs text-gray-700 hover:border-indigo-600 hover:text-indigo-600 transition-colors"
+                className="flex items-center gap-1 px-3 py-1.5 rounded-full border border-slate-700 text-xs text-slate-200 hover:border-rose-400 hover:text-rose-200 transition-colors"
               >
                 <LogIn className="h-4 w-4" />
                 Se connecter
               </button>
               <button
                 onClick={onSignup}
-                className="hidden sm:inline-flex items-center gap-1 px-3 py-1.5 rounded-full border border-gray-300 text-xs text-gray-700 hover:border-green-600 hover:text-green-600 transition-colors"
+                className="hidden sm:inline-flex items-center gap-1 px-3 py-1.5 rounded-full border border-slate-700 text-xs text-slate-200 hover:border-emerald-400 hover:text-emerald-200 transition-colors"
               >
-                Créer un compte
+                Creer un compte
               </button>
             </div>
           )}
         </div>
       </div>
 
-          {isMobileMenuOpen && (
-        <div className="lg:hidden border-t border-gray-200 bg-white px-4 py-3 space-y-2">
+      {isMobileMenuOpen && (
+        <div className="lg:hidden border-t border-slate-800 bg-slate-950 px-4 py-3 space-y-2">
           {user?.role !== 'ADMIN' && (
             <>
               <button
                 onClick={() => handleNavigate('home')}
-                className="block w-full text-left py-2 text-gray-700"
+                className="block w-full text-left py-2 text-slate-300"
               >
                 Accueil
               </button>
               <button
                 onClick={() => handleNavigate('catalog')}
-                className="block w-full text-left py-2 text-gray-700"
+                className="block w-full text-left py-2 text-slate-300"
               >
                 Catalogue
               </button>
@@ -178,7 +178,7 @@ export function Header({
           {user && user.role !== 'ADMIN' && (
             <button
               onClick={() => handleNavigate('dashboard')}
-              className="block w-full text-left py-2 text-gray-700"
+              className="block w-full text-left py-2 text-slate-300"
             >
               Mon espace
             </button>
@@ -186,15 +186,15 @@ export function Header({
           {user?.role === 'ADMIN' && (
             <button
               onClick={() => handleNavigate('admin')}
-              className="block w-full text-left py-2 text-gray-700"
+              className="block w-full text-left py-2 text-slate-300"
             >
               Admin
             </button>
           )}
-{(!user || user.role === 'SELLER') && (
+          {(!user || user.role === 'SELLER') && (
             <button
               onClick={onAddProduct}
-              className="block w-full text-left py-2 text-gray-700"
+              className="block w-full text-left py-2 text-slate-300"
             >
               Publier un objet
             </button>

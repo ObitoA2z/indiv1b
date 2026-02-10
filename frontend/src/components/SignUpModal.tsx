@@ -40,78 +40,81 @@ export function SignUpModal({ onClose, onRegister }: SignUpModalProps) {
   };
 
   return (
-    <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center p-4 z-50">
-      <div className="bg-white rounded-lg max-w-md w-full">
-        <div className="flex justify-between items-center p-4 border-b border-gray-200">
-          <h2 className="text-gray-900">Créer un compte</h2>
-          <button onClick={onClose} className="text-gray-400 hover:text-gray-600">
+    <div className="fixed inset-0 bg-black/70 flex items-center justify-center p-4 z-50">
+      <div className="bg-slate-950 border border-slate-800 rounded-2xl max-w-md w-full shadow-[0_0_30px_rgba(0,0,0,0.6)]">
+        <div className="flex justify-between items-center p-4 border-b border-slate-800">
+          <div>
+            <h2 className="text-slate-100">Creer un compte</h2>
+            <p className="text-slate-500 text-xs">Votre demande passera par la maison</p>
+          </div>
+          <button onClick={onClose} className="text-slate-400 hover:text-rose-200">
             <X className="h-6 w-6" />
           </button>
         </div>
 
         <form onSubmit={handleSubmit} className="p-4 space-y-4">
           <div>
-            <label className="block text-gray-900 mb-1 text-sm">Nom</label>
+            <label className="block text-slate-300 mb-1 text-sm">Nom</label>
             <input
               type="text"
               value={name}
               onChange={e => setName(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+              className="w-full px-3 py-2 border border-slate-700 bg-slate-900 text-slate-100 rounded-lg text-sm focus:ring-2 focus:ring-rose-500 focus:border-transparent"
             />
           </div>
 
           <div>
-            <label className="block text-gray-900 mb-1 text-sm">Email</label>
+            <label className="block text-slate-300 mb-1 text-sm">Email</label>
             <input
               type="email"
               value={email}
               onChange={e => setEmail(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+              className="w-full px-3 py-2 border border-slate-700 bg-slate-900 text-slate-100 rounded-lg text-sm focus:ring-2 focus:ring-rose-500 focus:border-transparent"
               required
             />
           </div>
 
           <div>
-            <label className="block text-gray-900 mb-1 text-sm">Mot de passe</label>
+            <label className="block text-slate-300 mb-1 text-sm">Mot de passe</label>
             <input
               type="password"
               value={password}
               onChange={e => setPassword(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+              className="w-full px-3 py-2 border border-slate-700 bg-slate-900 text-slate-100 rounded-lg text-sm focus:ring-2 focus:ring-rose-500 focus:border-transparent"
               required
             />
           </div>
 
           <div>
-            <label className="block text-gray-900 mb-1 text-sm">Adresse</label>
+            <label className="block text-slate-300 mb-1 text-sm">Adresse</label>
             <input
               type="text"
               value={address}
               onChange={e => setAddress(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+              className="w-full px-3 py-2 border border-slate-700 bg-slate-900 text-slate-100 rounded-lg text-sm focus:ring-2 focus:ring-rose-500 focus:border-transparent"
               placeholder="123 Rue de la Paix, Paris"
             />
           </div>
 
           <div>
-            <label className="block text-gray-900 mb-1 text-sm">Numéro de téléphone</label>
+            <label className="block text-slate-300 mb-1 text-sm">Numero de telephone</label>
             <input
               type="tel"
               value={phone}
               onChange={e => setPhone(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+              className="w-full px-3 py-2 border border-slate-700 bg-slate-900 text-slate-100 rounded-lg text-sm focus:ring-2 focus:ring-rose-500 focus:border-transparent"
               placeholder="+33 6 12 34 56 78"
             />
           </div>
 
           <div>
-            <label className="block text-gray-900 mb-1 text-sm">Sexe</label>
+            <label className="block text-slate-300 mb-1 text-sm">Sexe</label>
             <select
               value={gender}
               onChange={e => setGender(e.target.value as 'male' | 'female' | 'other' | '')}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+              className="w-full px-3 py-2 border border-slate-700 bg-slate-900 text-slate-100 rounded-lg text-sm focus:ring-2 focus:ring-rose-500 focus:border-transparent"
             >
-              <option value="">Sélectionner...</option>
+              <option value="">Selectionner...</option>
               <option value="male">Homme</option>
               <option value="female">Femme</option>
               <option value="other">Autre</option>
@@ -119,8 +122,8 @@ export function SignUpModal({ onClose, onRegister }: SignUpModalProps) {
           </div>
 
           <div>
-            <span className="block text-gray-900 mb-1 text-sm">Type de compte</span>
-            <div className="flex items-center gap-4 text-sm">
+            <span className="block text-slate-300 mb-1 text-sm">Type de compte</span>
+            <div className="flex items-center gap-4 text-sm text-slate-200">
               <label className="inline-flex items-center gap-2">
                 <input type="radio" name="role" value="BUYER" checked={role==='BUYER'} onChange={() => setRole('BUYER')} />
                 Acheteur
@@ -133,19 +136,20 @@ export function SignUpModal({ onClose, onRegister }: SignUpModalProps) {
           </div>
 
           {error && (
-            <p className="text-red-600 text-xs mb-1">{error}</p>
+            <p className="text-rose-300 text-xs mb-1">{error}</p>
           )}
 
           <button
             type="submit"
-            className="w-full bg-gray-900 text-white py-2 rounded-lg text-sm hover:bg-black transition-colors disabled:opacity-50"
+            className="w-full bg-rose-600 text-white py-2 rounded-lg text-sm hover:bg-rose-500 transition-colors disabled:opacity-50"
             disabled={loading}
           >
-            {loading ? 'Création...' : 'Créer le compte'}
+            {loading ? 'Creation...' : 'Creer le compte'}
           </button>
 
-          <p className="text-gray-500 text-xs mt-2">
-            Votre compte sera soumis à validation par un administrateur avant d'être activé. Les vendeurs peuvent publier des objets après approbation.
+          <p className="text-slate-500 text-xs mt-2">
+            Votre compte sera soumis a validation par un administrateur avant d'etre active.
+            Les vendeurs peuvent publier des objets apres approbation.
           </p>
         </form>
       </div>

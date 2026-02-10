@@ -12,49 +12,51 @@ export function ProductCard({ product, onClick, showRecommendedBadge }: ProductC
   return (
     <div
       onClick={onClick}
-      className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden cursor-pointer hover:shadow-md transition-shadow"
+      className="group bg-slate-900/70 rounded-2xl border border-slate-800 overflow-hidden cursor-pointer hover:border-rose-500/50 hover:shadow-[0_0_25px_rgba(244,63,94,0.15)] transition-all"
     >
       <div className="relative">
         <div className="aspect-[4/3] overflow-hidden">
           <img
             src={getImageUrl(product.image)}
             alt={product.title}
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
           />
         </div>
 
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/60 via-transparent to-transparent"></div>
+
         {product.status === 'pending' && (
-          <span className="absolute top-3 left-3 bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded-full">
+          <span className="absolute top-3 left-3 bg-amber-500/20 text-amber-200 text-xs px-2 py-1 rounded-full border border-amber-500/40">
             En attente
           </span>
         )}
 
         {product.status === 'sold' && (
-          <span className="absolute top-3 left-3 bg-gray-900 text-white text-xs px-2 py-1 rounded-full">
+          <span className="absolute top-3 left-3 bg-slate-900 text-slate-100 text-xs px-2 py-1 rounded-full border border-slate-700">
             Vendu
           </span>
         )}
 
         {showRecommendedBadge && (
-          <span className="absolute top-3 right-3 bg-indigo-600 text-white text-xs px-2 py-1 rounded-full">
-            Recommandé
+          <span className="absolute top-3 right-3 bg-rose-600 text-white text-xs px-2 py-1 rounded-full">
+            Recommande
           </span>
         )}
       </div>
 
-      <div className="p-3">
-        <p className="text-gray-900 text-sm line-clamp-2 mb-1">{product.title}</p>
+      <div className="p-4">
+        <p className="text-slate-100 text-sm line-clamp-2 mb-1">{product.title}</p>
 
-        <div className="flex items-baseline gap-1 mb-1">
-          <p className="text-gray-900">{product.price.toFixed(2)} €</p>
+        <div className="flex items-baseline gap-2 mb-2">
+          <p className="text-rose-200">{product.price.toFixed(2)} €</p>
           {product.shipping > 0 && (
-            <p className="text-gray-500 text-xs">+ {product.shipping.toFixed(2)} € de port</p>
+            <p className="text-slate-400 text-xs">+ {product.shipping.toFixed(2)} € port</p>
           )}
         </div>
 
-        <div className="flex items-center justify-between text-xs text-gray-500">
+        <div className="flex items-center justify-between text-xs text-slate-400">
           <div className="flex items-center gap-1">
-            <Star className="h-3 w-3 text-yellow-400 fill-yellow-400" />
+            <Star className="h-3 w-3 text-amber-400 fill-amber-400" />
             <span>{product.sellerRating.toFixed(1)}</span>
             <span>({product.sellerReviews})</span>
           </div>

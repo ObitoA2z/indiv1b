@@ -37,7 +37,6 @@ export function ProductDetailPage({
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
 
-  // Load product details
   useEffect(() => {
     if (!productId) {
       setError('Produit introuvable');
@@ -59,7 +58,6 @@ export function ProductDetailPage({
     load();
   }, [productId]);
 
-  // Keyboard controls for lightbox (must stay before any conditional return)
   useEffect(() => {
     if (!isLightboxOpen) return;
 
@@ -68,7 +66,6 @@ export function ProductDetailPage({
         setIsLightboxOpen(false);
       } else if (event.key === 'ArrowLeft') {
         setSelectedImageIndex((prev) => {
-          // Safely compute gallery length based on current product
           const galleryLength = (() => {
             if (!product) return 1;
             if (product.images && Array.isArray(product.images) && product.images.length > 0) {
@@ -126,7 +123,7 @@ export function ProductDetailPage({
   if (loading) {
     return (
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <p className="text-gray-600">Chargement du produit...</p>
+        <p className="text-slate-300">Chargement du produit...</p>
       </div>
     );
   }
@@ -136,12 +133,12 @@ export function ProductDetailPage({
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <button
           onClick={onBack}
-          className="flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-4"
+          className="flex items-center gap-2 text-slate-300 hover:text-rose-200 mb-4"
         >
           <ArrowLeft className="h-5 w-5" />
           Retour
         </button>
-        <p className="text-red-600">{error || 'Produit non trouve'}</p>
+        <p className="text-rose-300">{error || 'Produit non trouve'}</p>
       </div>
     );
   }
@@ -176,13 +173,12 @@ export function ProductDetailPage({
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      {/* Lightbox overlay */}
       {isLightboxOpen && (
         <div className="fixed inset-0 z-50 bg-black bg-opacity-80 flex items-center justify-center">
           <button
             type="button"
             onClick={handleCloseLightbox}
-            className="absolute top-4 right-4 text-white hover:text-gray-200"
+            className="absolute top-4 right-4 text-white hover:text-slate-200"
           >
             <CloseIcon className="h-6 w-6" />
           </button>
@@ -192,14 +188,14 @@ export function ProductDetailPage({
               <button
                 type="button"
                 onClick={handlePrevImage}
-                className="absolute left-4 text-white hover:text-gray-200 px-2 py-2"
+                className="absolute left-4 text-white hover:text-slate-200 px-2 py-2"
               >
                 <ChevronLeft className="h-8 w-8" />
               </button>
               <button
                 type="button"
                 onClick={handleNextImage}
-                className="absolute right-4 text-white hover:text-gray-200 px-2 py-2"
+                className="absolute right-4 text-white hover:text-slate-200 px-2 py-2"
               >
                 <ChevronRight className="h-8 w-8" />
               </button>
@@ -222,16 +218,15 @@ export function ProductDetailPage({
 
       <button
         onClick={onBack}
-        className="flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-6"
+        className="flex items-center gap-2 text-slate-300 hover:text-rose-200 mb-6"
       >
         <ArrowLeft className="h-5 w-5" />
         Retour au catalogue
       </button>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {/* Image Section */}
         <div>
-          <div className="bg-gray-100 rounded-lg overflow-hidden mb-4 cursor-zoom-in" onClick={() => handleOpenLightbox(selectedImageIndex)}>
+          <div className="bg-slate-900/60 rounded-2xl overflow-hidden mb-4 cursor-zoom-in border border-slate-800" onClick={() => handleOpenLightbox(selectedImageIndex)}>
             <img
               src={mainImage}
               alt={product.title}
@@ -248,8 +243,8 @@ export function ProductDetailPage({
                   onClick={() => setSelectedImageIndex(index)}
                   className={`relative h-20 w-20 rounded-md overflow-hidden border-2 ${
                     index === selectedImageIndex
-                      ? 'border-indigo-600'
-                      : 'border-transparent hover:border-indigo-300'
+                      ? 'border-rose-500'
+                      : 'border-transparent hover:border-rose-300'
                   }`}
                 >
                   <img
@@ -263,11 +258,11 @@ export function ProductDetailPage({
           )}
 
           {product.priceHistory && product.priceHistory.length > 1 && (
-            <div className="bg-green-50 border border-green-200 rounded-lg p-4 flex items-start gap-3">
-              <TrendingDown className="h-5 w-5 text-green-600 mt-0.5 flex-shrink-0" />
+            <div className="bg-emerald-500/10 border border-emerald-500/30 rounded-lg p-4 flex items-start gap-3">
+              <TrendingDown className="h-5 w-5 text-emerald-300 mt-0.5 flex-shrink-0" />
               <div>
-                <h4 className="text-green-900 mb-1">Baisse de prix !</h4>
-                <p className="text-green-700">
+                <h4 className="text-emerald-200 mb-1">Baisse de prix</h4>
+                <p className="text-emerald-200/80">
                   Prix reduit de {product.priceHistory[0].price.toFixed(2)} € a{' '}
                   {product.price.toFixed(2)} €
                 </p>
@@ -276,34 +271,33 @@ export function ProductDetailPage({
           )}
         </div>
 
-        {/* Product Info Section */}
         <div>
-          <h1 className="text-gray-900 mb-4">{product.title}</h1>
+          <h1 className="text-slate-100 mb-4 text-3xl">{product.title}</h1>
 
-          <div className="flex items-center gap-4 mb-6">
+          <div className="flex items-center gap-4 mb-6 text-slate-300">
             <div className="flex items-center gap-1">
-              <Star className="h-5 w-5 fill-yellow-400 text-yellow-400" />
-              <span className="text-gray-900">
+              <Star className="h-5 w-5 fill-amber-400 text-amber-400" />
+              <span className="text-slate-100">
                 {product.sellerRating.toFixed(1)}
               </span>
-              <span className="text-gray-500">
+              <span className="text-slate-400">
                 ({product.sellerReviews} avis)
               </span>
             </div>
-            <div className="flex items-center gap-1 text-gray-600">
+            <div className="flex items-center gap-1 text-slate-400">
               <MapPin className="h-4 w-4" />
               <span>{product.location}</span>
             </div>
           </div>
 
           {product.status === 'pending' && (
-            <div className="bg-orange-50 border border-orange-200 rounded-lg p-4 mb-6 flex items-start gap-3">
-              <AlertCircle className="h-5 w-5 text-orange-600 mt-0.5 flex-shrink-0" />
+            <div className="bg-amber-500/10 border border-amber-500/30 rounded-lg p-4 mb-6 flex items-start gap-3">
+              <AlertCircle className="h-5 w-5 text-amber-300 mt-0.5 flex-shrink-0" />
               <div>
-                <h4 className="text-orange-900 mb-1">
+                <h4 className="text-amber-200 mb-1">
                   Objet en attente de validation
                 </h4>
-                <p className="text-orange-700">
+                <p className="text-amber-200/80">
                   Cet objet est en cours de verification par notre equipe
                   avant publication.
                 </p>
@@ -312,25 +306,25 @@ export function ProductDetailPage({
           )}
 
           {product.status === 'sold' && (
-            <div className="bg-gray-100 border border-gray-300 rounded-lg p-4 mb-6">
-              <h4 className="text-gray-900 mb-1">Objet vendu</h4>
-              <p className="text-gray-600">Cet objet n'est plus disponible.</p>
+            <div className="bg-slate-900/60 border border-slate-700 rounded-lg p-4 mb-6">
+              <h4 className="text-slate-100 mb-1">Objet vendu</h4>
+              <p className="text-slate-400">Cet objet n'est plus disponible.</p>
             </div>
           )}
 
-          <div className="bg-white border border-gray-200 rounded-lg p-6 mb-6">
+          <div className="bg-slate-900/60 border border-slate-800 rounded-lg p-6 mb-6">
             <div className="flex items-baseline gap-2 mb-2">
-              <span className="text-gray-900">
+              <span className="text-rose-200 text-2xl">
                 {product.price.toFixed(2)} €
               </span>
             </div>
             {product.shipping > 0 && (
-              <p className="text-gray-600">
+              <p className="text-slate-400">
                 + {product.shipping.toFixed(2)} € de frais de port
               </p>
             )}
-            <p className="text-gray-500 text-sm mt-2">
-              Commission Maison de l'Épouvante (5%) et TVA seront ajoutees au moment du
+            <p className="text-slate-500 text-sm mt-2">
+              Commission Maison de l'Epouvante (5%) et TVA ajoutees au moment du
               paiement.
             </p>
           </div>
@@ -339,7 +333,7 @@ export function ProductDetailPage({
             <button
               onClick={handleBuyNow}
               disabled={product.status !== 'available'}
-              className="w-full bg-indigo-600 text-white py-3 rounded-lg hover:bg-indigo-700 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
+              className="w-full bg-rose-600 text-white py-3 rounded-lg hover:bg-rose-500 transition-colors disabled:bg-slate-700 disabled:cursor-not-allowed"
             >
               {product.status === 'available'
                 ? 'Acheter maintenant'
@@ -349,9 +343,9 @@ export function ProductDetailPage({
               <button
                 onClick={() => {
                   onAddToCart(product);
-                  alert('Objet ajoute au panier !');
+                  alert('Objet ajoute au panier');
                 }}
-                className="w-full bg:white text-indigo-600 border border-indigo-600 py-3 rounded-lg hover:bg-indigo-50 transition-colors flex items-center justify-center gap-2"
+                className="w-full bg-transparent text-rose-200 border border-rose-500/50 py-3 rounded-lg hover:bg-rose-500/10 transition-colors flex items-center justify-center gap-2"
               >
                 <ShoppingCart className="h-5 w-5" />
                 Ajouter au panier
@@ -360,7 +354,7 @@ export function ProductDetailPage({
             {user && product.status === 'available' && (
               <button
                 onClick={onOpenChat}
-                className="w-full bg-white text-gray-700 border border-gray-300 py-3 rounded-lg hover:bg-gray-50 transition-colors flex items-center justify-center gap-2"
+                className="w-full bg-slate-900/60 text-slate-200 border border-slate-700 py-3 rounded-lg hover:bg-slate-800 transition-colors flex items-center justify-center gap-2"
               >
                 <MessageCircle className="h-5 w-5" />
                 Contacter le vendeur
@@ -368,29 +362,29 @@ export function ProductDetailPage({
             )}
           </div>
 
-          <div className="border-t border-gray-200 pt-6">
-            <h3 className="text-gray-900 mb-3">Description</h3>
-            <p className="text-gray-700 whitespace-pre-line">
+          <div className="border-t border-slate-800 pt-6">
+            <h3 className="text-slate-100 mb-3">Description</h3>
+            <p className="text-slate-300 whitespace-pre-line">
               {product.description}
             </p>
           </div>
 
-          <div className="border-t border-gray-200 pt-6 mt-6">
-            <h3 className="text-gray-900 mb-3">Vendeur</h3>
+          <div className="border-t border-slate-800 pt-6 mt-6">
+            <h3 className="text-slate-100 mb-3">Vendeur</h3>
             <div className="flex items-center gap-4">
-              <div className="h-12 w-12 bg-indigo-100 rounded-full flex items-center justify-center">
-                <span className="text-indigo-600">
+              <div className="h-12 w-12 bg-rose-500/20 rounded-full flex items-center justify-center border border-rose-500/30">
+                <span className="text-rose-200">
                   {product.sellerName.charAt(0)}
                 </span>
               </div>
               <div>
-                <p className="text-gray-900">{product.sellerName}</p>
+                <p className="text-slate-100">{product.sellerName}</p>
                 <div className="flex items-center gap-1">
-                  <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                  <span className="text-gray-700">
+                  <Star className="h-4 w-4 fill-amber-400 text-amber-400" />
+                  <span className="text-slate-300">
                     {product.sellerRating.toFixed(1)}
                   </span>
-                  <span className="text-gray-500">
+                  <span className="text-slate-500">
                     ({product.sellerReviews} ventes)
                   </span>
                 </div>
@@ -398,9 +392,9 @@ export function ProductDetailPage({
             </div>
           </div>
 
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mt-6">
-            <h4 className="text-blue-900 mb-2">Protection La Petite Maison de l’Épouvante</h4>
-            <ul className="text-blue-700 space-y-1 text-sm">
+          <div className="bg-slate-900/70 border border-slate-800 rounded-lg p-4 mt-6">
+            <h4 className="text-rose-200 mb-2">Protection La Petite Maison de l'Epouvante</h4>
+            <ul className="text-slate-300 space-y-1 text-sm">
               <li>• Paiement 100% securise</li>
               <li>• Vendeur verifie</li>
               <li>• Objet controle avant mise en ligne</li>

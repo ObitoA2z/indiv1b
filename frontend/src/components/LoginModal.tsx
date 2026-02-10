@@ -27,52 +27,55 @@ export function LoginModal({ onClose, onLogin }: LoginModalProps) {
   };
 
   return (
-    <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center p-4 z-50">
-      <div className="bg-white rounded-lg max-w-md w-full">
-        <div className="flex justify-between items-center p-4 border-b border-gray-200">
-          <h2 className="text-gray-900">Se connecter</h2>
-          <button onClick={onClose} className="text-gray-400 hover:text-gray-600">
+    <div className="fixed inset-0 bg-black/70 flex items-center justify-center p-4 z-50">
+      <div className="bg-slate-950 border border-slate-800 rounded-2xl max-w-md w-full shadow-[0_0_30px_rgba(0,0,0,0.6)]">
+        <div className="flex justify-between items-center p-4 border-b border-slate-800">
+          <div>
+            <h2 className="text-slate-100">Se connecter</h2>
+            <p className="text-slate-500 text-xs">Acces reserve aux visiteurs autorises</p>
+          </div>
+          <button onClick={onClose} className="text-slate-400 hover:text-rose-200">
             <X className="h-6 w-6" />
           </button>
         </div>
 
         <form onSubmit={handleSubmit} className="p-4 space-y-4">
           <div>
-            <label className="block text-gray-900 mb-1 text-sm">Email</label>
+            <label className="block text-slate-300 mb-1 text-sm">Email</label>
             <input
               type="email"
               value={email}
               onChange={e => setEmail(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+              className="w-full px-3 py-2 border border-slate-700 bg-slate-900 text-slate-100 rounded-lg text-sm focus:ring-2 focus:ring-rose-500 focus:border-transparent"
               required
             />
           </div>
 
           <div>
-            <label className="block text-gray-900 mb-1 text-sm">Mot de passe</label>
+            <label className="block text-slate-300 mb-1 text-sm">Mot de passe</label>
             <input
               type="password"
               value={password}
               onChange={e => setPassword(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+              className="w-full px-3 py-2 border border-slate-700 bg-slate-900 text-slate-100 rounded-lg text-sm focus:ring-2 focus:ring-rose-500 focus:border-transparent"
               required
             />
           </div>
 
           {error && (
-            <p className="text-red-600 text-xs mb-1">{error}</p>
+            <p className="text-rose-300 text-xs mb-1">{error}</p>
           )}
 
           <button
             type="submit"
-            className="w-full bg-gray-900 text-white py-2 rounded-lg text-sm hover:bg-black transition-colors disabled:opacity-50"
+            className="w-full bg-rose-600 text-white py-2 rounded-lg text-sm hover:bg-rose-500 transition-colors disabled:opacity-50"
             disabled={loading}
           >
             {loading ? 'Connexion...' : 'Se connecter'}
           </button>
 
-          <p className="text-gray-500 text-xs mt-2">
-            Comptes de démo :
+          <p className="text-slate-500 text-xs mt-2">
+            Comptes de demo :
             <br />- buyer@example.com / password123 (acheteur)
             <br />- seller@example.com / password123 (vendeur)
             <br />- admin@example.com / password123 (admin)

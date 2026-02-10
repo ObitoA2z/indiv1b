@@ -73,7 +73,7 @@ const [loading, setLoading] = useState(true);
   if (loading) {
     return (
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <p className="text-gray-600">Chargement des produits...</p>
+        <p className="text-slate-400">Chargement des produits...</p>
       </div>
     );
   }
@@ -89,64 +89,64 @@ const [loading, setLoading] = useState(true);
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="mb-8">
-        <h1 className="text-gray-900 mb-2">Tableau de bord administrateur</h1>
-        <p className="text-gray-600">Gérez votre plateforme La Petite Maison de l��pouvante</p>
+        <h1 className="text-slate-100 mb-2">Tableau de bord administrateur</h1>
+        <p className="text-slate-400">Gérez votre plateforme La Petite Maison de l��pouvante</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-        <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+        <div className="bg-slate-900/70 p-6 rounded-lg shadow-sm border border-slate-800">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-gray-600 mb-1">Utilisateurs</p>
-              <p className="text-gray-900">{totalUsers ?? '-'}</p>
+              <p className="text-slate-400 mb-1">Utilisateurs</p>
+              <p className="text-slate-100">{totalUsers ?? '-'}</p>
             </div>
-            <Users className="h-8 w-8 text-blue-600" />
+            <Users className="h-8 w-8 text-sky-300" />
           </div>
         </div>
 
-        <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+        <div className="bg-slate-900/70 p-6 rounded-lg shadow-sm border border-slate-800">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-gray-600 mb-1">Objets</p>
-              <p className="text-gray-900">{totalProducts}</p>
+              <p className="text-slate-400 mb-1">Objets</p>
+              <p className="text-slate-100">{totalProducts}</p>
             </div>
-            <Package className="h-8 w-8 text-green-600" />
+            <Package className="h-8 w-8 text-emerald-300" />
           </div>
         </div>
 
-        <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+        <div className="bg-slate-900/70 p-6 rounded-lg shadow-sm border border-slate-800">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-gray-600 mb-1">En attente</p>
-              <p className="text-gray-900">{pendingProducts.length}</p>
+              <p className="text-slate-400 mb-1">En attente</p>
+              <p className="text-slate-100">{pendingProducts.length}</p>
             </div>
-            <AlertTriangle className="h-8 w-8 text-orange-600" />
+            <AlertTriangle className="h-8 w-8 text-amber-300" />
           </div>
         </div>
 
-        <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+        <div className="bg-slate-900/70 p-6 rounded-lg shadow-sm border border-slate-800">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-gray-600 mb-1">Revenus (5%)</p>
-              <p className="text-gray-900">2,450 €</p>
+              <p className="text-slate-400 mb-1">Revenus (5%)</p>
+              <p className="text-slate-100">2,450 €</p>
             </div>
-            <TrendingUp className="h-8 w-8 text-indigo-600" />
+            <TrendingUp className="h-8 w-8 text-rose-200" />
           </div>
         </div>
       </div>
 
-      <div className="border-b border-gray-200 mb-6">
+      <div className="border-b border-slate-800 mb-6">
         <nav className="flex gap-8">
           <button
             onClick={() => setActiveTab('overview')}
-            className={`pb-4 border-b-2 transition-colors ${activeTab === 'overview' ? 'border-indigo-600 text-indigo-600' : 'border-transparent text-gray-600 hover:text-gray-900'}`}
+            className={`pb-4 border-b-2 transition-colors ${activeTab === 'overview' ? 'border-rose-500 text-rose-200' : 'border-transparent text-slate-400 hover:text-slate-100'}`}
           >
             Vue d'ensemble
           </button>
 
           <button
             onClick={() => setActiveTab('products')}
-            className={`pb-4 border-b-2 transition-colors ${activeTab === 'products' ? 'border-indigo-600 text-indigo-600' : 'border-transparent text-gray-600 hover:text-gray-900'}`}
+            className={`pb-4 border-b-2 transition-colors ${activeTab === 'products' ? 'border-rose-500 text-rose-200' : 'border-transparent text-slate-400 hover:text-slate-100'}`}
           >
             Validation objets ({pendingProducts.length})
           </button>
@@ -164,14 +164,14 @@ const [loading, setLoading] = useState(true);
                 .catch(() => alert("Impossible de lister les utilisateurs"))
                 .finally(() => setUsersLoading(false));
             }}
-            className={`pb-4 border-b-2 transition-colors ${activeTab === 'users' ? 'border-indigo-600 text-indigo-600' : 'border-transparent text-gray-600 hover:text-gray-900'}`}
+            className={`pb-4 border-b-2 transition-colors ${activeTab === 'users' ? 'border-rose-500 text-rose-200' : 'border-transparent text-slate-400 hover:text-slate-100'}`}
           >
             Utilisateurs
           </button>
 
           <button
             onClick={() => setActiveTab('fraud')}
-            className={`pb-4 border-b-2 transition-colors ${activeTab === 'fraud' ? 'border-indigo-600 text-indigo-600' : 'border-transparent text-gray-600 hover:text-gray-900'}`}
+            className={`pb-4 border-b-2 transition-colors ${activeTab === 'fraud' ? 'border-rose-500 text-rose-200' : 'border-transparent text-slate-400 hover:text-slate-100'}`}
           >
             Détection fraudes
           </button>
@@ -193,7 +193,7 @@ const [loading, setLoading] = useState(true);
               setReqLoading(false);
             }
           }}
-          className="text-sm text-indigo-600 hover:text-indigo-700"
+          className="text-sm text-rose-200 hover:text-rose-200"
         >
           Voir les demandes vendeur en attente
         </button>
@@ -201,51 +201,51 @@ const [loading, setLoading] = useState(true);
 
       {activeTab === 'overview' && (
         <div className="space-y-6">
-          <div className="bg-white border border-gray-200 rounded-lg p-6">
-            <h3 className="text-gray-900 mb-4">Activité récente</h3>
+          <div className="bg-slate-900/70 border border-slate-800 rounded-lg p-6">
+            <h3 className="text-slate-100 mb-4">Activité récente</h3>
             <div className="space-y-3">
-              <div className="flex items-center justify-between py-2 border-b border-gray-100">
+              <div className="flex items-center justify-between py-2 border-b border-slate-800">
                 <div>
-                  <p className="text-gray-900">Nouvel objet ajouté</p>
-                  <p className="text-gray-600">Grimoire d'initiation par ArchivisteNoir</p>
+                  <p className="text-slate-100">Nouvel objet ajouté</p>
+                  <p className="text-slate-400">Grimoire d'initiation par ArchivisteNoir</p>
                 </div>
-                <span className="text-gray-500">Il y a 5 min</span>
+                <span className="text-slate-500">Il y a 5 min</span>
               </div>
-              <div className="flex items-center justify-between py-2 border-b border-gray-100">
+              <div className="flex items-center justify-between py-2 border-b border-slate-800">
                 <div>
-                  <p className="text-gray-900">Vente réalisée</p>
-                  <p className="text-gray-600">Poster Star Wars - 850 €</p>
+                  <p className="text-slate-100">Vente réalisée</p>
+                  <p className="text-slate-400">Poster Star Wars - 850 €</p>
                 </div>
-                <span className="text-gray-500">Il y a 1h</span>
+                <span className="text-slate-500">Il y a 1h</span>
               </div>
-              <div className="flex items-center justify-between py-2 border-b border-gray-100">
+              <div className="flex items-center justify-between py-2 border-b border-slate-800">
                 <div>
-                  <p className="text-gray-900">Nouvel utilisateur</p>
-                  <p className="text-gray-600">jean.dupont@email.com</p>
+                  <p className="text-slate-100">Nouvel utilisateur</p>
+                  <p className="text-slate-400">jean.dupont@email.com</p>
                 </div>
-                <span className="text-gray-500">Il y a 2h</span>
+                <span className="text-slate-500">Il y a 2h</span>
               </div>
             </div>
           </div>
 
-          <div className="bg-white border border-gray-200 rounded-lg p-6">
-            <h3 className="text-gray-900 mb-4">Statistiques des ventes</h3>
+          <div className="bg-slate-900/70 border border-slate-800 rounded-lg p-6">
+            <h3 className="text-slate-100 mb-4">Statistiques des ventes</h3>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <div>
-                <p className="text-gray-600 mb-1">Aujourd'hui</p>
-                <p className="text-gray-900">12 ventes</p>
+                <p className="text-slate-400 mb-1">Aujourd'hui</p>
+                <p className="text-slate-100">12 ventes</p>
               </div>
               <div>
-                <p className="text-gray-600 mb-1">Cette semaine</p>
-                <p className="text-gray-900">87 ventes</p>
+                <p className="text-slate-400 mb-1">Cette semaine</p>
+                <p className="text-slate-100">87 ventes</p>
               </div>
               <div>
-                <p className="text-gray-600 mb-1">Ce mois</p>
-                <p className="text-gray-900">342 ventes</p>
+                <p className="text-slate-400 mb-1">Ce mois</p>
+                <p className="text-slate-100">342 ventes</p>
               </div>
               <div>
-                <p className="text-gray-600 mb-1">Total</p>
-                <p className="text-gray-900">2,156 ventes</p>
+                <p className="text-slate-400 mb-1">Total</p>
+                <p className="text-slate-100">2,156 ventes</p>
               </div>
             </div>
           </div>
@@ -254,19 +254,19 @@ const [loading, setLoading] = useState(true);
 
       {activeTab === 'products' && (
         <div>
-          <h2 className="text-gray-900 mb-6">Tous les objets ({totalProducts})</h2>
+          <h2 className="text-slate-100 mb-6">Tous les objets ({totalProducts})</h2>
           {products.length > 0 ? (
             <div className="space-y-4">
               {products.map(product => (
-                <div key={product.id} className="bg-white border border-gray-200 rounded-lg p-4">
+                <div key={product.id} className="bg-slate-900/70 border border-slate-800 rounded-lg p-4">
                   <div className="flex gap-4">
                     <img src={getImageUrl(product.image)} alt={product.title} className="w-32 h-32 object-cover rounded-lg" />
                     <div className="flex-1">
                       <div className="flex justify-between items-start mb-2">
                         <div>
-                          <h3 className="text-gray-900 mb-1">{product.title}</h3>
-                          <p className="text-gray-600 mb-2 line-clamp-2">{product.description}</p>
-                          <div className="flex flex-wrap gap-4 text-gray-600">
+                          <h3 className="text-slate-100 mb-1">{product.title}</h3>
+                          <p className="text-slate-400 mb-2 line-clamp-2">{product.description}</p>
+                          <div className="flex flex-wrap gap-4 text-slate-400">
                             <span>Prix: {product.price.toFixed(2)} €</span>
                             <span>Vendeur: {product.sellerName}</span>
                             <span>Catégorie: {product.category}</span>
@@ -275,7 +275,7 @@ const [loading, setLoading] = useState(true);
                               <span className={`ml-2 px-2 py-0.5 rounded text-xs ${
                                 product.status === 'available' ? 'bg-green-100 text-green-700' :
                                 product.status === 'pending' ? 'bg-yellow-100 text-yellow-700' :
-                                'bg-gray-200 text-gray-700'
+                                'bg-slate-800 text-slate-300'
                               }`}>
                                 {product.status}
                               </span>
@@ -329,10 +329,10 @@ const [loading, setLoading] = useState(true);
               ))}
             </div>
           ) : (
-            <div className="text-center py-16 bg-gray-50 rounded-lg">
-              <Package className="h-16 w-16 text-gray-300 mx-auto mb-4" />
-              <h3 className="text-gray-900 mb-2">Aucun objet</h3>
-              <p className="text-gray-600">La liste des objets est vide</p>
+            <div className="text-center py-16 bg-slate-950/60 rounded-lg">
+              <Package className="h-16 w-16 text-slate-500 mx-auto mb-4" />
+              <h3 className="text-slate-100 mb-2">Aucun objet</h3>
+              <p className="text-slate-400">La liste des objets est vide</p>
             </div>
           )}
         </div>
@@ -341,9 +341,9 @@ const [loading, setLoading] = useState(true);
       {activeTab === 'users' && (
         <div>
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-gray-900">Gestion des utilisateurs</h2>
+            <h2 className="text-slate-100">Gestion des utilisateurs</h2>
             <div className="flex items-center gap-2">
-              <label className="text-sm text-gray-700">Filtrer:</label>
+              <label className="text-sm text-slate-300">Filtrer:</label>
               <select
                 value={usersFilter}
                 onChange={async (e) => {
@@ -361,7 +361,7 @@ const [loading, setLoading] = useState(true);
                     setUsersLoading(false);
                   }
                 }}
-                className="px-2 py-1 border border-gray-300 rounded"
+                className="px-2 py-1 border border-slate-700 rounded"
               >
                 <option value="ALL">Tous</option>
                 <option value="BUYER">Acheteurs</option>
@@ -372,20 +372,20 @@ const [loading, setLoading] = useState(true);
           </div>
 
           {usersLoading ? (
-            <p className="text-gray-600">Chargement...</p>
+            <p className="text-slate-400">Chargement...</p>
           ) : users.length > 0 ? (
             <div className="space-y-2">
               {users.map((u) => (
-                <div key={u.id} className="bg-white border border-gray-200 rounded-lg p-4 flex items-center justify-between">
+                <div key={u.id} className="bg-slate-900/70 border border-slate-800 rounded-lg p-4 flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <div className="h-9 w-9 rounded-full bg-indigo-100 flex items-center justify-center">
-                      <Shield className="h-5 w-5 text-indigo-600" />
+                    <div className="h-9 w-9 rounded-full bg-rose-500/20 flex items-center justify-center">
+                      <Shield className="h-5 w-5 text-rose-200" />
                     </div>
                     <div>
-                      <p className="text-gray-900">{u.name}</p>
-                      <p className="text-gray-600 text-sm">{u.email}</p>
+                      <p className="text-slate-100">{u.name}</p>
+                      <p className="text-slate-400 text-sm">{u.email}</p>
                       {(u.address || u.phone || u.gender) && (
-                        <div className="mt-1 text-xs text-gray-500 space-y-0.5">
+                        <div className="mt-1 text-xs text-slate-500 space-y-0.5">
                           {u.address && <p>Adresse : {u.address}</p>}
                           {u.phone && <p>Tél. : {u.phone}</p>}
                           {u.gender && (
@@ -403,7 +403,7 @@ const [loading, setLoading] = useState(true);
                     </div>
                   </div>
                   <div className="flex items-center gap-3">
-                    <span className="text-xs px-2 py-1 rounded-full border border-gray-300 text-gray-700">{u.role}</span>
+                    <span className="text-xs px-2 py-1 rounded-full border border-slate-700 text-slate-300">{u.role}</span>
                     <span
                       className={`text-xs px-2 py-1 rounded-full ${
                         u.active ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'
@@ -422,7 +422,7 @@ const [loading, setLoading] = useState(true);
                             alert("Maj du rôle impossible");
                           }
                         }}
-                        className="px-3 py-1 text-xs rounded bg-white border border-gray-300 hover:bg-gray-50"
+                        className="px-3 py-1 text-xs rounded bg-slate-900/70 border border-slate-700 hover:bg-slate-950/60"
                       >Acheteur</button>
                       <button
                         onClick={async () => {
@@ -434,7 +434,7 @@ const [loading, setLoading] = useState(true);
                             alert("Maj du rôle impossible");
                           }
                         }}
-                        className="px-3 py-1 text-xs rounded bg-white border border-gray-300 hover:bg-gray-50"
+                        className="px-3 py-1 text-xs rounded bg-slate-900/70 border border-slate-700 hover:bg-slate-950/60"
                       >Vendeur</button>
                       <button
                         onClick={async () => {
@@ -446,7 +446,7 @@ const [loading, setLoading] = useState(true);
                             alert("Maj du rôle impossible");
                           }
                         }}
-                        className="px-3 py-1 text-xs rounded bg-white border border-gray-300 hover:bg-gray-50"
+                        className="px-3 py-1 text-xs rounded bg-slate-900/70 border border-slate-700 hover:bg-slate-950/60"
                       >Admin</button>
                       <button
                         onClick={async () => {
@@ -458,7 +458,7 @@ const [loading, setLoading] = useState(true);
                             alert("Maj du statut impossible");
                           }
                         }}
-                        className="px-3 py-1 text-xs rounded bg-white border border-gray-300 hover:bg-gray-50"
+                        className="px-3 py-1 text-xs rounded bg-slate-900/70 border border-slate-700 hover:bg-slate-950/60"
                       >{u.active ? 'Désactiver' : 'Activer'}</button>
                     </div>
                   </div>
@@ -466,7 +466,7 @@ const [loading, setLoading] = useState(true);
               ))}
             </div>
           ) : (
-            <p className="text-gray-600">Aucun utilisateur</p>
+            <p className="text-slate-400">Aucun utilisateur</p>
           )}
         </div>
       )}
@@ -474,20 +474,20 @@ const [loading, setLoading] = useState(true);
       {activeTab === 'categories' && (
         <div>
           <div className="flex justify-between items-center mb-6">
-            <h2 className="text-gray-900">Gestion des catégories</h2>
+            <h2 className="text-slate-100">Gestion des catégories</h2>
           </div>
 
-          <div className="bg-white border border-gray-200 rounded-lg p-6 mb-6">
-            <h3 className="text-gray-900 mb-4">Ajouter une catégorie</h3>
+          <div className="bg-slate-900/70 border border-slate-800 rounded-lg p-6 mb-6">
+            <h3 className="text-slate-100 mb-4">Ajouter une catégorie</h3>
             <div className="flex gap-2">
               <input
                 type="text"
                 value={newCategory}
                 onChange={e => setNewCategory(e.target.value)}
                 placeholder="Nom de la catégorie"
-                className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                className="flex-1 px-4 py-2 border border-slate-700 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-transparent"
               />
-              <button className="flex items-center gap-2 bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors">
+              <button className="flex items-center gap-2 bg-rose-600 text-white px-4 py-2 rounded-lg hover:bg-rose-500 transition-colors">
                 <Plus className="h-5 w-5" />
                 Ajouter
               </button>
@@ -496,8 +496,8 @@ const [loading, setLoading] = useState(true);
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {categories.map(category => (
-              <div key={category.id} className="bg-white border border-gray-200 rounded-lg p-4 flex items-center justify-between">
-                <span className="text-gray-900">{category.name}</span>
+              <div key={category.id} className="bg-slate-900/70 border border-slate-800 rounded-lg p-4 flex items-center justify-between">
+                <span className="text-slate-100">{category.name}</span>
                 <button className="text-red-600 hover:text-red-700">
                   <Trash2 className="h-5 w-5" />
                 </button>
@@ -509,17 +509,17 @@ const [loading, setLoading] = useState(true);
 
       {activeTab === 'seller-requests' && (
         <div>
-          <h2 className="text-gray-900 mb-6">Demandes vendeur en attente</h2>
+          <h2 className="text-slate-100 mb-6">Demandes vendeur en attente</h2>
           {reqLoading ? (
-            <p className="text-gray-600">Chargement...</p>
+            <p className="text-slate-400">Chargement...</p>
           ) : sellerRequests.length > 0 ? (
             <div className="space-y-3">
               {sellerRequests.map((r) => (
-                <div key={r.id} className="bg-white border border-gray-200 rounded-lg p-4 flex items-center justify-between">
+                <div key={r.id} className="bg-slate-900/70 border border-slate-800 rounded-lg p-4 flex items-center justify-between">
                   <div>
-                    <p className="text-gray-900">{r.user?.name || r.user?.email}</p>
-                    <p className="text-gray-600 text-sm">{r.user?.email}</p>
-                    <p className="text-gray-500 text-xs">Demande du {new Date(r.createdAt).toLocaleString()}</p>
+                    <p className="text-slate-100">{r.user?.name || r.user?.email}</p>
+                    <p className="text-slate-400 text-sm">{r.user?.email}</p>
+                    <p className="text-slate-500 text-xs">Demande du {new Date(r.createdAt).toLocaleString()}</p>
                   </div>
                   <div className="flex gap-2">
                     <button
@@ -555,14 +555,14 @@ const [loading, setLoading] = useState(true);
               ))}
             </div>
           ) : (
-            <p className="text-gray-600">Aucune demande en attente</p>
+            <p className="text-slate-400">Aucune demande en attente</p>
           )}
         </div>
       )}
 
       {activeTab === 'fraud' && (
         <div>
-          <h2 className="text-gray-900 mb-6">Système de détection des fraudes</h2>
+          <h2 className="text-slate-100 mb-6">Système de détection des fraudes</h2>
 
           <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6 mb-6">
             <div className="flex items-start gap-3">
@@ -578,39 +578,39 @@ const [loading, setLoading] = useState(true);
           </div>
 
           <div className="space-y-4">
-            <div className="bg-white border border-red-200 rounded-lg p-4">
+            <div className="bg-slate-900/70 border border-red-200 rounded-lg p-4">
               <div className="flex items-start gap-3">
                 <AlertTriangle className="h-5 w-5 text-red-600 mt-0.5" />
                 <div className="flex-1">
-                  <h4 className="text-gray-900 mb-1">Changement de prix suspect</h4>
-                  <p className="text-gray-600 mb-2">L'objet "Figurine rare" a vu son prix augmenter de 300% en 24h</p>
-                  <span className="text-gray-500">Vendeur: SuspectSeller • Il y a 30 min</span>
+                  <h4 className="text-slate-100 mb-1">Changement de prix suspect</h4>
+                  <p className="text-slate-400 mb-2">L'objet "Figurine rare" a vu son prix augmenter de 300% en 24h</p>
+                  <span className="text-slate-500">Vendeur: SuspectSeller • Il y a 30 min</span>
                 </div>
-                <button className="text-indigo-600 hover:text-indigo-700">Examiner</button>
+                <button className="text-rose-200 hover:text-rose-200">Examiner</button>
               </div>
             </div>
 
-            <div className="bg-white border border-orange-200 rounded-lg p-4">
+            <div className="bg-slate-900/70 border border-orange-200 rounded-lg p-4">
               <div className="flex items-start gap-3">
-                <AlertTriangle className="h-5 w-5 text-orange-600 mt-0.5" />
+                <AlertTriangle className="h-5 w-5 text-amber-300 mt-0.5" />
                 <div className="flex-1">
-                  <h4 className="text-gray-900 mb-1">Vendeur avec note faible</h4>
-                  <p className="text-gray-600 mb-2">
+                  <h4 className="text-slate-100 mb-1">Vendeur avec note faible</h4>
+                  <p className="text-slate-400 mb-2">
                     Le vendeur "NewSeller123" a reçu plusieurs avis négatifs récemment (note: 2.1/5)
                   </p>
-                  <span className="text-gray-500">Il y a 2h</span>
+                  <span className="text-slate-500">Il y a 2h</span>
                 </div>
-                <button className="text-indigo-600 hover:text-indigo-700">Examiner</button>
+                <button className="text-rose-200 hover:text-rose-200">Examiner</button>
               </div>
             </div>
           </div>
 
-          <div className="bg-white border border-gray-200 rounded-lg p-6 mt-6">
-            <h3 className="text-gray-900 mb-4">Intégration API de détection</h3>
-            <p className="text-gray-600 mb-4">
+          <div className="bg-slate-900/70 border border-slate-800 rounded-lg p-6 mt-6">
+            <h3 className="text-slate-100 mb-4">Intégration API de détection</h3>
+            <p className="text-slate-400 mb-4">
               Connectez un service externe de détection de fraude pour une protection renforcée.
             </p>
-            <button className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors">
+            <button className="bg-rose-600 text-white px-4 py-2 rounded-lg hover:bg-rose-500 transition-colors">
               Configurer l'intégration
             </button>
           </div>

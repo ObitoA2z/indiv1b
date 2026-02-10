@@ -45,7 +45,7 @@ export function DashboardPage({
   if (loading) {
     return (
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <p className="text-gray-600">Chargement des produits...</p>
+        <p className="text-slate-300">Chargement des produits...</p>
       </div>
     );
   }
@@ -53,7 +53,7 @@ export function DashboardPage({
   if (error) {
     return (
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <p className="text-red-600">{error}</p>
+        <p className="text-rose-300">{error}</p>
       </div>
     );
   }
@@ -62,10 +62,10 @@ export function DashboardPage({
     <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="mb-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
-          <h1 className="text-gray-900 mb-2">
+          <h1 className="text-slate-100 mb-2 text-2xl">
             Bonjour {user?.name || 'Explorateur'}
           </h1>
-          <p className="text-gray-600">
+          <p className="text-slate-400">
             Gere vos objets, vos favoris et vos achats depuis cet espace.
           </p>
         </div>
@@ -73,7 +73,7 @@ export function DashboardPage({
         <div className="flex gap-3">
           <button
             onClick={onOpenChat}
-            className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg hover:border-indigo-600 hover:text-indigo-600 transition-colors"
+            className="flex items-center gap-2 px-4 py-2 border border-slate-700 rounded-lg hover:border-rose-400 hover:text-rose-200 transition-colors text-slate-200"
           >
             <MessageCircle className="h-5 w-5" />
             Contacter un visiteur
@@ -81,7 +81,7 @@ export function DashboardPage({
           {user?.role === 'SELLER' ? (
             <button
               onClick={onAddProduct}
-              className="flex items-center gap-2 bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors"
+              className="flex items-center gap-2 bg-rose-600 text-white px-4 py-2 rounded-lg hover:bg-rose-500 transition-colors"
             >
               <Plus className="h-5 w-5" />
               Publier un objet
@@ -89,7 +89,7 @@ export function DashboardPage({
           ) : user?.role === 'BUYER' ? (
             <button
               onClick={onUpgradeToSeller}
-              className="flex items-center gap-2 bg-gray-900 text-white px-4 py-2 rounded-lg hover:bg-black transition-colors"
+              className="flex items-center gap-2 bg-slate-900 text-slate-100 px-4 py-2 rounded-lg hover:bg-slate-800 transition-colors border border-slate-700"
             >
               Devenir vendeur
             </button>
@@ -98,64 +98,64 @@ export function DashboardPage({
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-        <div className="bg-white rounded-lg p-4 border border-gray-200">
+        <div className="bg-slate-900/70 rounded-lg p-4 border border-slate-800">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-gray-600 mb-1">Objets en vitrine</p>
-              <p className="text-gray-900">{myProducts.length}</p>
+              <p className="text-slate-400 mb-1">Objets en vitrine</p>
+              <p className="text-slate-100">{myProducts.length}</p>
             </div>
-            <Package className="h-6 w-6 text-indigo-600" />
+            <Package className="h-6 w-6 text-rose-300" />
           </div>
         </div>
 
-        <div className="bg-white rounded-lg p-4 border border-gray-200">
+        <div className="bg-slate-900/70 rounded-lg p-4 border border-slate-800">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-gray-600 mb-1">Objets favoris</p>
-              <p className="text-gray-900">{favoriteProducts.length}</p>
+              <p className="text-slate-400 mb-1">Objets favoris</p>
+              <p className="text-slate-100">{favoriteProducts.length}</p>
             </div>
-            <Clock className="h-6 w-6 text-yellow-500" />
+            <Clock className="h-6 w-6 text-amber-300" />
           </div>
         </div>
 
-        <div className="bg-white rounded-lg p-4 border border-gray-200">
+        <div className="bg-slate-900/70 rounded-lg p-4 border border-slate-800">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-gray-600 mb-1">Ventes realisees</p>
-              <p className="text-gray-900">12</p>
+              <p className="text-slate-400 mb-1">Ventes realisees</p>
+              <p className="text-slate-100">12</p>
             </div>
-            <CheckCircle className="h-6 w-6 text-green-600" />
+            <CheckCircle className="h-6 w-6 text-emerald-300" />
           </div>
         </div>
 
-        <div className="bg-white rounded-lg p-4 border border-gray-200">
+        <div className="bg-slate-900/70 rounded-lg p-4 border border-slate-800">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-gray-600 mb-1">Note moyenne</p>
-              <p className="text-gray-900">4.8/5</p>
+              <p className="text-slate-400 mb-1">Note moyenne</p>
+              <p className="text-slate-100">4.8/5</p>
             </div>
-            <TrendingUp className="h-6 w-6 text-blue-600" />
+            <TrendingUp className="h-6 w-6 text-sky-300" />
           </div>
         </div>
       </div>
 
-      <div className="border-b border-gray-200 mb-6">
+      <div className="border-b border-slate-800 mb-6">
         <nav className="flex gap-6">
           <button
             onClick={() => setActiveTab('my-products')}
-            className={`pb-4 border-b-2 ${activeTab === 'my-products' ? 'border-indigo-600 text-indigo-600' : 'border-transparent text-gray-600 hover:text-gray-900'}`}
+            className={`pb-4 border-b-2 ${activeTab === 'my-products' ? 'border-rose-500 text-rose-200' : 'border-transparent text-slate-400 hover:text-slate-200'}`}
           >
             Mes objets
           </button>
           <button
             onClick={() => setActiveTab('favorites')}
-            className={`pb-4 border-b-2 ${activeTab === 'favorites' ? 'border-indigo-600 text-indigo-600' : 'border-transparent text-gray-600 hover:text-gray-900'}`}
+            className={`pb-4 border-b-2 ${activeTab === 'favorites' ? 'border-rose-500 text-rose-200' : 'border-transparent text-slate-400 hover:text-slate-200'}`}
           >
             Favoris
           </button>
           <button
             onClick={() => setActiveTab('orders')}
-            className={`pb-4 border-b-2 ${activeTab === 'orders' ? 'border-indigo-600 text-indigo-600' : 'border-transparent text-gray-600 hover:text-gray-900'}`}
+            className={`pb-4 border-b-2 ${activeTab === 'orders' ? 'border-rose-500 text-rose-200' : 'border-transparent text-slate-400 hover:text-slate-200'}`}
           >
             Mes achats
           </button>
@@ -176,23 +176,23 @@ export function DashboardPage({
               ))}
             </div>
           ) : (
-            <div className="bg-white border border-gray-200 rounded-lg p-8 text-center">
-              <Package className="h-16 w-16 text-gray-300 mx-auto mb-4" />
-              <h3 className="text-gray-900 mb-2">Vous n'avez pas encore d'objet en vitrine</h3>
-              <p className="text-gray-600 mb-4">
+            <div className="bg-slate-900/70 border border-slate-800 rounded-lg p-8 text-center">
+              <Package className="h-16 w-16 text-slate-700 mx-auto mb-4" />
+              <h3 className="text-slate-100 mb-2">Vous n'avez pas encore d'objet en vitrine</h3>
+              <p className="text-slate-400 mb-4">
                 Publiez vos objets d'epouvante en quelques clics.
               </p>
               {user?.role === 'SELLER' ? (
                 <button
                   onClick={onAddProduct}
-                  className="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition-colors"
+                  className="bg-rose-600 text-white px-6 py-2 rounded-lg hover:bg-rose-500 transition-colors"
                 >
                   Publier un objet
                 </button>
               ) : user?.role === 'BUYER' ? (
                 <button
                   onClick={onUpgradeToSeller}
-                  className="bg-gray-900 text-white px-6 py-2 rounded-lg hover:bg-black transition-colors"
+                  className="bg-slate-900 text-slate-100 px-6 py-2 rounded-lg hover:bg-slate-800 transition-colors border border-slate-700"
                 >
                   Devenir vendeur
                 </button>
@@ -216,29 +216,29 @@ export function DashboardPage({
               ))}
             </div>
           ) : (
-            <div className="bg-white border border-gray-200 rounded-lg p-8 text-center">
-              <AlertTriangle className="h-16 w-16 text-gray-300 mx-auto mb-4" />
-              <h3 className="text-gray-900 mb-2">Aucun favori pour le moment</h3>
-              <p className="text-gray-600">Ajoutez des objets a vos favoris pour les retrouver facilement.</p>
+            <div className="bg-slate-900/70 border border-slate-800 rounded-lg p-8 text-center">
+              <AlertTriangle className="h-16 w-16 text-slate-700 mx-auto mb-4" />
+              <h3 className="text-slate-100 mb-2">Aucun favori pour le moment</h3>
+              <p className="text-slate-400">Ajoutez des objets a vos favoris pour les retrouver facilement.</p>
             </div>
           )}
         </div>
       )}
 
       {activeTab === 'orders' && (
-        <div className="bg-white border border-gray-200 rounded-lg p-6">
+        <div className="bg-slate-900/70 border border-slate-800 rounded-lg p-6">
           <div className="flex items-center gap-3 mb-4">
-            <Clock className="h-6 w-6 text-indigo-600" />
-            <h3 className="text-gray-900">Historique des achats</h3>
+            <Clock className="h-6 w-6 text-rose-300" />
+            <h3 className="text-slate-100">Historique des achats</h3>
           </div>
-          <p className="text-gray-600 mb-4">
+          <p className="text-slate-400 mb-4">
             L'historique des achats sera disponible une fois l'integration avec le systeme de paiement realisee.
           </p>
-          <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
-            <p className="text-gray-700">
+          <div className="bg-slate-900 border border-slate-800 rounded-lg p-4">
+            <p className="text-slate-300">
               Exemple de donnees a afficher :
             </p>
-            <ul className="list-disc list-inside text-gray-600 mt-2">
+            <ul className="list-disc list-inside text-slate-400 mt-2">
               <li>Date de l'achat</li>
               <li>Objets achetes</li>
               <li>Montant total</li>
