@@ -105,8 +105,8 @@ jobs:
         run: |
           OWNER_LC=$(echo "$GITHUB_REPOSITORY_OWNER" | tr '[:upper:]' '[:lower:]')
           echo "OWNER_LC=$OWNER_LC" >> $GITHUB_ENV
-          echo "IMAGE_BACKEND=ghcr.io/$OWNER_LC/collector-shop-full-backend" >> $GITHUB_ENV
-          echo "IMAGE_FRONTEND=ghcr.io/$OWNER_LC/collector-shop-full-frontend" >> $GITHUB_ENV
+          echo "IMAGE_BACKEND=ghcr.io/$OWNER_LC/petite-maison-epouvante-backend" >> $GITHUB_ENV
+          echo "IMAGE_FRONTEND=ghcr.io/$OWNER_LC/petite-maison-epouvante-frontend" >> $GITHUB_ENV
           echo "IMAGE_TAG=$GITHUB_SHA" >> $GITHUB_ENV
 
       - name: Login to GitHub Container Registry
@@ -149,8 +149,8 @@ jobs:
 
       - name: Update Kubernetes manifests with new image tags
         run: |
-          sed -i "s|image: .*collector-shop-full-backend:.*|image: $IMAGE_BACKEND:$IMAGE_TAG|" k8s/backend-deployment.yaml
-          sed -i "s|image: .*collector-shop-full-frontend:.*|image: $IMAGE_FRONTEND:$IMAGE_TAG|" k8s/frontend-deployment.yaml
+          sed -i "s|image: .*backend:.*|image: $IMAGE_BACKEND:$IMAGE_TAG|" k8s/backend-deployment.yaml
+          sed -i "s|image: .*frontend:.*|image: $IMAGE_FRONTEND:$IMAGE_TAG|" k8s/frontend-deployment.yaml
 
       - name: Commit and push updated manifests
         run: |

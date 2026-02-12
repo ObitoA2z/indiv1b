@@ -50,6 +50,15 @@ function configureApp(appInstance) {
     })
   );
 
+  appInstance.disable('x-powered-by');
+  appInstance.use((req, res, next) => {
+    res.setHeader('X-Content-Type-Options', 'nosniff');
+    res.setHeader('X-Frame-Options', 'DENY');
+    res.setHeader('Referrer-Policy', 'no-referrer');
+    res.setHeader('Permissions-Policy', 'geolocation=(), microphone=(), camera=()');
+    next();
+  });
+
   appInstance.use(express.json());
   appInstance.use('/uploads', express.static(uploadDir));
   appInstance.use(normalizeApiPrefix);

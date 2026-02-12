@@ -20,7 +20,7 @@ services:
       - "4004:4003"
     command: sh -c "npx prisma migrate deploy && npx prisma db seed && npm run dev"
     environment:
-      DATABASE_URL: "file:./dev.db"
+      DATABASE_URL: "file:/data/dev.db"
       JWT_SECRET: ${JWT_SECRET}
       STRIPE_SECRET_KEY: ${STRIPE_SECRET_KEY}
       FRONTEND_URL: "http://localhost:5173"
@@ -29,6 +29,7 @@ services:
       - .env
     volumes:
       - ./backend/prisma:/app/prisma
+      - backend_db:/data
     restart: unless-stopped
     depends_on:
       - rabbitmq
@@ -44,3 +45,6 @@ services:
     depends_on:
       - backend
     restart: unless-stopped
+
+volumes:
+  backend_db:

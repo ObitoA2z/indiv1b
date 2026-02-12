@@ -7,7 +7,6 @@
 
 const path = require('path');
 const fs = require('fs');
-const os = require('os');
 const { execSync } = require('child_process');
 
 const bcrypt = require('bcryptjs');
@@ -17,6 +16,7 @@ process.env.JWT_SECRET = process.env.JWT_SECRET || 'test-secret';
 process.env.FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:5173';
 
 const backendRoot = path.resolve(__dirname, '..');
+const tmpRoot = path.join(backendRoot, '.tmp');
 
 function run(cmd) {
   execSync(cmd, {
@@ -27,18 +27,26 @@ function run(cmd) {
 }
 
 async function main() {
-  // Use a temporary SQLite DB so the integration test is isolated
-  const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'epouvante-backend-it-'));
+  // Use a temporary SQLite DB in repo workspace for cross-platform Prisma stability
+  if (!fs.existsSync(tmpRoot)) {
+    fs.mkdirSync(tmpRoot, { recursive: true });
+  }
+  const tmpDir = fs.mkdtempSync(path.join(tmpRoot, 'epouvante-backend-it-'));
   const dbPath = path.join(tmpDir, 'test.db');
 
   // Prisma accepts absolute paths with the sqlite "file:" scheme
-  const normalizedDbPath = dbPath.replace(/\\/g, '/');
-  process.env.DATABASE_URL = `file:${normalizedDbPath}`;
+  const relativeDbPath = path.relative(backendRoot, dbPath).replace(/\\/g, '/');
+  process.env.DATABASE_URL = `file:./${relativeDbPath}`;
 
   console.log(`Integration tests using DATABASE_URL=${process.env.DATABASE_URL}`);
 
-  // Apply migrations on the temp database
-  run('npx prisma migrate deploy');
+  // Apply schema on temp DB. Fallback to db push if migrate deploy fails.
+  try {
+    run('npx prisma migrate deploy --schema prisma/schema.prisma');
+  } catch (err) {
+    console.warn('migrate deploy failed, fallback to db push --force-reset');
+    run('npx prisma db push --force-reset --skip-generate --schema prisma/schema.prisma');
+  }
 
   // Import after DATABASE_URL is set so Prisma uses the right DB
   // eslint-disable-next-line global-require
@@ -116,6 +124,9 @@ async function main() {
   // Cleanup temp DB folder (best-effort)
   try {
     fs.rmSync(tmpDir, { recursive: true, force: true });
+    if (fs.existsSync(tmpRoot) && fs.readdirSync(tmpRoot).length === 0) {
+      fs.rmdirSync(tmpRoot);
+    }
   } catch {
     // ignore
   }
