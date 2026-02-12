@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { X } from 'lucide-react';
+import { X, KeyRound, DoorOpen } from 'lucide-react';
 
 interface LoginModalProps {
   onClose: () => void;
@@ -7,8 +7,8 @@ interface LoginModalProps {
 }
 
 export function LoginModal({ onClose, onLogin }: LoginModalProps) {
-  const [email, setEmail] = useState('buyer@example.com');
-  const [password, setPassword] = useState('password123');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -27,60 +27,69 @@ export function LoginModal({ onClose, onLogin }: LoginModalProps) {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/70 flex items-center justify-center p-4 z-50">
-      <div className="bg-slate-950 border border-slate-800 rounded-2xl max-w-md w-full shadow-[0_0_30px_rgba(0,0,0,0.6)]">
-        <div className="flex justify-between items-center p-4 border-b border-slate-800">
-          <div>
-            <h2 className="text-slate-100">Se connecter</h2>
-            <p className="text-slate-500 text-xs">Acces reserve aux visiteurs autorises</p>
-          </div>
-          <button onClick={onClose} className="text-slate-400 hover:text-rose-200">
-            <X className="h-6 w-6" />
-          </button>
+    <div className="fixed inset-0 z-50 grid place-items-center bg-black/75 p-4">
+      <div className="pm-panel pm-edge w-full max-w-2xl rounded-2xl overflow-hidden">
+        <div className="grid md:grid-cols-[0.95fr_1.05fr]">
+          <aside className="hidden md:block border-r border-[#4f3426] bg-[#1a1310]/80 p-6">
+            <div className="inline-flex items-center gap-2 rounded-full border border-[#4f3426] bg-[#261a14] px-3 py-1 text-xs text-[#f7f0e8] mb-4">
+              <DoorOpen className="h-3.5 w-3.5 text-[#f28d49]" />
+              Acces prive
+            </div>
+            <h3 className="text-2xl text-[#f7f0e8] mb-3">Connexion au manoir</h3>
+            <p className="text-sm text-[#d7c8b8] leading-relaxed">
+              Connecte-toi pour acheter, publier et suivre tes contenus epouvante.
+            </p>
+          </aside>
+
+          <section className="p-5 md:p-6">
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <h2 className="text-[#f7f0e8] text-xl">Se connecter</h2>
+                <p className="text-[#d7c8b8] text-xs">Session securisee</p>
+              </div>
+              <button onClick={onClose} className="text-[#d7c8b8] hover:text-[#f28d49]">
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+
+            <form onSubmit={handleSubmit} className="space-y-3">
+              <div>
+                <label className="block text-[#f7f0e8] mb-1 text-sm">Email</label>
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="w-full rounded-lg border border-[#4f3426] bg-[#1a1310]/90 px-3 py-2 text-sm text-[#f7f0e8] placeholder:text-[#bcae9e] focus:outline-none focus:ring-2 focus:ring-[#d95f18]/40"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="block text-[#f7f0e8] mb-1 text-sm">Mot de passe</label>
+                <div className="relative">
+                  <KeyRound className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#bcae9e]" />
+                  <input
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="w-full rounded-lg border border-[#4f3426] bg-[#1a1310]/90 py-2 pl-9 pr-3 text-sm text-[#f7f0e8] placeholder:text-[#bcae9e] focus:outline-none focus:ring-2 focus:ring-[#d95f18]/40"
+                    required
+                  />
+                </div>
+              </div>
+
+              {error && <p className="text-[#ffc59f] text-xs">{error}</p>}
+
+              <button
+                type="submit"
+                className="w-full rounded-lg bg-[#d95f18] py-2.5 text-sm font-semibold text-white hover:brightness-110 transition disabled:opacity-50"
+                disabled={loading}
+              >
+                {loading ? 'Connexion...' : 'Ouvrir ma session'}
+              </button>
+            </form>
+          </section>
         </div>
-
-        <form onSubmit={handleSubmit} className="p-4 space-y-4">
-          <div>
-            <label className="block text-slate-300 mb-1 text-sm">Email</label>
-            <input
-              type="email"
-              value={email}
-              onChange={e => setEmail(e.target.value)}
-              className="w-full px-3 py-2 border border-slate-700 bg-slate-900 text-slate-100 rounded-lg text-sm focus:ring-2 focus:ring-rose-500 focus:border-transparent"
-              required
-            />
-          </div>
-
-          <div>
-            <label className="block text-slate-300 mb-1 text-sm">Mot de passe</label>
-            <input
-              type="password"
-              value={password}
-              onChange={e => setPassword(e.target.value)}
-              className="w-full px-3 py-2 border border-slate-700 bg-slate-900 text-slate-100 rounded-lg text-sm focus:ring-2 focus:ring-rose-500 focus:border-transparent"
-              required
-            />
-          </div>
-
-          {error && (
-            <p className="text-rose-300 text-xs mb-1">{error}</p>
-          )}
-
-          <button
-            type="submit"
-            className="w-full bg-rose-600 text-white py-2 rounded-lg text-sm hover:bg-rose-500 transition-colors disabled:opacity-50"
-            disabled={loading}
-          >
-            {loading ? 'Connexion...' : 'Se connecter'}
-          </button>
-
-          <p className="text-slate-500 text-xs mt-2">
-            Comptes de demo :
-            <br />- buyer@example.com / password123 (acheteur)
-            <br />- seller@example.com / password123 (vendeur)
-            <br />- admin@example.com / password123 (admin)
-          </p>
-        </form>
       </div>
     </div>
   );

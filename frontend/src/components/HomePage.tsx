@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { ArrowRight, ShieldCheck, Sparkles } from 'lucide-react';
+import { ArrowRight, ShieldCheck, Sparkles, Skull, Ghost } from 'lucide-react';
 import { ProductCard } from './ProductCard';
 import type { Product } from '../data/mockData';
 import { fetchProducts } from '../api/client';
@@ -21,7 +21,7 @@ export function HomePage({ onProductClick, onNavigateToCatalog }: HomePageProps)
         const data = await fetchProducts();
         setProducts(data);
       } catch (e) {
-        setError("Impossible de charger les produits");
+        setError('Impossible de charger les produits');
       } finally {
         setLoading(false);
       }
@@ -29,114 +29,131 @@ export function HomePage({ onProductClick, onNavigateToCatalog }: HomePageProps)
     load();
   }, []);
 
-  const featuredProducts = products.slice(0, 4);
+  const featuredProducts = products.slice(0, 3);
   const recentProducts = [...products]
     .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
-    .slice(0, 4);
+    .slice(0, 8);
 
   if (loading) {
     return (
-      <div className="min-h-screen">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-12">
-          <p className="text-slate-300">Chargement des produits...</p>
-        </div>
+      <div className="pm-frame pt-10 pb-12">
+        <p className="text-[#d7c8b8]">Chargement des produits...</p>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="min-h-screen">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-12">
-          <p className="text-rose-300">{error}</p>
-        </div>
+      <div className="pm-frame pt-10 pb-12">
+        <p className="text-[#ffc59f]">{error}</p>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen">
-      <section className="relative overflow-hidden">
-        <div className="absolute -top-32 -left-24 h-80 w-80 rounded-full bg-rose-500/20 blur-3xl"></div>
-        <div className="absolute -bottom-28 right-0 h-96 w-96 rounded-full bg-amber-500/10 blur-3xl"></div>
+    <div className="pm-fade-in">
+      <section className="pm-frame pt-8 pb-6">
+        <div className="pm-panel pm-edge rounded-3xl p-6 md:p-8 overflow-hidden relative">
+          <div className="absolute -right-16 -top-16 w-48 h-48 rounded-full bg-[#d95f18]/20 blur-3xl" />
+          <div className="absolute -left-20 bottom-0 w-56 h-56 rounded-full bg-[#8fa05c]/20 blur-3xl" />
 
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-14 pb-16">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-[1.35fr_1fr] gap-6 items-start">
             <div>
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-900/70 text-rose-200 text-xs border border-rose-500/30 mb-5">
-                <Sparkles className="h-3 w-3" />
-                <span>La maison s'ouvre a ceux qui osent</span>
+              <div className="inline-flex items-center gap-2 rounded-full border border-[#4f3426] bg-[#261a14]/80 px-3 py-1 text-xs text-[#f7f0e8] mb-4">
+                <Sparkles className="h-3.5 w-3.5 text-[#f28d49]" />
+                Plateforme epouvante officielle
               </div>
 
-              <h1 className="text-4xl md:text-5xl text-slate-100 mb-4">
-                La Petite Maison de l'Epouvante
+              <h1 className="pm-title text-4xl md:text-5xl leading-tight text-[#f7f0e8] mb-4">
+                Fanzine, masques, artefacts et curiosites pour nuits blanches
               </h1>
 
-              <p className="text-slate-300 mb-6 leading-relaxed">
-                Grimoires, poupees, affiches d'horreur, masques rituels, photographies paranormales...
-                Publiez et trouvez vos objets d'epouvante avec un rituel de verification strict.
+              <p className="text-[#d7c8b8] leading-relaxed mb-6 max-w-2xl">
+                Decouvre des produits epouvante valides par la maison. Chaque fiche est publiee,
+                controlee puis proposee a la vente avec historique et statut de confiance.
               </p>
 
-              <div className="flex flex-wrap gap-3 mb-6">
-                <div className="flex items-center gap-2">
-                  <ShieldCheck className="h-4 w-4 text-rose-300" />
-                  <span className="text-slate-200 text-sm">Paiements securises</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <ShieldCheck className="h-4 w-4 text-amber-300" />
-                  <span className="text-slate-200 text-sm">Authentification par experts</span>
-                </div>
-              </div>
-
-              <div className="flex flex-wrap gap-3">
+              <div className="flex flex-wrap gap-3 mb-7">
                 <button
                   onClick={onNavigateToCatalog}
-                  className="inline-flex items-center gap-2 bg-rose-600 text-white px-4 py-2 rounded-full text-sm hover:bg-rose-500 transition-colors"
+                  className="inline-flex items-center gap-2 rounded-full bg-[#d95f18] px-5 py-2.5 text-sm font-semibold text-white hover:brightness-110 transition"
                 >
-                  Explorer les objets
+                  Entrer dans le catalogue
                   <ArrowRight className="h-4 w-4" />
                 </button>
-                <button className="inline-flex items-center gap-2 border border-slate-700 text-slate-200 px-4 py-2 rounded-full text-sm hover:border-rose-400 hover:text-rose-200 transition-colors">
-                  Comment ca marche
+                <button className="inline-flex items-center gap-2 rounded-full border border-[#4f3426] bg-[#1f1612]/70 px-5 py-2.5 text-sm text-[#f7f0e8] hover:border-[#f28d49] hover:text-[#f28d49] transition">
+                  Voir le manifeste
                 </button>
+              </div>
+
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
+                <div className="rounded-xl border border-[#4f3426] bg-[#1a1310]/80 p-3">
+                  <p className="text-[#f28d49]">{products.length}</p>
+                  <p className="text-[#d7c8b8] text-xs">Objets en vitrine</p>
+                </div>
+                <div className="rounded-xl border border-[#4f3426] bg-[#1a1310]/80 p-3">
+                  <p className="text-[#f28d49]">24h</p>
+                  <p className="text-[#d7c8b8] text-xs">Validation moyenne</p>
+                </div>
+                <div className="rounded-xl border border-[#4f3426] bg-[#1a1310]/80 p-3">
+                  <p className="text-[#f28d49]">5%</p>
+                  <p className="text-[#d7c8b8] text-xs">Commission maison</p>
+                </div>
+                <div className="rounded-xl border border-[#4f3426] bg-[#1a1310]/80 p-3">
+                  <p className="text-[#f28d49]">4.8/5</p>
+                  <p className="text-[#d7c8b8] text-xs">Satisfaction</p>
+                </div>
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
-              {featuredProducts.map(product => (
-                <div key={product.id} className="bg-slate-900/80 rounded-2xl shadow-sm border border-slate-800 overflow-hidden">
-                  <div className="aspect-[4/3] overflow-hidden">
-                    <img
-                      src={getImageUrl(product.image)}
-                      alt={product.title}
-                      className="w-full h-full object-cover"
-                    />
+            <div className="grid grid-cols-1 gap-3">
+              {featuredProducts.map((product, idx) => (
+                <button
+                  key={product.id}
+                  onClick={() => onProductClick(product.id)}
+                  className="rounded-2xl border border-[#4f3426] bg-[#1a1310]/75 p-3 text-left hover:border-[#f28d49] transition"
+                >
+                  <div className="flex items-center gap-3">
+                    <img src={getImageUrl(product.image)} alt={product.title} className="h-16 w-16 rounded-xl object-cover" />
+                    <div>
+                      <p className="text-[#f7f0e8] text-sm line-clamp-2 mb-1">{product.title}</p>
+                      <p className="text-[#f28d49] text-sm">{product.price.toFixed(2)} EUR</p>
+                    </div>
+                    {idx === 0 ? <Skull className="h-4 w-4 text-[#8fa05c] ml-auto" /> : <Ghost className="h-4 w-4 text-[#8fa05c] ml-auto" />}
                   </div>
-                  <div className="p-3">
-                    <p className="text-slate-100 text-sm line-clamp-2 mb-1">{product.title}</p>
-                    <p className="text-rose-200 text-sm mb-1">{product.price.toFixed(2)} €</p>
-                    <p className="text-slate-400 text-xs mb-2">Publie par {product.sellerName}</p>
-                    <button
-                      onClick={() => onProductClick(product.id)}
-                      className="w-full text-center text-xs text-rose-200 hover:text-rose-100"
-                    >
-                      Voir le detail
-                    </button>
-                  </div>
-                </div>
+                </button>
               ))}
+
+              <div className="rounded-2xl border border-[#4f3426] bg-[#1a1310]/75 p-4">
+                <div className="flex items-center gap-2 text-[#f7f0e8] text-sm mb-2">
+                  <ShieldCheck className="h-4 w-4 text-[#8fa05c]" />
+                  Protection maison
+                </div>
+                <p className="text-xs text-[#d7c8b8] leading-relaxed">
+                  Paiement securise, moderation active, roles verifies. Les vendeurs sont traces et notes.
+                </p>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-slate-100">Objets recemment ajoutes</h2>
-          <span className="text-slate-500 text-xs">Selection froide de la semaine</span>
+      <section className="pm-frame pb-14">
+        <div className="flex items-end justify-between mb-4">
+          <div>
+            <h2 className="text-2xl text-[#f7f0e8]">Nouveautes du manoir</h2>
+            <p className="text-[#d7c8b8] text-sm">Selection recemment publiee</p>
+          </div>
+          <button
+            onClick={onNavigateToCatalog}
+            className="text-sm text-[#f28d49] hover:text-[#ffb27b] transition"
+          >
+            Tout parcourir
+          </button>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {recentProducts.map(product => (
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          {recentProducts.map((product) => (
             <ProductCard
               key={product.id}
               product={product}

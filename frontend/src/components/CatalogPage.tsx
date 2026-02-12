@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Search, Filter, Star } from 'lucide-react';
+import { Search, Filter, Star, SlidersHorizontal } from 'lucide-react';
 import { ProductCard } from './ProductCard';
 import type { Product } from '../data/mockData';
 import { categories } from '../data/mockData';
@@ -33,13 +33,13 @@ export function CatalogPage({ onProductClick, userInterests }: CatalogPageProps)
     load();
   }, []);
 
-  const filteredProducts = products.filter(product => {
+  const filteredProducts = products.filter((product) => {
     const matchesCategory = selectedCategory === 'all' || product.category === selectedCategory;
     const matchesSearch =
       product.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       product.description.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesInterests =
-      !showRecommended || (userInterests && userInterests.some(interest => product.category === interest));
+      !showRecommended || (userInterests && userInterests.some((interest) => product.category === interest));
 
     return matchesCategory && matchesSearch && matchesInterests;
   });
@@ -51,104 +51,119 @@ export function CatalogPage({ onProductClick, userInterests }: CatalogPageProps)
       case 'price-desc':
         return b.price - a.price;
       default:
-        return 0;
+        return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
     }
   });
 
   if (loading) {
     return (
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <p className="text-slate-300">Chargement des produits...</p>
+      <div className="pm-frame py-8">
+        <p className="text-[#d7c8b8]">Chargement des produits...</p>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <p className="text-rose-300">{error}</p>
+      <div className="pm-frame py-8">
+        <p className="text-[#ffc59f]">{error}</p>
       </div>
     );
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div className="mb-8">
-        <div className="flex flex-col md:flex-row gap-4 mb-6">
-          <div className="flex-1 relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-500 h-5 w-5" />
+    <div className="pm-frame py-7 pm-fade-in">
+      <div className="pm-panel pm-edge rounded-3xl p-4 md:p-5 mb-6">
+        <div className="grid grid-cols-1 xl:grid-cols-[1.4fr_0.5fr_0.5fr] gap-3 mb-4">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-[#d7c8b8] h-5 w-5" />
             <input
               type="text"
-              placeholder="Rechercher un objet..."
+              placeholder="Rechercher un objet, un vendeur, un style..."
               value={searchQuery}
-              onChange={e => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-slate-700 bg-slate-900/70 text-slate-100 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-transparent"
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full pl-10 pr-4 py-3 rounded-xl border border-[#4f3426] bg-[#1a1310]/80 text-[#f7f0e8] placeholder:text-[#bcae9e] focus:outline-none focus:ring-2 focus:ring-[#d95f18]/40"
             />
           </div>
 
-          <select
-            value={sortBy}
-            onChange={e => setSortBy(e.target.value as any)}
-            className="px-4 py-2 border border-slate-700 bg-slate-900/70 text-slate-100 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-transparent"
-          >
-            <option value="recent">Plus recents</option>
-            <option value="price-asc">Prix croissant</option>
-            <option value="price-desc">Prix decroissant</option>
-          </select>
+          <div className="flex items-center gap-2 rounded-xl border border-[#4f3426] bg-[#1a1310]/80 px-3">
+            <SlidersHorizontal className="h-4 w-4 text-[#d7c8b8]" />
+            <select
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value as 'recent' | 'price-asc' | 'price-desc')}
+              className="w-full py-3 bg-transparent text-[#f7f0e8] focus:outline-none"
+            >
+              <option className="bg-[#1a1310]" value="recent">Plus recents</option>
+              <option className="bg-[#1a1310]" value="price-asc">Prix croissant</option>
+              <option className="bg-[#1a1310]" value="price-desc">Prix decroissant</option>
+            </select>
+          </div>
+
+          {userInterests && userInterests.length > 0 && (
+            <button
+              onClick={() => setShowRecommended(!showRecommended)}
+              className={`inline-flex items-center justify-center gap-2 rounded-xl border px-4 py-3 transition ${
+                showRecommended
+                  ? 'border-[#8fa05c] bg-[#8fa05c]/20 text-[#d8e8a8]'
+                  : 'border-[#4f3426] bg-[#1a1310]/80 text-[#f7f0e8] hover:border-[#8fa05c]/60'
+              }`}
+            >
+              <Star className={`h-4 w-4 ${showRecommended ? 'fill-[#d8e8a8]' : ''}`} />
+              Recommandes
+            </button>
+          )}
         </div>
 
-        <div className="flex flex-wrap gap-2 mb-4">
+        <div className="flex flex-wrap gap-2">
           <button
             onClick={() => setSelectedCategory('all')}
-            className={`px-4 py-2 rounded-full transition-colors ${selectedCategory === 'all' ? 'bg-rose-600 text-white' : 'bg-slate-900/70 text-slate-200 border border-slate-700 hover:border-rose-500'}`}
+            className={`px-3 py-2 rounded-full text-sm transition ${
+              selectedCategory === 'all'
+                ? 'bg-[#d95f18] text-white'
+                : 'bg-[#1a1310]/80 border border-[#4f3426] text-[#f7f0e8] hover:border-[#f28d49]'
+            }`}
           >
-            Toutes les categories
+            Toutes
           </button>
-          {categories.map(category => (
+          {categories.map((category) => (
             <button
               key={category.id}
               onClick={() => setSelectedCategory(category.id)}
-              className={`px-4 py-2 rounded-full transition-colors ${selectedCategory === category.id ? 'bg-rose-600 text-white' : 'bg-slate-900/70 text-slate-200 border border-slate-700 hover:border-rose-500'}`}
+              className={`px-3 py-2 rounded-full text-sm transition ${
+                selectedCategory === category.id
+                  ? 'bg-[#d95f18] text-white'
+                  : 'bg-[#1a1310]/80 border border-[#4f3426] text-[#f7f0e8] hover:border-[#f28d49]'
+              }`}
             >
               {category.name}
             </button>
           ))}
         </div>
-
-        {userInterests && userInterests.length > 0 && (
-          <button
-            onClick={() => setShowRecommended(!showRecommended)}
-            className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors ${showRecommended ? 'bg-amber-500/20 text-amber-200 border border-amber-500/40' : 'bg-slate-900/70 text-slate-200 border border-slate-700 hover:border-amber-400'}`}
-          >
-            <Star className={`h-5 w-5 ${showRecommended ? 'fill-amber-400 text-amber-400' : ''}`} />
-            Recommandes pour vous
-          </button>
-        )}
       </div>
 
-      <div className="mb-4">
-        <p className="text-slate-400">
-          {sortedProducts.length} objet{sortedProducts.length > 1 ? 's' : ''} trouve
-          {sortedProducts.length > 1 ? 's' : ''}
+      <div className="flex items-center justify-between mb-4">
+        <p className="text-[#d7c8b8] text-sm inline-flex items-center gap-2">
+          <Filter className="h-4 w-4 text-[#f28d49]" />
+          {sortedProducts.length} objet{sortedProducts.length > 1 ? 's' : ''} trouve{sortedProducts.length > 1 ? 's' : ''}
         </p>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        {sortedProducts.map(product => (
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+        {sortedProducts.map((product) => (
           <ProductCard
             key={product.id}
             product={product}
             onClick={() => onProductClick(product.id)}
-            showRecommendedBadge={showRecommended && userInterests?.some(interest => product.category === interest)}
+            showRecommendedBadge={Boolean(showRecommended && userInterests?.some((interest) => product.category === interest))}
           />
         ))}
       </div>
 
       {sortedProducts.length === 0 && (
-        <div className="text-center py-16">
-          <Filter className="h-16 w-16 text-slate-700 mx-auto mb-4" />
-          <h3 className="text-slate-100 mb-2">Aucun objet trouve</h3>
-          <p className="text-slate-400">Essayez de modifier vos filtres ou votre recherche</p>
+        <div className="pm-panel rounded-2xl p-10 text-center mt-6">
+          <Filter className="h-14 w-14 text-[#4f3426] mx-auto mb-3" />
+          <h3 className="text-[#f7f0e8] mb-1">Aucun objet trouve</h3>
+          <p className="text-[#d7c8b8]">Essaie une autre categorie ou un autre mot-cle.</p>
         </div>
       )}
     </div>

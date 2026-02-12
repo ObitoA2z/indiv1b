@@ -59,13 +59,13 @@ export function DashboardPage({
   }
 
   return (
-    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="pm-frame py-8 pm-fade-in">
       <div className="mb-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
-          <h1 className="text-slate-100 mb-2 text-2xl">
+          <h1 className="text-[#f7f0e8] mb-2 text-3xl">
             Bonjour {user?.name || 'Explorateur'}
           </h1>
-          <p className="text-slate-400">
+          <p className="text-[#d7c8b8]">
             Gere vos objets, vos favoris et vos achats depuis cet espace.
           </p>
         </div>
@@ -73,7 +73,7 @@ export function DashboardPage({
         <div className="flex gap-3">
           <button
             onClick={onOpenChat}
-            className="flex items-center gap-2 px-4 py-2 border border-slate-700 rounded-lg hover:border-rose-400 hover:text-rose-200 transition-colors text-slate-200"
+            className="flex items-center gap-2 px-4 py-2 border border-[#4f3426] rounded-lg hover:border-[#f28d49] hover:text-[#f28d49] transition-colors text-[#f7f0e8] bg-[#1a1310]/80"
           >
             <MessageCircle className="h-5 w-5" />
             Contacter un visiteur
@@ -81,7 +81,7 @@ export function DashboardPage({
           {user?.role === 'SELLER' ? (
             <button
               onClick={onAddProduct}
-              className="flex items-center gap-2 bg-rose-600 text-white px-4 py-2 rounded-lg hover:bg-rose-500 transition-colors"
+              className="flex items-center gap-2 bg-[#d95f18] text-white px-4 py-2 rounded-lg hover:brightness-110 transition-colors"
             >
               <Plus className="h-5 w-5" />
               Publier un objet
@@ -89,7 +89,7 @@ export function DashboardPage({
           ) : user?.role === 'BUYER' ? (
             <button
               onClick={onUpgradeToSeller}
-              className="flex items-center gap-2 bg-slate-900 text-slate-100 px-4 py-2 rounded-lg hover:bg-slate-800 transition-colors border border-slate-700"
+              className="flex items-center gap-2 bg-[#1a1310] text-[#f7f0e8] px-4 py-2 rounded-lg hover:bg-[#261a14] transition-colors border border-[#4f3426]"
             >
               Devenir vendeur
             </button>
@@ -98,64 +98,64 @@ export function DashboardPage({
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-        <div className="bg-slate-900/70 rounded-lg p-4 border border-slate-800">
+        <div className="pm-panel rounded-lg p-4">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-slate-400 mb-1">Objets en vitrine</p>
-              <p className="text-slate-100">{myProducts.length}</p>
+              <p className="text-[#d7c8b8] mb-1">Objets en vitrine</p>
+              <p className="text-[#f7f0e8]">{myProducts.length}</p>
             </div>
             <Package className="h-6 w-6 text-rose-300" />
           </div>
         </div>
 
-        <div className="bg-slate-900/70 rounded-lg p-4 border border-slate-800">
+        <div className="pm-panel rounded-lg p-4">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-slate-400 mb-1">Objets favoris</p>
-              <p className="text-slate-100">{favoriteProducts.length}</p>
+              <p className="text-[#d7c8b8] mb-1">Objets favoris</p>
+              <p className="text-[#f7f0e8]">{favoriteProducts.length}</p>
             </div>
             <Clock className="h-6 w-6 text-amber-300" />
           </div>
         </div>
 
-        <div className="bg-slate-900/70 rounded-lg p-4 border border-slate-800">
+        <div className="pm-panel rounded-lg p-4">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-slate-400 mb-1">Ventes realisees</p>
-              <p className="text-slate-100">12</p>
+              <p className="text-[#d7c8b8] mb-1">Ventes realisees</p>
+              <p className="text-[#f7f0e8]">12</p>
             </div>
             <CheckCircle className="h-6 w-6 text-emerald-300" />
           </div>
         </div>
 
-        <div className="bg-slate-900/70 rounded-lg p-4 border border-slate-800">
+        <div className="pm-panel rounded-lg p-4">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-slate-400 mb-1">Note moyenne</p>
-              <p className="text-slate-100">4.8/5</p>
+              <p className="text-[#d7c8b8] mb-1">Note moyenne</p>
+              <p className="text-[#f7f0e8]">4.8/5</p>
             </div>
             <TrendingUp className="h-6 w-6 text-sky-300" />
           </div>
         </div>
       </div>
 
-      <div className="border-b border-slate-800 mb-6">
+      <div className="border-b border-[#4f3426] mb-6">
         <nav className="flex gap-6">
           <button
             onClick={() => setActiveTab('my-products')}
-            className={`pb-4 border-b-2 ${activeTab === 'my-products' ? 'border-rose-500 text-rose-200' : 'border-transparent text-slate-400 hover:text-slate-200'}`}
+            className={`pb-4 border-b-2 ${activeTab === 'my-products' ? 'border-[#d95f18] text-[#ffc59f]' : 'border-transparent text-[#d7c8b8] hover:text-[#f7f0e8]'}`}
           >
             Mes objets
           </button>
           <button
             onClick={() => setActiveTab('favorites')}
-            className={`pb-4 border-b-2 ${activeTab === 'favorites' ? 'border-rose-500 text-rose-200' : 'border-transparent text-slate-400 hover:text-slate-200'}`}
+            className={`pb-4 border-b-2 ${activeTab === 'favorites' ? 'border-[#d95f18] text-[#ffc59f]' : 'border-transparent text-[#d7c8b8] hover:text-[#f7f0e8]'}`}
           >
             Favoris
           </button>
           <button
             onClick={() => setActiveTab('orders')}
-            className={`pb-4 border-b-2 ${activeTab === 'orders' ? 'border-rose-500 text-rose-200' : 'border-transparent text-slate-400 hover:text-slate-200'}`}
+            className={`pb-4 border-b-2 ${activeTab === 'orders' ? 'border-[#d95f18] text-[#ffc59f]' : 'border-transparent text-[#d7c8b8] hover:text-[#f7f0e8]'}`}
           >
             Mes achats
           </button>

@@ -11,7 +11,7 @@ import { ChatWidget } from './components/ChatWidget';
 import { CartDrawer } from './components/CartDrawer';
 import { AddProductModal, ProductFormData } from './components/AddProductModal';
 import { Product } from './data/mockData';
-import { createProduct, loginUser, registerUser, createSellerRequest } from './api/client';
+import { createProduct, loginUser, registerUser, createSellerRequest, createOrder } from './api/client';
 
 export type UserRole = 'BUYER' | 'SELLER' | 'ADMIN';
 
@@ -143,6 +143,30 @@ function App() {
     setCart([]);
   };
 
+  const handleCheckoutCart = async () => {
+    if (!user?.token) {
+      alert('Veuillez vous reconnecter pour finaliser la commande.');
+      return;
+    }
+
+    if (cart.length === 0) {
+      alert('Votre panier est vide.');
+      return;
+    }
+
+    try {
+      for (const item of cart) {
+        await createOrder(item.product.id, user.token, item.quantity);
+      }
+      setCart([]);
+      setShowCart(false);
+      alert('Commande enregistree avec succes.');
+    } catch (err: any) {
+      console.error(err);
+      alert(err?.message || 'Erreur lors de la creation de la commande');
+    }
+  };
+
   const handleAddProduct = (productData: ProductFormData) => {
     if (!user) {
       alert('Vous devez être connecté pour publier un objet');
@@ -237,7 +261,8 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-transparent text-slate-100">
+    <div className="min-h-screen bg-transparent text-[#f7f0e8]">
+      <div className="pointer-events-none fixed inset-0 opacity-20 [background-image:radial-gradient(rgba(255,255,255,0.08)_0.5px,transparent_0.5px)] [background-size:6px_6px]" />
       <Header
         user={user}
         onLogin={() => setShowLoginModal(true)}
@@ -256,7 +281,7 @@ function App() {
         }}
       />
 
-      <main>{renderPage()}</main>
+      <main className="relative z-10">{renderPage()}</main>
 
       {showLoginModal && (
         <LoginModal onClose={() => setShowLoginModal(false)} onLogin={handleLogin} />
@@ -282,6 +307,7 @@ function App() {
             setShowCart(false);
             setShowLoginModal(true);
           }}
+          onCheckout={handleCheckoutCart}
         />
       )}
 

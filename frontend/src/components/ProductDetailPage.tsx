@@ -10,10 +10,11 @@ import {
   X as CloseIcon,
   ChevronLeft,
   ChevronRight,
+  ShieldCheck,
 } from 'lucide-react';
 import type { User } from '../App';
 import type { Product } from '../data/mockData';
-import { fetchProductById, createCheckoutSession } from '../api/client';
+import { fetchProductById, createCheckoutSession, createOrder } from '../api/client';
 import { getImageUrl } from '../lib/getImageUrl';
 
 interface ProductDetailPageProps {
@@ -116,36 +117,43 @@ export function ProductDetailPage({
       window.location.href = url;
     } catch (err: any) {
       console.error(err);
-      alert(err?.message || 'Erreur lors de la redirection vers le paiement');
+      const message = String(err?.message || '');
+      if (message.toLowerCase().includes('stripe')) {
+        try {
+          await createOrder(product.id, user.token, 1);
+          alert('Commande enregistree avec succes.');
+          return;
+        } catch (fallbackErr: any) {
+          console.error(fallbackErr);
+          alert(fallbackErr?.message || 'Erreur lors de la creation de la commande');
+          return;
+        }
+      }
+      alert(message || 'Erreur lors de la redirection vers le paiement');
     }
   };
 
   if (loading) {
     return (
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <p className="text-slate-300">Chargement du produit...</p>
+      <div className="pm-frame py-8">
+        <p className="text-[#d7c8b8]">Chargement du produit...</p>
       </div>
     );
   }
 
   if (error || !product) {
     return (
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <button
-          onClick={onBack}
-          className="flex items-center gap-2 text-slate-300 hover:text-rose-200 mb-4"
-        >
+      <div className="pm-frame py-8">
+        <button onClick={onBack} className="inline-flex items-center gap-2 text-[#f7f0e8] hover:text-[#f28d49] mb-4">
           <ArrowLeft className="h-5 w-5" />
           Retour
         </button>
-        <p className="text-rose-300">{error || 'Produit non trouve'}</p>
+        <p className="text-[#ffc59f]">{error || 'Produit non trouve'}</p>
       </div>
     );
   }
 
-  const galleryImagesRaw = (product.images && Array.isArray(product.images) && product.images.length > 0)
-    ? product.images
-    : [product.image];
+  const galleryImagesRaw = product.images && Array.isArray(product.images) && product.images.length > 0 ? product.images : [product.image];
   const galleryImages = galleryImagesRaw.map(getImageUrl);
 
   const mainImage = galleryImages[Math.min(selectedImageIndex, galleryImages.length - 1)];
@@ -160,78 +168,51 @@ export function ProductDetailPage({
   };
 
   const handlePrevImage = () => {
-    setSelectedImageIndex((prev) =>
-      prev === 0 ? galleryImages.length - 1 : prev - 1
-    );
+    setSelectedImageIndex((prev) => (prev === 0 ? galleryImages.length - 1 : prev - 1));
   };
 
   const handleNextImage = () => {
-    setSelectedImageIndex((prev) =>
-      prev === galleryImages.length - 1 ? 0 : prev + 1
-    );
+    setSelectedImageIndex((prev) => (prev === galleryImages.length - 1 ? 0 : prev + 1));
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="pm-frame py-8 pm-fade-in">
       {isLightboxOpen && (
-        <div className="fixed inset-0 z-50 bg-black bg-opacity-80 flex items-center justify-center">
-          <button
-            type="button"
-            onClick={handleCloseLightbox}
-            className="absolute top-4 right-4 text-white hover:text-slate-200"
-          >
+        <div className="fixed inset-0 z-50 bg-black/85 flex items-center justify-center">
+          <button type="button" onClick={handleCloseLightbox} className="absolute top-4 right-4 text-white hover:text-[#f28d49]">
             <CloseIcon className="h-6 w-6" />
           </button>
 
           {galleryImages.length > 1 && (
             <>
-              <button
-                type="button"
-                onClick={handlePrevImage}
-                className="absolute left-4 text-white hover:text-slate-200 px-2 py-2"
-              >
+              <button type="button" onClick={handlePrevImage} className="absolute left-4 text-white hover:text-[#f28d49] px-2 py-2">
                 <ChevronLeft className="h-8 w-8" />
               </button>
-              <button
-                type="button"
-                onClick={handleNextImage}
-                className="absolute right-4 text-white hover:text-slate-200 px-2 py-2"
-              >
+              <button type="button" onClick={handleNextImage} className="absolute right-4 text-white hover:text-[#f28d49] px-2 py-2">
                 <ChevronRight className="h-8 w-8" />
               </button>
             </>
           )}
 
-          <img
-            src={mainImage}
-            alt={product.title}
-            className="max-h-[80vh] max-w-[90vw] object-contain rounded-lg shadow-xl"
-          />
+          <img src={mainImage} alt={product.title} className="max-h-[80vh] max-w-[90vw] object-contain rounded-lg shadow-xl" />
 
           {galleryImages.length > 1 && (
-            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-white text-sm bg-black bg-opacity-50 px-3 py-1 rounded-full">
+            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-white text-sm bg-black/50 px-3 py-1 rounded-full">
               {selectedImageIndex + 1} / {galleryImages.length}
             </div>
           )}
         </div>
       )}
 
-      <button
-        onClick={onBack}
-        className="flex items-center gap-2 text-slate-300 hover:text-rose-200 mb-6"
-      >
+      <button onClick={onBack} className="inline-flex items-center gap-2 text-[#f7f0e8] hover:text-[#f28d49] mb-6">
         <ArrowLeft className="h-5 w-5" />
         Retour au catalogue
       </button>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-7">
         <div>
-          <div className="bg-slate-900/60 rounded-2xl overflow-hidden mb-4 cursor-zoom-in border border-slate-800" onClick={() => handleOpenLightbox(selectedImageIndex)}>
-            <img
-              src={mainImage}
-              alt={product.title}
-              className="w-full h-96 object-cover"
-            />
+          <div className="pm-panel rounded-2xl overflow-hidden mb-4 cursor-zoom-in" onClick={() => handleOpenLightbox(selectedImageIndex)}>
+            <img src={mainImage} alt={product.title} className="w-full h-[430px] object-cover" />
           </div>
 
           {galleryImages.length > 1 && (
@@ -242,29 +223,22 @@ export function ProductDetailPage({
                   type="button"
                   onClick={() => setSelectedImageIndex(index)}
                   className={`relative h-20 w-20 rounded-md overflow-hidden border-2 ${
-                    index === selectedImageIndex
-                      ? 'border-rose-500'
-                      : 'border-transparent hover:border-rose-300'
+                    index === selectedImageIndex ? 'border-[#f28d49]' : 'border-transparent hover:border-[#8fa05c]'
                   }`}
                 >
-                  <img
-                    src={img}
-                    alt={`${product.title} ${index + 1}`}
-                    className="h-full w-full object-cover"
-                  />
+                  <img src={img} alt={`${product.title} ${index + 1}`} className="h-full w-full object-cover" />
                 </button>
               ))}
             </div>
           )}
 
           {product.priceHistory && product.priceHistory.length > 1 && (
-            <div className="bg-emerald-500/10 border border-emerald-500/30 rounded-lg p-4 flex items-start gap-3">
-              <TrendingDown className="h-5 w-5 text-emerald-300 mt-0.5 flex-shrink-0" />
+            <div className="rounded-lg p-4 border border-[#8fa05c]/40 bg-[#8fa05c]/15 flex items-start gap-3">
+              <TrendingDown className="h-5 w-5 text-[#d8e8a8] mt-0.5 flex-shrink-0" />
               <div>
-                <h4 className="text-emerald-200 mb-1">Baisse de prix</h4>
-                <p className="text-emerald-200/80">
-                  Prix reduit de {product.priceHistory[0].price.toFixed(2)} € a{' '}
-                  {product.price.toFixed(2)} €
+                <h4 className="text-[#d8e8a8] mb-1">Baisse de prix</h4>
+                <p className="text-[#d8e8a8]/90 text-sm">
+                  Prix reduit de {product.priceHistory[0].price.toFixed(2)} EUR a {product.price.toFixed(2)} EUR
                 </p>
               </div>
             </div>
@@ -272,72 +246,52 @@ export function ProductDetailPage({
         </div>
 
         <div>
-          <h1 className="text-slate-100 mb-4 text-3xl">{product.title}</h1>
+          <h1 className="text-[#f7f0e8] mb-3 text-3xl">{product.title}</h1>
 
-          <div className="flex items-center gap-4 mb-6 text-slate-300">
+          <div className="flex items-center gap-4 mb-5 text-[#d7c8b8]">
             <div className="flex items-center gap-1">
-              <Star className="h-5 w-5 fill-amber-400 text-amber-400" />
-              <span className="text-slate-100">
-                {product.sellerRating.toFixed(1)}
-              </span>
-              <span className="text-slate-400">
-                ({product.sellerReviews} avis)
-              </span>
+              <Star className="h-5 w-5 fill-[#f28d49] text-[#f28d49]" />
+              <span className="text-[#f7f0e8]">{product.sellerRating.toFixed(1)}</span>
+              <span>({product.sellerReviews} avis)</span>
             </div>
-            <div className="flex items-center gap-1 text-slate-400">
+            <div className="flex items-center gap-1">
               <MapPin className="h-4 w-4" />
               <span>{product.location}</span>
             </div>
           </div>
 
           {product.status === 'pending' && (
-            <div className="bg-amber-500/10 border border-amber-500/30 rounded-lg p-4 mb-6 flex items-start gap-3">
-              <AlertCircle className="h-5 w-5 text-amber-300 mt-0.5 flex-shrink-0" />
+            <div className="rounded-lg p-4 mb-5 flex items-start gap-3 border border-[#8fa05c]/40 bg-[#8fa05c]/15">
+              <AlertCircle className="h-5 w-5 text-[#d8e8a8] mt-0.5 flex-shrink-0" />
               <div>
-                <h4 className="text-amber-200 mb-1">
-                  Objet en attente de validation
-                </h4>
-                <p className="text-amber-200/80">
-                  Cet objet est en cours de verification par notre equipe
-                  avant publication.
-                </p>
+                <h4 className="text-[#d8e8a8] mb-1">Objet en attente de validation</h4>
+                <p className="text-[#d8e8a8]/85 text-sm">Cet objet est en cours de verification par notre equipe avant publication.</p>
               </div>
             </div>
           )}
 
           {product.status === 'sold' && (
-            <div className="bg-slate-900/60 border border-slate-700 rounded-lg p-4 mb-6">
-              <h4 className="text-slate-100 mb-1">Objet vendu</h4>
-              <p className="text-slate-400">Cet objet n'est plus disponible.</p>
+            <div className="pm-panel rounded-lg p-4 mb-5">
+              <h4 className="text-[#f7f0e8] mb-1">Objet vendu</h4>
+              <p className="text-[#d7c8b8]">Cet objet n'est plus disponible.</p>
             </div>
           )}
 
-          <div className="bg-slate-900/60 border border-slate-800 rounded-lg p-6 mb-6">
+          <div className="pm-panel rounded-lg p-5 mb-5">
             <div className="flex items-baseline gap-2 mb-2">
-              <span className="text-rose-200 text-2xl">
-                {product.price.toFixed(2)} €
-              </span>
+              <span className="text-[#f28d49] text-3xl">{product.price.toFixed(2)} EUR</span>
             </div>
-            {product.shipping > 0 && (
-              <p className="text-slate-400">
-                + {product.shipping.toFixed(2)} € de frais de port
-              </p>
-            )}
-            <p className="text-slate-500 text-sm mt-2">
-              Commission Maison de l'Epouvante (5%) et TVA ajoutees au moment du
-              paiement.
-            </p>
+            {product.shipping > 0 && <p className="text-[#d7c8b8]">+ {product.shipping.toFixed(2)} EUR de frais de port</p>}
+            <p className="text-[#bcae9e] text-sm mt-2">Commission maison (5%) et TVA ajoutees au moment du paiement.</p>
           </div>
 
-          <div className="space-y-3 mb-6">
+          <div className="space-y-3 mb-5">
             <button
               onClick={handleBuyNow}
               disabled={product.status !== 'available'}
-              className="w-full bg-rose-600 text-white py-3 rounded-lg hover:bg-rose-500 transition-colors disabled:bg-slate-700 disabled:cursor-not-allowed"
+              className="w-full rounded-lg bg-[#d95f18] text-white py-3 font-semibold hover:brightness-110 transition disabled:bg-[#4f3426] disabled:cursor-not-allowed"
             >
-              {product.status === 'available'
-                ? 'Acheter maintenant'
-                : 'Non disponible'}
+              {product.status === 'available' ? 'Acheter maintenant' : 'Non disponible'}
             </button>
             {product.status === 'available' && (
               <button
@@ -345,7 +299,7 @@ export function ProductDetailPage({
                   onAddToCart(product);
                   alert('Objet ajoute au panier');
                 }}
-                className="w-full bg-transparent text-rose-200 border border-rose-500/50 py-3 rounded-lg hover:bg-rose-500/10 transition-colors flex items-center justify-center gap-2"
+                className="w-full rounded-lg border border-[#d95f18]/50 py-3 text-[#ffc59f] hover:bg-[#d95f18]/10 transition flex items-center justify-center gap-2"
               >
                 <ShoppingCart className="h-5 w-5" />
                 Ajouter au panier
@@ -354,7 +308,7 @@ export function ProductDetailPage({
             {user && product.status === 'available' && (
               <button
                 onClick={onOpenChat}
-                className="w-full bg-slate-900/60 text-slate-200 border border-slate-700 py-3 rounded-lg hover:bg-slate-800 transition-colors flex items-center justify-center gap-2"
+                className="w-full rounded-lg border border-[#4f3426] bg-[#1a1310]/80 py-3 text-[#f7f0e8] hover:border-[#8fa05c] hover:text-[#d8e8a8] transition flex items-center justify-center gap-2"
               >
                 <MessageCircle className="h-5 w-5" />
                 Contacter le vendeur
@@ -362,43 +316,38 @@ export function ProductDetailPage({
             )}
           </div>
 
-          <div className="border-t border-slate-800 pt-6">
-            <h3 className="text-slate-100 mb-3">Description</h3>
-            <p className="text-slate-300 whitespace-pre-line">
-              {product.description}
-            </p>
+          <div className="border-t border-[#4f3426] pt-5">
+            <h3 className="text-[#f7f0e8] mb-2">Description</h3>
+            <p className="text-[#d7c8b8] whitespace-pre-line text-sm leading-relaxed">{product.description}</p>
           </div>
 
-          <div className="border-t border-slate-800 pt-6 mt-6">
-            <h3 className="text-slate-100 mb-3">Vendeur</h3>
+          <div className="border-t border-[#4f3426] pt-5 mt-5">
+            <h3 className="text-[#f7f0e8] mb-2">Vendeur</h3>
             <div className="flex items-center gap-4">
-              <div className="h-12 w-12 bg-rose-500/20 rounded-full flex items-center justify-center border border-rose-500/30">
-                <span className="text-rose-200">
-                  {product.sellerName.charAt(0)}
-                </span>
+              <div className="h-12 w-12 rounded-full flex items-center justify-center border border-[#d95f18]/40 bg-[#d95f18]/15">
+                <span className="text-[#ffc59f]">{product.sellerName.charAt(0)}</span>
               </div>
               <div>
-                <p className="text-slate-100">{product.sellerName}</p>
-                <div className="flex items-center gap-1">
-                  <Star className="h-4 w-4 fill-amber-400 text-amber-400" />
-                  <span className="text-slate-300">
-                    {product.sellerRating.toFixed(1)}
-                  </span>
-                  <span className="text-slate-500">
-                    ({product.sellerReviews} ventes)
-                  </span>
+                <p className="text-[#f7f0e8]">{product.sellerName}</p>
+                <div className="flex items-center gap-1 text-sm text-[#d7c8b8]">
+                  <Star className="h-4 w-4 fill-[#f28d49] text-[#f28d49]" />
+                  <span>{product.sellerRating.toFixed(1)}</span>
+                  <span>({product.sellerReviews} ventes)</span>
                 </div>
               </div>
             </div>
           </div>
 
-          <div className="bg-slate-900/70 border border-slate-800 rounded-lg p-4 mt-6">
-            <h4 className="text-rose-200 mb-2">Protection La Petite Maison de l'Epouvante</h4>
-            <ul className="text-slate-300 space-y-1 text-sm">
-              <li>• Paiement 100% securise</li>
-              <li>• Vendeur verifie</li>
-              <li>• Objet controle avant mise en ligne</li>
-              <li>• Service client disponible</li>
+          <div className="rounded-lg p-4 mt-5 border border-[#8fa05c]/30 bg-[#8fa05c]/12">
+            <h4 className="text-[#d8e8a8] mb-2 inline-flex items-center gap-2">
+              <ShieldCheck className="h-4 w-4" />
+              Protection La Petite Maison de l'Epouvante
+            </h4>
+            <ul className="text-[#d8e8a8]/90 space-y-1 text-sm">
+              <li>- Paiement securise</li>
+              <li>- Vendeur verifie</li>
+              <li>- Objet controle avant mise en ligne</li>
+              <li>- Service client disponible</li>
             </ul>
           </div>
         </div>

@@ -275,6 +275,34 @@ export async function createCheckoutSession(productId: string, token: string, qu
   return res.json();
 }
 
+export interface OrderDTO {
+  id: string;
+  productId: string;
+  buyerId: string;
+  totalPrice: number;
+  status: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export async function createOrder(productId: string, token: string, quantity: number = 1): Promise<OrderDTO> {
+  const res = await fetch(buildApiUrl('/api/orders'), {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ productId, quantity }),
+  });
+
+  if (!res.ok) {
+    const data = await res.json().catch(() => null);
+    throw new Error(data?.error || 'Erreur lors de la creation de la commande');
+  }
+
+  return res.json();
+}
+
 export async function approveProduct(id: string, token?: string): Promise<Product> {
   const headers: Record<string, string> = {};
   if (token) {

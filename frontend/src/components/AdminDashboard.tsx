@@ -1,20 +1,45 @@
-import { useEffect, useState } from 'react';
-import { Users, Package, AlertTriangle, TrendingUp, Plus, Trash2, Check, X as XIcon, Shield } from 'lucide-react';
+import { useEffect, useMemo, useState } from 'react';
+import {
+  Users,
+  Package,
+  AlertTriangle,
+  TrendingUp,
+  Plus,
+  Trash2,
+  Check,
+  X as XIcon,
+  Shield,
+  FileWarning,
+  ClipboardList,
+} from 'lucide-react';
 import type { Product } from '../data/mockData';
 import { categories } from '../data/mockData';
 import { getImageUrl } from '../lib/getImageUrl';
-import { fetchProducts, approveProduct, rejectProduct, deleteProductAdmin, listSellerRequests, approveSellerRequest, rejectSellerRequest, adminListUsers, adminSetUserRole, adminSetUserActive } from '../api/client';
+import {
+  fetchProducts,
+  approveProduct,
+  rejectProduct,
+  deleteProductAdmin,
+  listSellerRequests,
+  approveSellerRequest,
+  rejectSellerRequest,
+  adminListUsers,
+  adminSetUserRole,
+  adminSetUserActive,
+} from '../api/client';
 import type { User } from '../App';
+
+type TabId = 'overview' | 'products' | 'users' | 'categories' | 'fraud' | 'seller-requests';
 
 interface AdminDashboardProps {
   user: User | null;
 }
 
 export function AdminDashboard({ user }: AdminDashboardProps) {
-const [activeTab, setActiveTab] = useState<'overview' | 'products' | 'users' | 'categories' | 'fraud' | 'seller-requests'>('overview');
+  const [activeTab, setActiveTab] = useState<TabId>('overview');
   const [newCategory, setNewCategory] = useState('');
   const [products, setProducts] = useState<Product[]>([]);
-const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
   const [sellerRequests, setSellerRequests] = useState<any[]>([]);
   const [reqLoading, setReqLoading] = useState(false);
   const [users, setUsers] = useState<any[]>([]);
@@ -28,8 +53,8 @@ const [loading, setLoading] = useState(true);
       try {
         const data = await fetchProducts();
         setProducts(data);
-      } catch (e) {
-        setError("Impossible de charger les produits");
+      } catch {
+        setError('Impossible de charger les produits');
       } finally {
         setLoading(false);
       }
@@ -37,587 +62,477 @@ const [loading, setLoading] = useState(true);
     load();
   }, []);
 
-  const pendingProducts = products.filter(p => p.status === 'pending');
-  const totalProducts = products.length;
+  const pendingProducts = useMemo(() => products.filter((p) => p.status === 'pending'), [products]);
+
+  const tabButtonClass = (tab: TabId) =>
+    `w-full rounded-xl border px-3 py-2 text-left text-sm transition ${
+      activeTab === tab
+        ? 'border-cyan-300/45 bg-cyan-300/15 text-cyan-50'
+        : 'border-cyan-300/20 bg-[#0a1226] text-cyan-100/70 hover:border-cyan-300/35 hover:text-cyan-50'
+    }`;
+
+  const loadUsers = async (role?: 'BUYER' | 'SELLER' | 'ADMIN') => {
+    if (!user?.token) return;
+    setUsersLoading(true);
+    try {
+      const res = await adminListUsers(user.token, role);
+      setUsers(res.items);
+      setTotalUsers(res.total);
+    } catch {
+      alert('Impossible de lister les utilisateurs');
+    } finally {
+      setUsersLoading(false);
+    }
+  };
+
+  const loadSellerRequests = async () => {
+    if (!user?.token) return;
+    setReqLoading(true);
+    try {
+      const list = await listSellerRequests(user.token, 'pending');
+      setSellerRequests(list);
+    } catch {
+      alert('Impossible de charger les demandes vendeur');
+    } finally {
+      setReqLoading(false);
+    }
+  };
 
   const handleApprove = async (id: string) => {
     if (!user || user.role !== 'ADMIN') {
-      alert('Accès réservé aux administrateurs');
+      alert('Acces reserve aux administrateurs');
       return;
     }
-
     try {
       const updated = await approveProduct(id, user.token);
-      setProducts(prev => prev.map(p => (p.id === id ? updated : p)));
-    } catch (e) {
-      console.error(e);
-      alert("Erreur lors de l'approbation de l'objet");
+      setProducts((prev) => prev.map((p) => (p.id === id ? updated : p)));
+    } catch {
+      alert("Erreur lors de l'approbation du produit");
     }
   };
 
   const handleReject = async (id: string) => {
     if (!user || user.role !== 'ADMIN') {
-      alert('Accès réservé aux administrateurs');
+      alert('Acces reserve aux administrateurs');
       return;
     }
-
     try {
       const updated = await rejectProduct(id, user.token);
-      setProducts(prev => prev.map(p => (p.id === id ? updated : p)));
-    } catch (e) {
-      console.error(e);
-      alert("Erreur lors du rejet de l'objet");
+      setProducts((prev) => prev.map((p) => (p.id === id ? updated : p)));
+    } catch {
+      alert('Erreur lors du rejet du produit');
     }
   };
 
   if (loading) {
     return (
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <p className="text-slate-400">Chargement des produits...</p>
+      <div className="pm-frame py-8">
+        <p className="text-cyan-100/75">Chargement des donnees admin...</p>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <p className="text-red-600">{error}</p>
+      <div className="pm-frame py-8">
+        <p className="text-red-300">{error}</p>
       </div>
     );
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div className="mb-8">
-        <h1 className="text-slate-100 mb-2">Tableau de bord administrateur</h1>
-        <p className="text-slate-400">Gérez votre plateforme La Petite Maison de l��pouvante</p>
+    <div className="pm-frame py-8">
+      <div className="mb-6 rounded-3xl border border-cyan-300/25 bg-gradient-to-r from-cyan-500/10 to-emerald-500/10 p-5">
+        <p className="text-xs uppercase tracking-[0.18em] text-cyan-100/70">Back-office</p>
+        <h1 className="text-2xl text-[#effbff]">Administration de la Petite Maison de l'Epouvante</h1>
+        <p className="text-cyan-100/70">Pilotage produits, membres, moderation et securite.</p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-        <div className="bg-slate-900/70 p-6 rounded-lg shadow-sm border border-slate-800">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-slate-400 mb-1">Utilisateurs</p>
-              <p className="text-slate-100">{totalUsers ?? '-'}</p>
-            </div>
-            <Users className="h-8 w-8 text-sky-300" />
+      <div className="mb-6 grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
+        <article className="rounded-2xl border border-cyan-300/25 bg-[#081128] p-4">
+          <div className="mb-2 inline-flex rounded-lg border border-cyan-300/30 bg-cyan-300/10 p-2">
+            <Users className="h-5 w-5 text-cyan-100" />
           </div>
-        </div>
+          <p className="text-xs uppercase tracking-widest text-cyan-100/60">Utilisateurs</p>
+          <p className="text-xl text-[#effbff]">{totalUsers ?? '-'}</p>
+        </article>
 
-        <div className="bg-slate-900/70 p-6 rounded-lg shadow-sm border border-slate-800">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-slate-400 mb-1">Objets</p>
-              <p className="text-slate-100">{totalProducts}</p>
-            </div>
-            <Package className="h-8 w-8 text-emerald-300" />
+        <article className="rounded-2xl border border-cyan-300/25 bg-[#081128] p-4">
+          <div className="mb-2 inline-flex rounded-lg border border-cyan-300/30 bg-cyan-300/10 p-2">
+            <Package className="h-5 w-5 text-cyan-100" />
           </div>
-        </div>
+          <p className="text-xs uppercase tracking-widest text-cyan-100/60">Produits</p>
+          <p className="text-xl text-[#effbff]">{products.length}</p>
+        </article>
 
-        <div className="bg-slate-900/70 p-6 rounded-lg shadow-sm border border-slate-800">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-slate-400 mb-1">En attente</p>
-              <p className="text-slate-100">{pendingProducts.length}</p>
-            </div>
-            <AlertTriangle className="h-8 w-8 text-amber-300" />
+        <article className="rounded-2xl border border-amber-300/35 bg-amber-300/10 p-4">
+          <div className="mb-2 inline-flex rounded-lg border border-amber-300/35 bg-amber-300/10 p-2">
+            <AlertTriangle className="h-5 w-5 text-amber-100" />
           </div>
-        </div>
+          <p className="text-xs uppercase tracking-widest text-amber-100/70">En attente</p>
+          <p className="text-xl text-amber-50">{pendingProducts.length}</p>
+        </article>
 
-        <div className="bg-slate-900/70 p-6 rounded-lg shadow-sm border border-slate-800">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-slate-400 mb-1">Revenus (5%)</p>
-              <p className="text-slate-100">2,450 €</p>
-            </div>
-            <TrendingUp className="h-8 w-8 text-rose-200" />
+        <article className="rounded-2xl border border-emerald-300/35 bg-emerald-300/10 p-4">
+          <div className="mb-2 inline-flex rounded-lg border border-emerald-300/35 bg-emerald-300/10 p-2">
+            <TrendingUp className="h-5 w-5 text-emerald-100" />
           </div>
-        </div>
+          <p className="text-xs uppercase tracking-widest text-emerald-100/70">Commission</p>
+          <p className="text-xl text-emerald-50">5%</p>
+        </article>
       </div>
 
-      <div className="border-b border-slate-800 mb-6">
-        <nav className="flex gap-8">
-          <button
-            onClick={() => setActiveTab('overview')}
-            className={`pb-4 border-b-2 transition-colors ${activeTab === 'overview' ? 'border-rose-500 text-rose-200' : 'border-transparent text-slate-400 hover:text-slate-100'}`}
-          >
-            Vue d'ensemble
+      <div className="grid grid-cols-1 gap-6 xl:grid-cols-[260px_1fr]">
+        <aside className="space-y-2 rounded-2xl border border-cyan-300/25 bg-[#081128] p-3">
+          <button onClick={() => setActiveTab('overview')} className={tabButtonClass('overview')}>
+            Vue generale
           </button>
-
-          <button
-            onClick={() => setActiveTab('products')}
-            className={`pb-4 border-b-2 transition-colors ${activeTab === 'products' ? 'border-rose-500 text-rose-200' : 'border-transparent text-slate-400 hover:text-slate-100'}`}
-          >
-            Validation objets ({pendingProducts.length})
+          <button onClick={() => setActiveTab('products')} className={tabButtonClass('products')}>
+            Produits ({pendingProducts.length} en attente)
           </button>
-
           <button
-            onClick={() => {
+            onClick={async () => {
               setActiveTab('users');
-              if (!user?.token) return;
-              setUsersLoading(true);
-              adminListUsers(user.token)
-                .then((res) => {
-                  setUsers(res.items);
-                  setTotalUsers(res.total);
-                })
-                .catch(() => alert("Impossible de lister les utilisateurs"))
-                .finally(() => setUsersLoading(false));
+              await loadUsers(usersFilter === 'ALL' ? undefined : usersFilter);
             }}
-            className={`pb-4 border-b-2 transition-colors ${activeTab === 'users' ? 'border-rose-500 text-rose-200' : 'border-transparent text-slate-400 hover:text-slate-100'}`}
+            className={tabButtonClass('users')}
           >
             Utilisateurs
           </button>
-
-          <button
-            onClick={() => setActiveTab('fraud')}
-            className={`pb-4 border-b-2 transition-colors ${activeTab === 'fraud' ? 'border-rose-500 text-rose-200' : 'border-transparent text-slate-400 hover:text-slate-100'}`}
-          >
-            Détection fraudes
+          <button onClick={() => setActiveTab('categories')} className={tabButtonClass('categories')}>
+            Categories
           </button>
-        </nav>
-      </div>
-
-      <div className="mb-6">
-        <button
-          onClick={async () => {
-            if (!user?.token) return;
-            setReqLoading(true);
-            try {
-              const list = await listSellerRequests(user.token, 'pending');
-              setSellerRequests(list);
+          <button onClick={() => setActiveTab('fraud')} className={tabButtonClass('fraud')}>
+            Detection fraude
+          </button>
+          <button
+            onClick={async () => {
               setActiveTab('seller-requests');
-            } catch (e) {
-              alert("Impossible de charger les demandes vendeur");
-            } finally {
-              setReqLoading(false);
-            }
-          }}
-          className="text-sm text-rose-200 hover:text-rose-200"
-        >
-          Voir les demandes vendeur en attente
-        </button>
-      </div>
+              await loadSellerRequests();
+            }}
+            className={tabButtonClass('seller-requests')}
+          >
+            Demandes vendeur
+          </button>
+        </aside>
 
-      {activeTab === 'overview' && (
-        <div className="space-y-6">
-          <div className="bg-slate-900/70 border border-slate-800 rounded-lg p-6">
-            <h3 className="text-slate-100 mb-4">Activité récente</h3>
-            <div className="space-y-3">
-              <div className="flex items-center justify-between py-2 border-b border-slate-800">
-                <div>
-                  <p className="text-slate-100">Nouvel objet ajouté</p>
-                  <p className="text-slate-400">Grimoire d'initiation par ArchivisteNoir</p>
-                </div>
-                <span className="text-slate-500">Il y a 5 min</span>
-              </div>
-              <div className="flex items-center justify-between py-2 border-b border-slate-800">
-                <div>
-                  <p className="text-slate-100">Vente réalisée</p>
-                  <p className="text-slate-400">Poster Star Wars - 850 €</p>
-                </div>
-                <span className="text-slate-500">Il y a 1h</span>
-              </div>
-              <div className="flex items-center justify-between py-2 border-b border-slate-800">
-                <div>
-                  <p className="text-slate-100">Nouvel utilisateur</p>
-                  <p className="text-slate-400">jean.dupont@email.com</p>
-                </div>
-                <span className="text-slate-500">Il y a 2h</span>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-slate-900/70 border border-slate-800 rounded-lg p-6">
-            <h3 className="text-slate-100 mb-4">Statistiques des ventes</h3>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <div>
-                <p className="text-slate-400 mb-1">Aujourd'hui</p>
-                <p className="text-slate-100">12 ventes</p>
-              </div>
-              <div>
-                <p className="text-slate-400 mb-1">Cette semaine</p>
-                <p className="text-slate-100">87 ventes</p>
-              </div>
-              <div>
-                <p className="text-slate-400 mb-1">Ce mois</p>
-                <p className="text-slate-100">342 ventes</p>
-              </div>
-              <div>
-                <p className="text-slate-400 mb-1">Total</p>
-                <p className="text-slate-100">2,156 ventes</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {activeTab === 'products' && (
-        <div>
-          <h2 className="text-slate-100 mb-6">Tous les objets ({totalProducts})</h2>
-          {products.length > 0 ? (
+        <section className="rounded-2xl border border-cyan-300/25 bg-[#060c1e] p-4 sm:p-5">
+          {activeTab === 'overview' && (
             <div className="space-y-4">
-              {products.map(product => (
-                <div key={product.id} className="bg-slate-900/70 border border-slate-800 rounded-lg p-4">
-                  <div className="flex gap-4">
-                    <img src={getImageUrl(product.image)} alt={product.title} className="w-32 h-32 object-cover rounded-lg" />
-                    <div className="flex-1">
-                      <div className="flex justify-between items-start mb-2">
-                        <div>
-                          <h3 className="text-slate-100 mb-1">{product.title}</h3>
-                          <p className="text-slate-400 mb-2 line-clamp-2">{product.description}</p>
-                          <div className="flex flex-wrap gap-4 text-slate-400">
-                            <span>Prix: {product.price.toFixed(2)} €</span>
-                            <span>Vendeur: {product.sellerName}</span>
-                            <span>Catégorie: {product.category}</span>
-                            <span>
-                              Statut:
-                              <span className={`ml-2 px-2 py-0.5 rounded text-xs ${
-                                product.status === 'available' ? 'bg-green-100 text-green-700' :
-                                product.status === 'pending' ? 'bg-yellow-100 text-yellow-700' :
-                                'bg-slate-800 text-slate-300'
-                              }`}>
-                                {product.status}
-                              </span>
-                            </span>
+              <div className="rounded-2xl border border-cyan-300/20 bg-[#0a1226] p-4">
+                <h3 className="mb-2 text-cyan-50">Activite recente</h3>
+                <ul className="space-y-2 text-sm text-cyan-100/70">
+                  <li className="rounded-xl border border-cyan-300/15 bg-[#081128] p-3">Nouveau produit depose en moderation.</li>
+                  <li className="rounded-xl border border-cyan-300/15 bg-[#081128] p-3">Demande vendeur recue pour verification.</li>
+                  <li className="rounded-xl border border-cyan-300/15 bg-[#081128] p-3">Connexion admin enregistree.</li>
+                </ul>
+              </div>
+
+              <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
+                <div className="rounded-2xl border border-cyan-300/20 bg-[#0a1226] p-4">
+                  <p className="text-xs uppercase tracking-widest text-cyan-100/60">Aujourd'hui</p>
+                  <p className="text-lg text-cyan-50">12 ventes</p>
+                </div>
+                <div className="rounded-2xl border border-cyan-300/20 bg-[#0a1226] p-4">
+                  <p className="text-xs uppercase tracking-widest text-cyan-100/60">Cette semaine</p>
+                  <p className="text-lg text-cyan-50">87 ventes</p>
+                </div>
+                <div className="rounded-2xl border border-cyan-300/20 bg-[#0a1226] p-4">
+                  <p className="text-xs uppercase tracking-widest text-cyan-100/60">Ce mois</p>
+                  <p className="text-lg text-cyan-50">342 ventes</p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {activeTab === 'products' && (
+            <div>
+              <h2 className="mb-4 text-cyan-50">Produits ({products.length})</h2>
+              {products.length > 0 ? (
+                <div className="space-y-3">
+                  {products.map((product) => (
+                    <article key={product.id} className="rounded-2xl border border-cyan-300/20 bg-[#0a1226] p-3">
+                      <div className="flex flex-col gap-3 sm:flex-row">
+                        <img src={getImageUrl(product.image)} alt={product.title} className="h-28 w-full rounded-xl object-cover sm:w-36" />
+                        <div className="min-w-0 flex-1">
+                          <h3 className="text-cyan-50">{product.title}</h3>
+                          <p className="line-clamp-2 text-sm text-cyan-100/70">{product.description}</p>
+                          <div className="mt-2 flex flex-wrap gap-2 text-xs text-cyan-100/65">
+                            <span className="rounded-full border border-cyan-300/20 px-2 py-1">Prix: {product.price.toFixed(2)} EUR</span>
+                            <span className="rounded-full border border-cyan-300/20 px-2 py-1">Vendeur: {product.sellerName}</span>
+                            <span className="rounded-full border border-cyan-300/20 px-2 py-1">Categorie: {product.category}</span>
+                            <span className="rounded-full border border-cyan-300/20 px-2 py-1">Statut: {product.status}</span>
+                          </div>
+
+                          <div className="mt-3 flex flex-wrap gap-2">
+                            {product.status === 'pending' && (
+                              <>
+                                <button onClick={() => handleApprove(product.id)} className="inline-flex items-center gap-1 rounded-xl bg-emerald-600 px-3 py-1.5 text-sm text-white">
+                                  <Check className="h-4 w-4" /> Approuver
+                                </button>
+                                <button onClick={() => handleReject(product.id)} className="inline-flex items-center gap-1 rounded-xl bg-amber-600 px-3 py-1.5 text-sm text-white">
+                                  <XIcon className="h-4 w-4" /> Rejeter
+                                </button>
+                              </>
+                            )}
+                            <button
+                              onClick={async () => {
+                                if (!user || user.role !== 'ADMIN') {
+                                  alert('Acces reserve aux administrateurs');
+                                  return;
+                                }
+                                if (!confirm('Supprimer definitivement ce produit ?')) return;
+                                try {
+                                  await deleteProductAdmin(product.id, user.token);
+                                  setProducts((prev) => prev.filter((p) => p.id !== product.id));
+                                } catch {
+                                  alert('Erreur lors de la suppression du produit');
+                                }
+                              }}
+                              className="inline-flex items-center gap-1 rounded-xl bg-red-600 px-3 py-1.5 text-sm text-white"
+                            >
+                              <Trash2 className="h-4 w-4" /> Supprimer
+                            </button>
                           </div>
                         </div>
                       </div>
-                      <div className="flex flex-wrap gap-2 mt-4">
-                        {product.status === 'pending' && (
-                          <>
-                            <button
-                              onClick={() => handleApprove(product.id)}
-                              className="flex items-center gap-2 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors"
-                            >
-                              <Check className="h-4 w-4" />
-                              Approuver
-                            </button>
-                            <button
-                              onClick={() => handleReject(product.id)}
-                              className="flex items-center gap-2 bg-orange-600 text-white px-4 py-2 rounded-lg hover:bg-orange-700 transition-colors"
-                            >
-                              <XIcon className="h-4 w-4" />
-                              Rejeter
-                            </button>
-                          </>
-                        )}
+                    </article>
+                  ))}
+                </div>
+              ) : (
+                <div className="rounded-2xl border border-cyan-300/20 bg-[#0a1226] p-6 text-center text-cyan-100/70">Aucun produit</div>
+              )}
+            </div>
+          )}
+
+          {activeTab === 'users' && (
+            <div>
+              <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                <h2 className="text-cyan-50">Gestion des utilisateurs</h2>
+                <div className="flex items-center gap-2">
+                  <label className="text-sm text-cyan-100/65">Filtrer:</label>
+                  <select
+                    value={usersFilter}
+                    onChange={async (e) => {
+                      const value = e.target.value as 'ALL' | 'BUYER' | 'SELLER' | 'ADMIN';
+                      setUsersFilter(value);
+                      await loadUsers(value === 'ALL' ? undefined : value);
+                    }}
+                    className="rounded-xl border border-cyan-300/25 bg-[#0a1226] px-3 py-1.5 text-sm text-cyan-50"
+                  >
+                    <option value="ALL">Tous</option>
+                    <option value="BUYER">Acheteurs</option>
+                    <option value="SELLER">Vendeurs</option>
+                    <option value="ADMIN">Admins</option>
+                  </select>
+                </div>
+              </div>
+
+              {usersLoading ? (
+                <p className="text-cyan-100/70">Chargement...</p>
+              ) : users.length > 0 ? (
+                <div className="space-y-2">
+                  {users.map((u) => (
+                    <article key={u.id} className="rounded-2xl border border-cyan-300/20 bg-[#0a1226] p-3">
+                      <div className="flex flex-col gap-3 xl:flex-row xl:items-center xl:justify-between">
+                        <div className="flex items-start gap-3">
+                          <div className="mt-0.5 rounded-xl border border-cyan-300/25 bg-cyan-300/10 p-2">
+                            <Shield className="h-4 w-4 text-cyan-100" />
+                          </div>
+                          <div>
+                            <p className="text-cyan-50">{u.name}</p>
+                            <p className="text-sm text-cyan-100/70">{u.email}</p>
+                            {(u.address || u.phone || u.gender) && (
+                              <div className="mt-1 space-y-0.5 text-xs text-cyan-100/55">
+                                {u.address && <p>Adresse: {u.address}</p>}
+                                {u.phone && <p>Tel: {u.phone}</p>}
+                                {u.gender && <p>Genre: {u.gender}</p>}
+                              </div>
+                            )}
+                          </div>
+                        </div>
+
+                        <div className="flex flex-wrap items-center gap-2">
+                          <span className="rounded-full border border-cyan-300/20 px-2 py-1 text-xs text-cyan-100">{u.role}</span>
+                          <span className={`rounded-full px-2 py-1 text-xs ${u.active ? 'bg-emerald-500/20 text-emerald-100' : 'bg-amber-500/20 text-amber-100'}`}>
+                            {u.active ? 'Actif' : 'En attente'}
+                          </span>
+                          <button
+                            onClick={async () => {
+                              if (!user?.token) return;
+                              try {
+                                const updated = await adminSetUserRole(user.token, u.id, 'BUYER');
+                                setUsers((prev) => prev.map((x) => (x.id === u.id ? updated : x)));
+                              } catch {
+                                alert('Maj du role impossible');
+                              }
+                            }}
+                            className="rounded-lg border border-cyan-300/25 bg-[#071022] px-2 py-1 text-xs text-cyan-100"
+                          >
+                            Acheteur
+                          </button>
+                          <button
+                            onClick={async () => {
+                              if (!user?.token) return;
+                              try {
+                                const updated = await adminSetUserRole(user.token, u.id, 'SELLER');
+                                setUsers((prev) => prev.map((x) => (x.id === u.id ? updated : x)));
+                              } catch {
+                                alert('Maj du role impossible');
+                              }
+                            }}
+                            className="rounded-lg border border-cyan-300/25 bg-[#071022] px-2 py-1 text-xs text-cyan-100"
+                          >
+                            Vendeur
+                          </button>
+                          <button
+                            onClick={async () => {
+                              if (!user?.token) return;
+                              try {
+                                const updated = await adminSetUserRole(user.token, u.id, 'ADMIN');
+                                setUsers((prev) => prev.map((x) => (x.id === u.id ? updated : x)));
+                              } catch {
+                                alert('Maj du role impossible');
+                              }
+                            }}
+                            className="rounded-lg border border-cyan-300/25 bg-[#071022] px-2 py-1 text-xs text-cyan-100"
+                          >
+                            Admin
+                          </button>
+                          <button
+                            onClick={async () => {
+                              if (!user?.token) return;
+                              try {
+                                const updated = await adminSetUserActive(user.token, u.id, !u.active);
+                                setUsers((prev) => prev.map((x) => (x.id === u.id ? updated : x)));
+                              } catch {
+                                alert('Maj du statut impossible');
+                              }
+                            }}
+                            className="rounded-lg border border-cyan-300/25 bg-[#071022] px-2 py-1 text-xs text-cyan-100"
+                          >
+                            {u.active ? 'Desactiver' : 'Activer'}
+                          </button>
+                        </div>
+                      </div>
+                    </article>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-cyan-100/70">Aucun utilisateur</p>
+              )}
+            </div>
+          )}
+
+          {activeTab === 'categories' && (
+            <div>
+              <h2 className="mb-4 text-cyan-50">Gestion des categories</h2>
+              <div className="mb-4 rounded-2xl border border-cyan-300/20 bg-[#0a1226] p-4">
+                <label className="mb-2 block text-sm text-cyan-100/70">Ajouter une categorie</label>
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    value={newCategory}
+                    onChange={(e) => setNewCategory(e.target.value)}
+                    placeholder="Nom de la categorie"
+                    className="flex-1 rounded-xl border border-cyan-300/25 bg-[#071022] px-3 py-2 text-sm text-cyan-50"
+                  />
+                  <button className="inline-flex items-center gap-1 rounded-xl bg-cyan-600 px-3 py-2 text-sm text-white">
+                    <Plus className="h-4 w-4" /> Ajouter
+                  </button>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                {categories.map((category) => (
+                  <div key={category.id} className="flex items-center justify-between rounded-2xl border border-cyan-300/20 bg-[#0a1226] p-3">
+                    <span className="text-sm text-cyan-50">{category.name}</span>
+                    <button className="rounded-lg p-1 text-red-300 hover:bg-red-500/15">
+                      <Trash2 className="h-4 w-4" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {activeTab === 'seller-requests' && (
+            <div>
+              <h2 className="mb-4 text-cyan-50">Demandes vendeur</h2>
+              {reqLoading ? (
+                <p className="text-cyan-100/70">Chargement...</p>
+              ) : sellerRequests.length > 0 ? (
+                <div className="space-y-2">
+                  {sellerRequests.map((r) => (
+                    <article key={r.id} className="flex flex-col gap-3 rounded-2xl border border-cyan-300/20 bg-[#0a1226] p-3 sm:flex-row sm:items-center sm:justify-between">
+                      <div>
+                        <p className="text-cyan-50">{r.user?.name || r.user?.email}</p>
+                        <p className="text-sm text-cyan-100/70">{r.user?.email}</p>
+                        <p className="text-xs text-cyan-100/55">Demande du {new Date(r.createdAt).toLocaleString()}</p>
+                      </div>
+                      <div className="flex gap-2">
                         <button
                           onClick={async () => {
-                            if (!user || user.role !== 'ADMIN') {
-                              alert('Accès réservé aux administrateurs');
-                              return;
-                            }
-                            if (!confirm('Supprimer définitivement cet objet ?')) return;
+                            if (!user?.token) return;
                             try {
-                              await deleteProductAdmin(product.id, user.token);
-                              setProducts(prev => prev.filter(p => p.id !== product.id));
-                            } catch (e) {
-                              console.error(e);
-                              alert("Erreur lors de la suppression de l'objet");
+                              await approveSellerRequest(user.token, r.id);
+                              setSellerRequests((prev) => prev.filter((x) => x.id !== r.id));
+                            } catch {
+                              alert("Erreur lors de l'approbation");
                             }
                           }}
-                          className="flex items-center gap-2 bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors"
+                          className="rounded-xl bg-emerald-600 px-3 py-1.5 text-sm text-white"
                         >
-                          <Trash2 className="h-4 w-4" />
-                          Supprimer
+                          Approuver
+                        </button>
+                        <button
+                          onClick={async () => {
+                            if (!user?.token) return;
+                            try {
+                              await rejectSellerRequest(user.token, r.id);
+                              setSellerRequests((prev) => prev.filter((x) => x.id !== r.id));
+                            } catch {
+                              alert('Erreur lors du rejet');
+                            }
+                          }}
+                          className="rounded-xl bg-red-600 px-3 py-1.5 text-sm text-white"
+                        >
+                          Rejeter
                         </button>
                       </div>
-                    </div>
-                  </div>
+                    </article>
+                  ))}
                 </div>
-              ))}
-            </div>
-          ) : (
-            <div className="text-center py-16 bg-slate-950/60 rounded-lg">
-              <Package className="h-16 w-16 text-slate-500 mx-auto mb-4" />
-              <h3 className="text-slate-100 mb-2">Aucun objet</h3>
-              <p className="text-slate-400">La liste des objets est vide</p>
+              ) : (
+                <p className="text-cyan-100/70">Aucune demande en attente</p>
+              )}
             </div>
           )}
-        </div>
-      )}
 
-      {activeTab === 'users' && (
-        <div>
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-slate-100">Gestion des utilisateurs</h2>
-            <div className="flex items-center gap-2">
-              <label className="text-sm text-slate-300">Filtrer:</label>
-              <select
-                value={usersFilter}
-                onChange={async (e) => {
-                  const v = e.target.value as any;
-                  setUsersFilter(v);
-                  if (!user?.token) return;
-                  setUsersLoading(true);
-                  try {
-                    const res = await adminListUsers(user.token, v === 'ALL' ? undefined : v);
-                    setUsers(res.items);
-                    setTotalUsers(res.total);
-                  } catch (e) {
-                    alert("Impossible de lister les utilisateurs");
-                  } finally {
-                    setUsersLoading(false);
-                  }
-                }}
-                className="px-2 py-1 border border-slate-700 rounded"
-              >
-                <option value="ALL">Tous</option>
-                <option value="BUYER">Acheteurs</option>
-                <option value="SELLER">Vendeurs</option>
-                <option value="ADMIN">Admins</option>
-              </select>
-            </div>
-          </div>
-
-          {usersLoading ? (
-            <p className="text-slate-400">Chargement...</p>
-          ) : users.length > 0 ? (
-            <div className="space-y-2">
-              {users.map((u) => (
-                <div key={u.id} className="bg-slate-900/70 border border-slate-800 rounded-lg p-4 flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="h-9 w-9 rounded-full bg-rose-500/20 flex items-center justify-center">
-                      <Shield className="h-5 w-5 text-rose-200" />
-                    </div>
-                    <div>
-                      <p className="text-slate-100">{u.name}</p>
-                      <p className="text-slate-400 text-sm">{u.email}</p>
-                      {(u.address || u.phone || u.gender) && (
-                        <div className="mt-1 text-xs text-slate-500 space-y-0.5">
-                          {u.address && <p>Adresse : {u.address}</p>}
-                          {u.phone && <p>Tél. : {u.phone}</p>}
-                          {u.gender && (
-                            <p>
-                              Sexe :
-                              {u.gender === 'male'
-                                ? ' Homme'
-                                : u.gender === 'female'
-                                ? ' Femme'
-                                : ' Autre'}
-                            </p>
-                          )}
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <span className="text-xs px-2 py-1 rounded-full border border-slate-700 text-slate-300">{u.role}</span>
-                    <span
-                      className={`text-xs px-2 py-1 rounded-full ${
-                        u.active ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'
-                      }`}
-                    >
-                      {u.active ? 'Actif' : 'En attente'}
-                    </span>
-                    <div className="flex gap-2">
-                      <button
-                        onClick={async () => {
-                          if (!user?.token) return;
-                          try {
-                            const updated = await adminSetUserRole(user.token, u.id, 'BUYER');
-                            setUsers(prev => prev.map(x => x.id === u.id ? updated : x));
-                          } catch {
-                            alert("Maj du rôle impossible");
-                          }
-                        }}
-                        className="px-3 py-1 text-xs rounded bg-slate-900/70 border border-slate-700 hover:bg-slate-950/60"
-                      >Acheteur</button>
-                      <button
-                        onClick={async () => {
-                          if (!user?.token) return;
-                          try {
-                            const updated = await adminSetUserRole(user.token, u.id, 'SELLER');
-                            setUsers(prev => prev.map(x => x.id === u.id ? updated : x));
-                          } catch {
-                            alert("Maj du rôle impossible");
-                          }
-                        }}
-                        className="px-3 py-1 text-xs rounded bg-slate-900/70 border border-slate-700 hover:bg-slate-950/60"
-                      >Vendeur</button>
-                      <button
-                        onClick={async () => {
-                          if (!user?.token) return;
-                          try {
-                            const updated = await adminSetUserRole(user.token, u.id, 'ADMIN');
-                            setUsers(prev => prev.map(x => x.id === u.id ? updated : x));
-                          } catch {
-                            alert("Maj du rôle impossible");
-                          }
-                        }}
-                        className="px-3 py-1 text-xs rounded bg-slate-900/70 border border-slate-700 hover:bg-slate-950/60"
-                      >Admin</button>
-                      <button
-                        onClick={async () => {
-                          if (!user?.token) return;
-                          try {
-                            const updated = await adminSetUserActive(user.token, u.id, !u.active);
-                            setUsers(prev => prev.map(x => x.id === u.id ? updated : x));
-                          } catch {
-                            alert("Maj du statut impossible");
-                          }
-                        }}
-                        className="px-3 py-1 text-xs rounded bg-slate-900/70 border border-slate-700 hover:bg-slate-950/60"
-                      >{u.active ? 'Désactiver' : 'Activer'}</button>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <p className="text-slate-400">Aucun utilisateur</p>
-          )}
-        </div>
-      )}
-
-      {activeTab === 'categories' && (
-        <div>
-          <div className="flex justify-between items-center mb-6">
-            <h2 className="text-slate-100">Gestion des catégories</h2>
-          </div>
-
-          <div className="bg-slate-900/70 border border-slate-800 rounded-lg p-6 mb-6">
-            <h3 className="text-slate-100 mb-4">Ajouter une catégorie</h3>
-            <div className="flex gap-2">
-              <input
-                type="text"
-                value={newCategory}
-                onChange={e => setNewCategory(e.target.value)}
-                placeholder="Nom de la catégorie"
-                className="flex-1 px-4 py-2 border border-slate-700 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-transparent"
-              />
-              <button className="flex items-center gap-2 bg-rose-600 text-white px-4 py-2 rounded-lg hover:bg-rose-500 transition-colors">
-                <Plus className="h-5 w-5" />
-                Ajouter
-              </button>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {categories.map(category => (
-              <div key={category.id} className="bg-slate-900/70 border border-slate-800 rounded-lg p-4 flex items-center justify-between">
-                <span className="text-slate-100">{category.name}</span>
-                <button className="text-red-600 hover:text-red-700">
-                  <Trash2 className="h-5 w-5" />
-                </button>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {activeTab === 'seller-requests' && (
-        <div>
-          <h2 className="text-slate-100 mb-6">Demandes vendeur en attente</h2>
-          {reqLoading ? (
-            <p className="text-slate-400">Chargement...</p>
-          ) : sellerRequests.length > 0 ? (
-            <div className="space-y-3">
-              {sellerRequests.map((r) => (
-                <div key={r.id} className="bg-slate-900/70 border border-slate-800 rounded-lg p-4 flex items-center justify-between">
-                  <div>
-                    <p className="text-slate-100">{r.user?.name || r.user?.email}</p>
-                    <p className="text-slate-400 text-sm">{r.user?.email}</p>
-                    <p className="text-slate-500 text-xs">Demande du {new Date(r.createdAt).toLocaleString()}</p>
-                  </div>
-                  <div className="flex gap-2">
-                    <button
-                      onClick={async () => {
-                        if (!user?.token) return;
-                        try {
-                          await approveSellerRequest(user.token!, r.id);
-                          setSellerRequests((prev) => prev.filter((x) => x.id !== r.id));
-                        } catch (e) {
-                          alert("Erreur lors de l'approbation");
-                        }
-                      }}
-                      className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700"
-                    >
-                      Approuver
-                    </button>
-                    <button
-                      onClick={async () => {
-                        if (!user?.token) return;
-                        try {
-                          await rejectSellerRequest(user.token!, r.id);
-                          setSellerRequests((prev) => prev.filter((x) => x.id !== r.id));
-                        } catch (e) {
-                          alert('Erreur lors du rejet');
-                        }
-                      }}
-                      className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700"
-                    >
-                      Rejeter
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <p className="text-slate-400">Aucune demande en attente</p>
-          )}
-        </div>
-      )}
-
-      {activeTab === 'fraud' && (
-        <div>
-          <h2 className="text-slate-100 mb-6">Système de détection des fraudes</h2>
-
-          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6 mb-6">
-            <div className="flex items-start gap-3">
-              <AlertTriangle className="h-6 w-6 text-yellow-600 mt-0.5 flex-shrink-0" />
-              <div>
-                <h3 className="text-yellow-900 mb-2">Alertes automatiques</h3>
-                <p className="text-yellow-700 mb-4">
-                  Le système surveille automatiquement les changements de prix suspects, les vendeurs avec des notes faibles,
-                  et les objets potentiellement frauduleux.
+          {activeTab === 'fraud' && (
+            <div>
+              <h2 className="mb-4 text-cyan-50">Detection des fraudes</h2>
+              <div className="mb-3 rounded-2xl border border-amber-300/30 bg-amber-300/10 p-4">
+                <p className="mb-1 inline-flex items-center gap-2 text-amber-100"><ClipboardList className="h-4 w-4" /> Alertes automatiques</p>
+                <p className="text-sm text-amber-100/75">
+                  La plateforme surveille les variations de prix, les comptes suspects et les activites anormales.
                 </p>
               </div>
-            </div>
-          </div>
 
-          <div className="space-y-4">
-            <div className="bg-slate-900/70 border border-red-200 rounded-lg p-4">
-              <div className="flex items-start gap-3">
-                <AlertTriangle className="h-5 w-5 text-red-600 mt-0.5" />
-                <div className="flex-1">
-                  <h4 className="text-slate-100 mb-1">Changement de prix suspect</h4>
-                  <p className="text-slate-400 mb-2">L'objet "Figurine rare" a vu son prix augmenter de 300% en 24h</p>
-                  <span className="text-slate-500">Vendeur: SuspectSeller • Il y a 30 min</span>
-                </div>
-                <button className="text-rose-200 hover:text-rose-200">Examiner</button>
+              <div className="space-y-2">
+                <article className="rounded-2xl border border-red-300/30 bg-red-500/10 p-4">
+                  <p className="mb-1 inline-flex items-center gap-2 text-red-100"><FileWarning className="h-4 w-4" /> Changement de prix suspect</p>
+                  <p className="text-sm text-red-100/75">Un produit a augmente de 300% en moins de 24h. Verification manuelle recommandee.</p>
+                </article>
+                <article className="rounded-2xl border border-amber-300/30 bg-amber-500/10 p-4">
+                  <p className="mb-1 inline-flex items-center gap-2 text-amber-100"><AlertTriangle className="h-4 w-4" /> Vendeur signale</p>
+                  <p className="text-sm text-amber-100/75">Plusieurs avis negatifs recents ont ete detectes. Controle du profil en attente.</p>
+                </article>
               </div>
             </div>
-
-            <div className="bg-slate-900/70 border border-orange-200 rounded-lg p-4">
-              <div className="flex items-start gap-3">
-                <AlertTriangle className="h-5 w-5 text-amber-300 mt-0.5" />
-                <div className="flex-1">
-                  <h4 className="text-slate-100 mb-1">Vendeur avec note faible</h4>
-                  <p className="text-slate-400 mb-2">
-                    Le vendeur "NewSeller123" a reçu plusieurs avis négatifs récemment (note: 2.1/5)
-                  </p>
-                  <span className="text-slate-500">Il y a 2h</span>
-                </div>
-                <button className="text-rose-200 hover:text-rose-200">Examiner</button>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-slate-900/70 border border-slate-800 rounded-lg p-6 mt-6">
-            <h3 className="text-slate-100 mb-4">Intégration API de détection</h3>
-            <p className="text-slate-400 mb-4">
-              Connectez un service externe de détection de fraude pour une protection renforcée.
-            </p>
-            <button className="bg-rose-600 text-white px-4 py-2 rounded-lg hover:bg-rose-500 transition-colors">
-              Configurer l'intégration
-            </button>
-          </div>
-        </div>
-      )}
+          )}
+        </section>
+      </div>
     </div>
   );
 }
-
-

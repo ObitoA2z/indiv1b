@@ -1,19 +1,100 @@
 @import "tailwindcss";
 
+:root {
+  --pm-bg: #02050e;
+  --pm-bg-soft: #070d1b;
+  --pm-card: #091327;
+  --pm-card-2: #101c35;
+  --pm-border: #2a5574;
+  --pm-text: #effbff;
+  --pm-text-muted: #9cc6db;
+  --pm-accent: #12b3c7;
+  --pm-accent-soft: #4bdad0;
+  --pm-green: #38b486;
+}
+
+* {
+  box-sizing: border-box;
+}
+
 body {
   margin: 0;
-  font-family: "Georgia", "Times New Roman", serif;
+  font-family: "Verdana", "Geneva", sans-serif;
   background:
-    radial-gradient(1200px 600px at 10% -10%, rgba(190, 24, 93, 0.35), transparent 60%),
-    radial-gradient(900px 600px at 90% 10%, rgba(153, 27, 27, 0.25), transparent 55%),
-    linear-gradient(180deg, #0b0b10 0%, #0a0a0f 60%, #08080c 100%);
-  color: #e2e8f0;
+    radial-gradient(1000px 500px at -10% -10%, rgba(45, 212, 191, 0.2), transparent 60%),
+    radial-gradient(900px 500px at 110% 10%, rgba(6, 182, 212, 0.22), transparent 62%),
+    linear-gradient(180deg, #0a1223 0%, #060c19 45%, #02050e 100%);
+  color: var(--pm-text);
+  min-height: 100vh;
 }
 
 h1,
 h2,
 h3,
 h4 {
-  font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
-  letter-spacing: 0.3px;
+  font-family: "Georgia", "Times New Roman", serif;
+  letter-spacing: 0.2px;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+.pm-frame {
+  width: min(1200px, calc(100% - 1.5rem));
+  margin-inline: auto;
+}
+
+.pm-panel {
+  border: 1px solid color-mix(in oklab, var(--pm-border) 75%, white 8%);
+  background: linear-gradient(140deg, color-mix(in oklab, var(--pm-card) 95%, black 5%), color-mix(in oklab, var(--pm-card-2) 95%, black 5%));
+  box-shadow: 0 22px 40px rgba(0, 0, 0, 0.34), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+.pm-edge {
+  position: relative;
+}
+
+.pm-edge::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  border: 1px solid rgba(174, 238, 255, 0.08);
+}
+
+.pm-title {
+  text-wrap: balance;
+}
+
+.pm-glow {
+  animation: pmPulse 4s ease-in-out infinite;
+}
+
+@keyframes pmPulse {
+  0% {
+    box-shadow: 0 0 0 rgba(75, 218, 208, 0.08);
+  }
+  50% {
+    box-shadow: 0 0 26px rgba(75, 218, 208, 0.24);
+  }
+  100% {
+    box-shadow: 0 0 0 rgba(75, 218, 208, 0.08);
+  }
+}
+
+.pm-fade-in {
+  animation: pmFadeIn 450ms ease both;
+}
+
+@keyframes pmFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
