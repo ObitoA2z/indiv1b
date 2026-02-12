@@ -80,6 +80,7 @@ Application web full-stack pour publier, consulter et acheter des produits epouv
 - Cartographie competences + formation: `docs/skills-matrix.md`, `docs/training-plan.md`
 - Runbook exploitation/observabilite: `docs/operations-runbook.md`
 - Pack preuves soutenance: `docs/soutenance-evidence-pack.md`
+- Guide start/stop local: `docs/start-stop-local.md`
 
 ## Infra complementaire
 - TLS ingress manifest: `k8s/ingress.yaml`
