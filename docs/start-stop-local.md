@@ -1,7 +1,6 @@
 # Start/Stop local (Windows)
 
-Ce guide couvre les deux modes du projet:
-- Docker Compose (mode dev rapide)
+Ce guide couvre le mode du projet:
 - Kubernetes Minikube + ArgoCD (mode CI/CD local)
 
 ## 1) Tout eteindre
@@ -9,43 +8,25 @@ Ce guide couvre les deux modes du projet:
 Depuis la racine du repo:
 
 ```powershell
-docker compose down --remove-orphans
 & "C:\Program Files\Kubernetes\Minikube\minikube.exe" stop
 ```
 
 Verification:
 
 ```powershell
-docker compose ps
 & "C:\Program Files\Kubernetes\Minikube\minikube.exe" status
 ```
 
-## 2) Demarrer en Docker Compose
+## 2) Demarrer en Kubernetes + ArgoCD
 
-Depuis la racine du repo:
-
-```powershell
-docker compose up -d --build
-docker compose ps
-```
-
-URLs:
-- Frontend: `http://localhost:5173`
-- Backend: `http://localhost:4004/api/health`
-- Prometheus: `http://localhost:9090`
-- Grafana: `http://localhost:3000`
-- RabbitMQ UI: `http://localhost:15672`
-
-## 3) Demarrer en Kubernetes + ArgoCD
-
-### 3.1 Lancer Minikube
+### 2.1 Lancer Minikube
 
 ```powershell
 & "C:\Program Files\Kubernetes\Minikube\minikube.exe" start
 kubectl config use-context minikube
 ```
 
-### 3.2 Verifier ArgoCD
+### 2.2 Verifier ArgoCD
 
 ```powershell
 kubectl -n argocd get application petite-maison-epouvante-full
@@ -57,7 +38,7 @@ Si l'application n'existe pas:
 kubectl apply -f k8s/argocd-application.yaml
 ```
 
-### 3.3 Configurer TLS local
+### 2.3 Configurer TLS local
 
 Installer `mkcert` si necessaire:
 
@@ -84,7 +65,7 @@ Ajouter les hosts (PowerShell en administrateur):
 Add-Content -Path "C:\Windows\System32\drivers\etc\hosts" -Value "`n127.0.0.1 petite-maison-epouvante.local`n127.0.0.1 api.petite-maison-epouvante.local`n127.0.0.1 grafana.petite-maison-epouvante.local`n127.0.0.1 prometheus.petite-maison-epouvante.local`n127.0.0.1 rabbitmq.petite-maison-epouvante.local"
 ```
 
-### 3.4 Exposer l'Ingress local (HTTPS)
+### 2.4 Exposer l'Ingress local (HTTPS)
 
 Garder ce terminal ouvert:
 
@@ -92,14 +73,14 @@ Garder ce terminal ouvert:
 kubectl -n ingress-nginx port-forward svc/ingress-nginx-controller 9443:443 9080:80
 ```
 
-### 3.5 Verifier les pods
+### 2.5 Verifier les pods
 
 ```powershell
 kubectl -n petite-maison-epouvante get pods,svc,ingress
 kubectl -n argocd get application petite-maison-epouvante-full
 ```
 
-## 4) URLs Kubernetes HTTPS
+## 3) URLs Kubernetes HTTPS
 
 - Frontend: `https://petite-maison-epouvante.local:9443`
 - API backend: `https://api.petite-maison-epouvante.local:9443/api/health`

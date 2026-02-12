@@ -1,12 +1,12 @@
-import type { Product } from '../data/mockData';
+﻿import type { Product } from '../data/mockData';
 import type { ProductFormData } from '../components/AddProductModal';
 
 // Helper pour construire les URLs d'API sans doubler "/api".
 // Principe :
-// - En dev / docker-compose, on passe une URL complète (ex: http://localhost:4004)
+// - En local, on passe une URL complÃ¨te (ex: http://localhost:4004)
 //   et on joint le chemin REST dessus.
-// - En production Kubernetes, on ne définit PAS VITE_API_URL et on garde
-//   des chemins relatifs (ex: /api/products) qui sont proxyfiés par Nginx.
+// - En production Kubernetes, on ne dÃ©finit PAS VITE_API_URL et on garde
+//   des chemins relatifs (ex: /api/products) qui sont proxyfiÃ©s par Nginx.
 const RAW_API_BASE = (import.meta.env.VITE_API_URL as string | undefined) ?? '';
 
 function buildApiUrl(path: string): string {
@@ -15,12 +15,12 @@ function buildApiUrl(path: string): string {
   if (RAW_API_BASE) {
     try {
       const u = new URL(RAW_API_BASE);
-      // Nettoie le trailing slash éventuel et concatène le chemin
+      // Nettoie le trailing slash Ã©ventuel et concatÃ¨ne le chemin
       const basePath = u.pathname.replace(/\/$/, '');
       u.pathname = `${basePath}${normalizedPath}`;
       return u.toString();
     } catch {
-      // Si RAW_API_BASE n'est pas une URL absolue, on la traite comme préfixe de chemin
+      // Si RAW_API_BASE n'est pas une URL absolue, on la traite comme prÃ©fixe de chemin
       const base = RAW_API_BASE.replace(/\/$/, '');
       return `${base}${normalizedPath}`;
     }
@@ -69,7 +69,7 @@ export async function adminSetUserRole(token: string, id: string, role: 'BUYER' 
   });
   if (!res.ok) {
     const data = await res.json().catch(() => null);
-    throw new Error(data?.error || "Impossible de mettre à jour le rôle");
+    throw new Error(data?.error || "Impossible de mettre Ã  jour le rÃ´le");
   }
   return res.json();
 }
@@ -80,7 +80,7 @@ export async function adminSetUserActive(token: string, id: string, active: bool
     headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
     body: JSON.stringify({ active }),
   });
-  if (!res.ok) throw new Error("Impossible de mettre à jour l'état du compte");
+  if (!res.ok) throw new Error("Impossible de mettre Ã  jour l'Ã©tat du compte");
   return res.json();
 }
 
@@ -101,7 +101,7 @@ export async function createSellerRequest(token: string, message?: string): Prom
   });
   if (!res.ok) {
     const data = await res.json().catch(() => null);
-    throw new Error(data?.error || 'Impossible de créer la demande vendeur');
+    throw new Error(data?.error || 'Impossible de crÃ©er la demande vendeur');
   }
   return res.json();
 }
@@ -198,7 +198,7 @@ export async function fetchProducts(): Promise<Product[]> {
 export async function fetchProductById(id: string): Promise<Product> {
   const res = await fetch(buildApiUrl(`/api/products/${id}`));
   if (!res.ok) {
-    throw new Error('Produit non trouvé');
+    throw new Error('Produit non trouvÃ©');
   }
   const p = await res.json();
   return {
@@ -249,7 +249,7 @@ export async function createProduct(payload: CreateProductPayload, token?: strin
   });
 
   if (!res.ok) {
-    throw new Error("Erreur lors de la création de l'objet");
+    throw new Error("Erreur lors de la crÃ©ation de l'objet");
   }
 
   return res.json();
@@ -269,7 +269,7 @@ export async function createCheckoutSession(productId: string, token: string, qu
 
   if (!res.ok) {
     const data = await res.json().catch(() => null);
-    throw new Error(data?.error || 'Erreur lors de la création de la session de paiement');
+    throw new Error(data?.error || 'Erreur lors de la crÃ©ation de la session de paiement');
   }
 
   return res.json();
@@ -353,3 +353,5 @@ export async function deleteProductAdmin(id: string, token?: string): Promise<vo
     throw new Error(data?.error || "Erreur lors de la suppression de l'objet");
   }
 }
+
+

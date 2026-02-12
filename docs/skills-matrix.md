@@ -6,7 +6,7 @@
 | React + TypeScript |  |  | X |  |  | Good |
 | Node.js + Express |  | X |  |  |  | Good |
 | Prisma + SQL modeling |  | X |  |  |  | Medium |
-| Docker + Compose |  | X | X | X |  | Good |
+| Docker + Kubernetes |  | X | X | X |  | Good |
 | Kubernetes manifests | X |  |  | X |  | Medium |
 | CI/CD (GitHub Actions) | X | X | X | X |  | Medium |
 | Security controls (auth, scans) | X | X |  | X | X | Medium |

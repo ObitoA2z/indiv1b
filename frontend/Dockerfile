@@ -10,7 +10,7 @@ RUN npm install
 # Copy source code
 COPY . .
 
-# Build-time API URL for Vite (passed from docker-compose build args)
+# Build-time API URL for Vite (optional build arg)
 ARG VITE_API_URL
 ENV VITE_API_URL=${VITE_API_URL}
 

@@ -4,13 +4,13 @@
 Validate behavior of auth, product publication, moderation, and order flow in an isolated environment.
 
 ## Environment
-- Local Docker Compose environment
-- Frontend: `http://localhost:5173`
-- Backend: `http://localhost:4004`
-- RabbitMQ: `http://localhost:15672`
+- Local Kubernetes (Minikube) environment
+- Frontend: `https://petite-maison-epouvante.local:9443`
+- Backend: `https://api.petite-maison-epouvante.local:9443`
+- RabbitMQ: `https://rabbitmq.petite-maison-epouvante.local:9443`
 
 ## Repro steps
-1. Start stack: `docker compose up --build`
+1. Start cluster and app: `minikube start` puis `kubectl -n argocd get application petite-maison-epouvante-full`
 2. Register buyer and seller accounts via API.
 3. Create product with seller token.
 4. Approve product with admin token.

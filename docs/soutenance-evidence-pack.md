@@ -46,11 +46,11 @@ Ce document liste les preuves a produire pendant la soutenance pour valider les 
   - certificat valide + redirection HTTPS active.
 
 ## 6) Observabilite
-- Services locaux:
-  - `docker compose up -d prometheus grafana rabbitmq backend`
+- Services Kubernetes:
+  - `kubectl -n petite-maison-epouvante get deploy,svc`
 - URLs:
-  - `http://localhost:9090` (Prometheus)
-  - `http://localhost:3000` (Grafana)
+  - `https://prometheus.petite-maison-epouvante.local:9443` (Prometheus)
+  - `https://grafana.petite-maison-epouvante.local:9443` (Grafana)
 - Dashboard:
   - `grafana/dashboards/petite-maison-overview.json`
 - Preuve attendue:

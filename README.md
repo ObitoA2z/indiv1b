@@ -11,17 +11,20 @@ Application web full-stack pour publier, consulter et acheter des produits epouv
 - Base: SQLite (Prisma)
 - Messaging: RabbitMQ
 - Monitoring: Prometheus + Grafana
-- Conteneurisation: Docker / Docker Compose
+- Conteneurisation: Docker + Kubernetes
 - CI/CD: GitHub Actions
 
-## Lancement en local (Docker)
-1. Renseigner `.env` a la racine (ex: `JWT_SECRET`, `STRIPE_SECRET_KEY`).
-2. Lancer:
-   - `docker compose up --build`
-3. Acceder a:
-   - Frontend: `http://localhost:5173`
-   - Backend: `http://localhost:4004`
-   - RabbitMQ UI: `http://localhost:15672`
+## Lancement en local (Kubernetes)
+1. Demarrer Minikube:
+   - `minikube start`
+2. Verifier ArgoCD:
+   - `kubectl -n argocd get application petite-maison-epouvante-full`
+3. Acceder aux services via Ingress HTTPS:
+   - Frontend: `https://petite-maison-epouvante.local:9443`
+   - Backend health: `https://api.petite-maison-epouvante.local:9443/api/health`
+   - Grafana: `https://grafana.petite-maison-epouvante.local:9443`
+   - Prometheus: `https://prometheus.petite-maison-epouvante.local:9443`
+   - RabbitMQ UI: `https://rabbitmq.petite-maison-epouvante.local:9443`
 
 ## Lancement backend sans Docker
 1. Aller dans `backend`.
@@ -87,8 +90,8 @@ Application web full-stack pour publier, consulter et acheter des produits epouv
 - Autoscaling manifests: `k8s/backend-hpa.yaml`, `k8s/frontend-hpa.yaml`
 
 ## URLs HTTPS locales (Kubernetes)
-- Frontend: `https://petite-maison-epouvante.local`
-- API backend: `https://api.petite-maison-epouvante.local`
-- Grafana: `https://grafana.petite-maison-epouvante.local`
-- Prometheus: `https://prometheus.petite-maison-epouvante.local`
-- RabbitMQ UI: `https://rabbitmq.petite-maison-epouvante.local`
+- Frontend: `https://petite-maison-epouvante.local:9443`
+- API backend: `https://api.petite-maison-epouvante.local:9443`
+- Grafana: `https://grafana.petite-maison-epouvante.local:9443`
+- Prometheus: `https://prometheus.petite-maison-epouvante.local:9443`
+- RabbitMQ UI: `https://rabbitmq.petite-maison-epouvante.local:9443`

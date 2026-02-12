@@ -12,10 +12,10 @@ Version: V1
 | Performance efficiency | Q-003 | Product listing must respond quickly. | P95 latency <= 500 ms on `GET /api/products` |
 | Security | Q-004 | Auth and role checks must block unauthorized access. | 0 critical auth bypass findings |
 | Maintainability | Q-005 | Changes must stay testable and modular. | Unit + integration tests executed in CI |
-| Portability | Q-006 | App must run local + Docker + Kubernetes manifests. | Successful startup in Docker Compose and K8s manifests versioned |
+| Portability | Q-006 | App must run on Kubernetes manifests in local cluster. | Successful startup in Minikube + manifests versioned |
 
 ## Verification evidence
 - API routes: `backend/src/routes/*.js`
 - Auth middleware: `backend/src/auth.js`
 - CI execution: `.github/workflows/ci.yml`
-- Infrastructure descriptors: `docker-compose.yml`, `k8s/*.yaml`
+- Infrastructure descriptors: `k8s/*.yaml`
