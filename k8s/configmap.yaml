@@ -10,5 +10,3 @@ data:
   FRONTEND_URL: "http://localhost:30080"
   # RabbitMQ connection URL
   RABBITMQ_URL: "amqp://admin:admin123@rabbitmq.petite-maison-epouvante.svc.cluster.local:5672"
-  # Marker to validate CI -> ArgoCD -> Kubernetes flow
-  PIPELINE_TEST_MARKER: "flow-test-2026-02-12"
