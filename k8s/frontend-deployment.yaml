@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: ghcr.io/obitoa2z/collector-shop-full-frontend:a57fd987dd7a2f43d50e2a80b6aae9c5517f4e97
+          image: ghcr.io/obitoa2z/collector-shop-full-frontend:400c83a9f47c8cb272f85486cc4e67715c6ea2fb
           imagePullPolicy: IfNotPresent
           ports:
             - name: http
