@@ -1,25 +1,25 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: collector-backend
-  namespace: collector-shop
+  name: petite-maison-backend
+  namespace: petite-maison-epouvante
   labels:
-    app: collector-backend
+    app: petite-maison-backend
     tier: backend
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: collector-backend
+      app: petite-maison-backend
   template:
     metadata:
       labels:
-        app: collector-backend
+        app: petite-maison-backend
         tier: backend
     spec:
       containers:
         - name: backend
-          image: collectorshopbk.azurecr.io/collector-backend:v1
+          image: ghcr.io/obitoa2z/petite-maison-epouvante-backend:v1
           imagePullPolicy: IfNotPresent
           env:
             - name: NODE_ENV
@@ -29,27 +29,27 @@ spec:
             - name: DATABASE_URL
               valueFrom:
                 configMapKeyRef:
-                  name: collector-config
+                  name: petite-maison-config
                   key: DATABASE_URL
             - name: FRONTEND_URL
               valueFrom:
                 configMapKeyRef:
-                  name: collector-config
+                  name: petite-maison-config
                   key: FRONTEND_URL
             - name: JWT_SECRET
               valueFrom:
                 secretKeyRef:
-                  name: collector-secrets
+                  name: petite-maison-secrets
                   key: JWT_SECRET
             - name: STRIPE_SECRET_KEY
               valueFrom:
                 secretKeyRef:
-                  name: collector-secrets
+                  name: petite-maison-secrets
                   key: STRIPE_SECRET_KEY
             - name: RABBITMQ_URL
               valueFrom:
                 configMapKeyRef:
-                  name: collector-config
+                  name: petite-maison-config
                   key: RABBITMQ_URL
           ports:
             - name: http

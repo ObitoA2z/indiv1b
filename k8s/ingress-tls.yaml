@@ -1,8 +1,8 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: collector-shop-ingress-tls
-  namespace: collector-shop
+  name: petite-maison-epouvante-ingress-tls
+  namespace: petite-maison-epouvante
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
@@ -11,16 +11,16 @@ spec:
   ingressClassName: nginx
   tls:
     - hosts:
-        - collector-shop.local
-      secretName: collector-shop-tls
+        - petite-maison-epouvante.local
+      secretName: petite-maison-epouvante-tls
   rules:
-    - host: collector-shop.local
+    - host: petite-maison-epouvante.local
       http:
         paths:
           - path: /
             pathType: Prefix
             backend:
               service:
-                name: collector-frontend
+                name: petite-maison-frontend
                 port:
                   number: 80

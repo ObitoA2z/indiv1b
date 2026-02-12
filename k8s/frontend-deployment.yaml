@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: collector-frontend
-  namespace: collector-shop
+  name: petite-maison-frontend
+  namespace: petite-maison-epouvante
   labels:
-    app: collector-frontend
+    app: petite-maison-frontend
     tier: frontend
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: collector-frontend
+      app: petite-maison-frontend
   template:
     metadata:
       labels:
-        app: collector-frontend
+        app: petite-maison-frontend
         tier: frontend
     spec:
       containers:

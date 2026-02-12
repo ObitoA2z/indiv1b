@@ -10,6 +10,7 @@ Application web full-stack pour publier, consulter et acheter des produits epouv
 - Backend: Node.js + Express + Prisma
 - Base: SQLite (Prisma)
 - Messaging: RabbitMQ
+- Monitoring: Prometheus + Grafana
 - Conteneurisation: Docker / Docker Compose
 - CI/CD: GitHub Actions
 
@@ -77,6 +78,8 @@ Application web full-stack pour publier, consulter et acheter des produits epouv
 - Plan de remediation: `docs/remediation-plan.md`
 - Sandbox + POC: `docs/sandbox-experiment.md`, `docs/poc-feasibility.md`
 - Cartographie competences + formation: `docs/skills-matrix.md`, `docs/training-plan.md`
+- Runbook exploitation/observabilite: `docs/operations-runbook.md`
+- Pack preuves soutenance: `docs/soutenance-evidence-pack.md`
 
 ## Infra complementaire
 - TLS ingress manifest: `k8s/ingress-tls.yaml`, `k8s-aks/ingress-tls.yaml`

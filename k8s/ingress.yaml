@@ -1,18 +1,18 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: collector-shop-ingress
-  namespace: collector-shop
+  name: petite-maison-epouvante-ingress
+  namespace: petite-maison-epouvante
 spec:
   ingressClassName: nginx
   rules:
-    - host: collector-shop.local
+    - host: petite-maison-epouvante.local
       http:
         paths:
           - path: /
             pathType: Prefix
             backend:
               service:
-                name: collector-frontend
+                name: petite-maison-frontend
                 port:
                   number: 80

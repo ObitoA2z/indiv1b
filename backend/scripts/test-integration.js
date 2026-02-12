@@ -78,6 +78,8 @@ async function main() {
   // Register a buyer (account is active immediately)
   const buyerEmail = 'buyer@test.local';
   const buyerPassword = 'Buyer!234';
+  const sellerEmail = 'seller@test.local';
+  const sellerPassword = 'Seller!234';
 
   const registerRes = await request(app)
     .post('/api/auth/register')
@@ -97,6 +99,33 @@ async function main() {
   if (!buyerLoginRes.body?.token) {
     throw new Error('Missing JWT token for buyer login');
   }
+  const buyerToken = buyerLoginRes.body.token;
+
+  // Register/login a seller for product publication flow
+  const sellerRegisterRes = await request(app)
+    .post('/api/auth/register')
+    .send({
+      name: 'Seller',
+      email: sellerEmail,
+      password: sellerPassword,
+      role: 'SELLER',
+      sellerMessage: 'Integration flow seller account',
+    })
+    .expect(201);
+
+  if (!sellerRegisterRes.body?.token) {
+    throw new Error('Missing JWT token after seller registration');
+  }
+
+  const sellerLoginRes = await request(app)
+    .post('/api/auth/login')
+    .send({ email: sellerEmail, password: sellerPassword })
+    .expect(200);
+
+  if (!sellerLoginRes.body?.token) {
+    throw new Error('Missing JWT token for seller login');
+  }
+  const sellerToken = sellerLoginRes.body.token;
 
   // Admin can login
   const loginRes = await request(app)
@@ -117,6 +146,68 @@ async function main() {
 
   if (typeof usersRes.body?.total !== 'number' || !Array.isArray(usersRes.body?.items)) {
     throw new Error('Unexpected response shape from /api/admin/users');
+  }
+
+  // End-to-end business flow:
+  // seller publishes -> admin approves -> buyer consults -> buyer orders
+  const productPayload = {
+    title: 'Masque spectral integration',
+    description: 'Objet epouvante pour test E2E',
+    price: 39.99,
+    shipping: 4.5,
+    category: 'props',
+    images: ['https://example.com/mask.png'],
+    location: 'Paris',
+  };
+
+  const createProductRes = await request(app)
+    .post('/api/products')
+    .set('Authorization', `Bearer ${sellerToken}`)
+    .send(productPayload)
+    .expect(201);
+
+  const productId = createProductRes.body?.id;
+  if (!productId) {
+    throw new Error('Product creation failed: missing product id');
+  }
+  if (createProductRes.body?.status !== 'pending') {
+    throw new Error('Product should be pending after seller publication');
+  }
+
+  const approveRes = await request(app)
+    .post(`/api/admin/products/${productId}/approve`)
+    .set('Authorization', `Bearer ${token}`)
+    .expect(200);
+
+  if (approveRes.body?.status !== 'available') {
+    throw new Error('Admin approval failed: status is not available');
+  }
+
+  const productDetailRes = await request(app)
+    .get(`/api/products/${productId}`)
+    .expect(200);
+
+  if (productDetailRes.body?.status !== 'available') {
+    throw new Error('Product detail should expose available status after approval');
+  }
+
+  const orderRes = await request(app)
+    .post('/api/orders')
+    .set('Authorization', `Bearer ${buyerToken}`)
+    .send({ productId, quantity: 2 })
+    .expect(201);
+
+  if (!orderRes.body?.id) {
+    throw new Error('Order creation failed: missing order id');
+  }
+
+  const listOrdersRes = await request(app)
+    .get('/api/orders')
+    .set('Authorization', `Bearer ${buyerToken}`)
+    .expect(200);
+
+  if (!Array.isArray(listOrdersRes.body) || !listOrdersRes.body.some((o) => o.id === orderRes.body.id)) {
+    throw new Error('Created order not found in buyer orders list');
   }
 
   await prisma.$disconnect();

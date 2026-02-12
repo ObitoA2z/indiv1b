@@ -52,3 +52,10 @@ The V1 scope is focused on one business feature: publish and consult horror prod
 - Unit tests: `backend/tests/unit/auth.test.js`, `backend/tests/unit/server.test.js`, `backend/tests/unit/rabbitmq.test.js`
 - Integration tests: `backend/scripts/test-integration.js`
 - Smoke tests: `backend/scripts/smoke-routes.js`
+
+## E2E proof (A1)
+- `backend/scripts/test-integration.js` now validates the full business chain:
+  - seller publication (`POST /api/products`)
+  - admin moderation (`POST /api/admin/products/:id/approve`)
+  - buyer consultation (`GET /api/products/:id`)
+  - buyer order creation (`POST /api/orders`) and listing (`GET /api/orders`)

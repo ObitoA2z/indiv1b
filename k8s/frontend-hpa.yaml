@@ -1,13 +1,13 @@
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: collector-frontend-hpa
-  namespace: collector-shop
+  name: petite-maison-frontend-hpa
+  namespace: petite-maison-epouvante
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: collector-frontend
+    name: petite-maison-frontend
   minReplicas: 2
   maxReplicas: 6
   metrics:

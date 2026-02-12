@@ -10,6 +10,7 @@
 4. Build and push images on `main`.
 5. Image vulnerability scans (Trivy).
 6. Update Kubernetes manifests with image tags and push commit.
+7. Security gates: fail pipeline when CRITICAL vulnerabilities are detected (deps/images).
 
 ## Inputs and outputs
 - Inputs: source code, lock files, secrets (`GITHUB_TOKEN`).

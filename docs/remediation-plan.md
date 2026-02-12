@@ -3,7 +3,7 @@
 ## Priority matrix
 | Priority | Item | Owner | Target date | Success criteria |
 | --- | --- | --- | --- | --- |
-| P1 | Enforce CI security gates for CRITICAL vulnerabilities | DevOps | +7 days | CI blocks when CRITICAL > 0 |
+| P1 | Maintain CI security gates for CRITICAL vulnerabilities | DevOps | In place + continuous | CI blocks when CRITICAL > 0 |
 | P1 | Ensure TLS active on public ingress | DevOps | +7 days | HTTPS endpoint reachable with valid certificate |
 | P1 | Finalize stable integration testing on CI runner | Backend | +7 days | Integration job green for 5 consecutive runs |
 | P2 | Enable autoscaling in production profile | DevOps | +14 days | HPA active and tested under load |

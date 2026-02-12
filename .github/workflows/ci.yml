@@ -66,6 +66,10 @@ jobs:
           name: backend-audit-report
           path: backend/backend-audit.json
 
+      - name: Fail on backend critical vulnerabilities
+        run: |
+          node -e "const fs=require('fs');const p='backend-audit.json';const j=JSON.parse(fs.readFileSync(p,'utf8'));const v=j.vulnerabilities||{};const critical=Object.values(v).filter(x=>x&&x.severity==='critical').length;console.log('backend_critical_vulns='+critical);if(critical>0){process.exit(1);}"
+
   frontend:
     name: Frontend
     if: github.actor != 'github-actions[bot]'
@@ -103,6 +107,10 @@ jobs:
         with:
           name: frontend-audit-report
           path: frontend/frontend-audit.json
+
+      - name: Fail on frontend critical vulnerabilities
+        run: |
+          node -e "const fs=require('fs');const p='frontend-audit.json';const j=JSON.parse(fs.readFileSync(p,'utf8'));const v=j.vulnerabilities||{};const critical=Object.values(v).filter(x=>x&&x.severity==='critical').length;console.log('frontend_critical_vulns='+critical);if(critical>0){process.exit(1);}"
 
   build-and-push-images:
     name: Build, Scan & Push Docker images
@@ -166,6 +174,26 @@ jobs:
           path: |
             trivy-backend.json
             trivy-frontend.json
+
+      - name: Fail on backend image CRITICAL vulnerabilities
+        uses: aquasecurity/trivy-action@0.28.0
+        with:
+          image-ref: ${{ env.IMAGE_BACKEND }}:${{ env.IMAGE_TAG }}
+          format: table
+          vuln-type: os,library
+          severity: CRITICAL
+          ignore-unfixed: true
+          exit-code: '1'
+
+      - name: Fail on frontend image CRITICAL vulnerabilities
+        uses: aquasecurity/trivy-action@0.28.0
+        with:
+          image-ref: ${{ env.IMAGE_FRONTEND }}:${{ env.IMAGE_TAG }}
+          format: table
+          vuln-type: os,library
+          severity: CRITICAL
+          ignore-unfixed: true
+          exit-code: '1'
 
       - name: Push images
         run: |

@@ -2,11 +2,11 @@ apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
   name: backend-restrict-ingress
-  namespace: collector-shop
+  namespace: petite-maison-epouvante
 spec:
   podSelector:
     matchLabels:
-      app: collector-backend
+      app: petite-maison-backend
   policyTypes:
     - Ingress
   ingress:

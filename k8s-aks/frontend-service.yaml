@@ -1,14 +1,14 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: collector-frontend
-  namespace: collector-shop
+  name: petite-maison-frontend
+  namespace: petite-maison-epouvante
   labels:
-    app: collector-frontend
+    app: petite-maison-frontend
 spec:
   type: LoadBalancer
   selector:
-    app: collector-frontend
+    app: petite-maison-frontend
   ports:
     - name: http
       port: 80

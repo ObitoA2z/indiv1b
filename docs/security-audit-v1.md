@@ -18,7 +18,7 @@ Application code, CI pipeline, Docker/Kubernetes manifests, and basic load behav
 | Image scan | Pass with caveats | Trivy runs in CI, currently non-blocking. |
 | TLS | Partial | TLS manifest provided, rollout depends on cert provisioning. |
 | Availability controls | Partial | Probes present, autoscaling manifests added but require metrics-server/prod setup. |
-| Observability | Partial | Health and logs available; no centralized metrics stack committed. |
+| Observability | Pass with caveats | Health/logs + Prometheus/Grafana local stack and dashboard are committed; alerting governance still to industrialize. |
 
 ## Key risks (current)
 1. Security scan gates are informational, not strict release blockers.

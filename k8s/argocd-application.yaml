@@ -1,17 +1,17 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: collector-shop-full
+  name: petite-maison-epouvante-full
   namespace: argocd
 spec:
   project: default
   source:
-    repoURL: git@github.com:bamekakenang/collector-shop-full.git
+    repoURL: https://github.com/ObitoA2z/indiv1b.git
     targetRevision: main
     path: k8s
   destination:
     server: https://kubernetes.default.svc
-    namespace: collector-shop
+    namespace: petite-maison-epouvante
   syncPolicy:
     automated:
       prune: true
