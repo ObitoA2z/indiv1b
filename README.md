@@ -82,5 +82,5 @@ Application web full-stack pour publier, consulter et acheter des produits epouv
 - Pack preuves soutenance: `docs/soutenance-evidence-pack.md`
 
 ## Infra complementaire
-- TLS ingress manifest: `k8s/ingress-tls.yaml`, `k8s-aks/ingress-tls.yaml`
+- TLS ingress manifest: `k8s/ingress.yaml`, `k8s-aks/ingress-tls.yaml`
 - Autoscaling manifests: `k8s/backend-hpa.yaml`, `k8s/frontend-hpa.yaml`, `k8s-aks/backend-hpa.yaml`, `k8s-aks/frontend-hpa.yaml`

@@ -40,7 +40,7 @@ Ce document liste les preuves a produire pendant la soutenance pour valider les 
 
 ## 5) HTTPS / TLS
 - Manifestes:
-  - `k8s/ingress-tls.yaml`
+  - `k8s/ingress.yaml`
   - `k8s-aks/ingress-tls.yaml`
 - Commande de preuve:
   - `curl -I https://<host>`

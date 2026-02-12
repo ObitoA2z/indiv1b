@@ -3,8 +3,15 @@ kind: Ingress
 metadata:
   name: petite-maison-epouvante-ingress
   namespace: petite-maison-epouvante
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
 spec:
   ingressClassName: nginx
+  tls:
+    - hosts:
+        - petite-maison-epouvante.local
+      secretName: petite-maison-epouvante-tls
   rules:
     - host: petite-maison-epouvante.local
       http:
