@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: ghcr.io/obitoa2z/petite-maison-epouvante-frontend:7d93a3a62a009820eff513ee474bcde9348436d3
+          image: ghcr.io/obitoa2z/petite-maison-epouvante-frontend:9ee109ff4aeeba8a2ef4bdbda05cade756a95f84
           imagePullPolicy: IfNotPresent
           ports:
             - name: http
