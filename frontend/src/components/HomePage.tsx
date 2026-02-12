@@ -52,6 +52,14 @@ export function HomePage({ onProductClick, onNavigateToCatalog }: HomePageProps)
 
   return (
     <div className="pm-fade-in">
+      <section className="pm-frame pt-6">
+        <div className="rounded-2xl border border-[#f28d49] bg-[#3b1f13]/90 px-4 py-3 text-center shadow-[0_0_30px_rgba(242,141,73,0.25)]">
+          <p className="text-sm md:text-base font-semibold text-[#ffd9bd] tracking-wide">
+            CI/CD TEST ACTIF - Version front visible sur Kubernetes via ArgoCD
+          </p>
+        </div>
+      </section>
+
       <section className="pm-frame pt-8 pb-6">
         <div className="pm-panel pm-edge rounded-3xl p-6 md:p-8 overflow-hidden relative">
           <div className="absolute -right-16 -top-16 w-48 h-48 rounded-full bg-[#d95f18]/20 blur-3xl" />
