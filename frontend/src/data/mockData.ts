@@ -24,26 +24,25 @@ export interface Category {
 }
 
 export const categories: Category[] = [
-  { id: 'grimoires', name: 'Grimoires' },
-  { id: 'poupees-hantees', name: 'Poupees hantees' },
-  { id: 'affiches-horreur', name: "Affiches d'horreur" },
-  { id: 'masques-rituels', name: 'Masques rituels' },
-  { id: 'vinyles-hantes', name: 'Vinyles hantes' },
-  { id: 'photographies-paranormales', name: 'Photographies paranormales' },
-  { id: 'objets-maudits', name: 'Objets maudits' },
-  { id: 'figurines-macabres', name: 'Figurines macabres' }
+  { id: 'grimoires', name: 'Citrouilles maudites' },
+  { id: 'poupees-hantees', name: 'Visages possedes' },
+  { id: 'affiches-horreur', name: 'Citrouilles peintes' },
+  { id: 'masques-rituels', name: 'Masques de peste' },
+  { id: 'vinyles-hantes', name: 'Grimoires arachnides' },
+  { id: 'photographies-paranormales', name: 'Scenes macabres' },
+  { id: 'objets-maudits', name: 'Araignees decoratives' },
+  { id: 'figurines-macabres', name: 'Enseignes fantomes' }
 ];
 
 export const mockProducts: Product[] = [
   {
     id: '1',
-    title: "Grimoire d'initiation - Edition 1897",
+    title: 'Citrouille grimacante - Veille de Samhain',
     description:
-      "Grimoire ancien reliure cuir, pages intactes, annotations d'initie en marge. Ideal pour les rituels de protection et les recherches occultes.",
-    price: 240.0,
-    shipping: 12.0,
-    image:
-      'https://images.unsplash.com/photo-1455885666463-2d0c55f91a8f?auto=format&fit=crop&w=1080&q=80',
+      'Citrouille sculptee main avec expression agressive, ideale pour decorer une entree de maison hantee.',
+    price: 49.0,
+    shipping: 7.0,
+    image: 'https://loremflickr.com/1200/900/halloween,pumpkin?lock=101',
     category: 'grimoires',
     sellerId: 's1',
     sellerName: 'ArchivisteNoir',
@@ -51,21 +50,20 @@ export const mockProducts: Product[] = [
     sellerReviews: 62,
     location: 'Paris',
     status: 'available',
-    createdAt: '2024-12-01',
+    createdAt: '2025-10-21',
     priceHistory: [
-      { price: 280.0, date: '2024-11-20' },
-      { price: 240.0, date: '2024-12-01' }
+      { price: 59.0, date: '2025-10-12' },
+      { price: 49.0, date: '2025-10-21' }
     ]
   },
   {
     id: '2',
-    title: "Poupee de porcelaine 'Eloise' - Soupirs nocturnes",
+    title: 'Citrouille possedee - Edition rouge',
     description:
-      "Poupee ancienne, porcelaine intacte, robe d'origine. Vendue avec certificat d'authenticite et notes du collectionneur.",
-    price: 320.0,
-    shipping: 18.0,
-    image:
-      'https://images.unsplash.com/photo-1504198458649-3128b932f49b?auto=format&fit=crop&w=1080&q=80',
+      'Citrouille de decoration avec reliefs tres marques et teinte sombre pour une ambiance agressive.',
+    price: 64.0,
+    shipping: 9.0,
+    image: 'https://loremflickr.com/1200/900/jack-o-lantern,halloween?lock=102',
     category: 'poupees-hantees',
     sellerId: 's2',
     sellerName: 'MaisonEtrange',
@@ -73,17 +71,16 @@ export const mockProducts: Product[] = [
     sellerReviews: 91,
     location: 'Lyon',
     status: 'available',
-    createdAt: '2024-11-28'
+    createdAt: '2025-10-23'
   },
   {
     id: '3',
-    title: "Affiche originale - La Nuit des Ombres (1964)",
+    title: 'Lot de mini-citrouilles peintes - Trio noir',
     description:
-      "Affiche cinema originale, format 120x160 cm. Papier d'epoque, couleurs conservees. Piece rare pour amateurs d'horreur classique.",
-    price: 680.0,
-    shipping: 22.0,
-    image:
-      'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?auto=format&fit=crop&w=1080&q=80',
+      'Trois petites citrouilles customisees a la craie pour deco de table ou stand epouvante.',
+    price: 29.0,
+    shipping: 6.0,
+    image: 'https://loremflickr.com/1200/900/painted,pumpkin?lock=103',
     category: 'affiches-horreur',
     sellerId: 's3',
     sellerName: 'CineNoir',
@@ -91,17 +88,16 @@ export const mockProducts: Product[] = [
     sellerReviews: 103,
     location: 'Bordeaux',
     status: 'available',
-    createdAt: '2024-12-02'
+    createdAt: '2025-10-25'
   },
   {
     id: '4',
-    title: 'Masque rituel en bois - Cercle de Sologne',
+    title: 'Masque bec de peste - Replique theatrale',
     description:
-      "Masque sculpte main, patine d'origine, traces d'encens. Objet destine a l'exposition ou aux rituels theatrises.",
-    price: 210.0,
-    shipping: 14.0,
-    image:
-      'https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=1080&q=80',
+      'Masque style medecin de peste en tissu patine, parfait pour costume et decor photo sombre.',
+    price: 85.0,
+    shipping: 11.0,
+    image: 'https://loremflickr.com/1200/900/plague,doctor,mask?lock=104',
     category: 'masques-rituels',
     sellerId: 's4',
     sellerName: 'BoisAncestral',
@@ -109,17 +105,16 @@ export const mockProducts: Product[] = [
     sellerReviews: 48,
     location: 'Marseille',
     status: 'available',
-    createdAt: '2024-11-25'
+    createdAt: '2025-10-27'
   },
   {
     id: '5',
-    title: "Vinyle hante - Bande originale 'Le Manoir' (1978)",
+    title: "Livre decoratif 'Arachnids' - Couverture relief",
     description:
-      "Pressage d'epoque, pochette en bon etat, disque ecoute et nettoye. Sonorites sombres, ambiance de manoir abandonne.",
-    price: 160.0,
-    shipping: 8.0,
-    image:
-      'https://images.unsplash.com/photo-1511379938547-c1f69419868d?auto=format&fit=crop&w=1080&q=80',
+      'Faux grimoire avec araignee en relief pour bibliotheque gothique et vitrine epouvante.',
+    price: 72.0,
+    shipping: 10.0,
+    image: 'https://loremflickr.com/1200/900/spider,book?lock=105',
     category: 'vinyles-hantes',
     sellerId: 's5',
     sellerName: 'AiguilleNoire',
@@ -127,17 +122,16 @@ export const mockProducts: Product[] = [
     sellerReviews: 77,
     location: 'Toulouse',
     status: 'available',
-    createdAt: '2024-11-30'
+    createdAt: '2025-10-28'
   },
   {
     id: '6',
-    title: 'Photographie argentique - Apparition du couloir Nord',
+    title: 'Mise en scene cuisine macabre - Duo visages',
     description:
-      "Tirage argentique authentifie, leger grain d'epoque. La silhouette en fond apparait sur la serie complete.",
-    price: 390.0,
-    shipping: 16.0,
-    image:
-      'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1080&q=80',
+      'Accessoire photo humoristique et angoissant avec couteau factice et pommes de terre illustrees.',
+    price: 19.0,
+    shipping: 5.0,
+    image: 'https://loremflickr.com/1200/900/potato,knife?lock=106',
     category: 'photographies-paranormales',
     sellerId: 's6',
     sellerName: 'ObscuraLab',
@@ -145,17 +139,16 @@ export const mockProducts: Product[] = [
     sellerReviews: 132,
     location: 'Nantes',
     status: 'available',
-    createdAt: '2024-11-22'
+    createdAt: '2025-10-18'
   },
   {
     id: '7',
-    title: "Talisman d'obsidienne - Protection inversee",
+    title: 'Araignee textile rouge - Decoration porte',
     description:
-      "Talisman taille main, obsidienne polie. Livre avec sachet de protection et protocole d'entretien.",
-    price: 140.0,
-    shipping: 9.0,
-    image:
-      'https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=1080&q=80',
+      'Araignee artisanale en tissu et fils chenille, legere et facile a suspendre pour Halloween.',
+    price: 14.0,
+    shipping: 4.0,
+    image: 'https://loremflickr.com/1200/900/toy,spider?lock=107',
     category: 'objets-maudits',
     sellerId: 's7',
     sellerName: 'AtelierOcculte',
@@ -163,17 +156,16 @@ export const mockProducts: Product[] = [
     sellerReviews: 58,
     location: 'Lille',
     status: 'pending',
-    createdAt: '2024-12-03'
+    createdAt: '2025-10-29'
   },
   {
     id: '8',
-    title: "Figurine 'Gardien du Caveau' - Edition limitee",
+    title: "Enseigne 'BOO' et fantomes - Jardin",
     description:
-      "Figurine resine detaillee, edition numerotee, boite d'origine. Parfaite pour vitrine et collection macabre.",
-    price: 260.0,
-    shipping: 15.0,
-    image:
-      'https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?auto=format&fit=crop&w=1080&q=80',
+      'Decoration exterieure grand format avec lettres orange et silhouettes de fantomes blanches.',
+    price: 39.0,
+    shipping: 8.0,
+    image: 'https://loremflickr.com/1200/900/halloween,ghost,decoration?lock=108',
     category: 'figurines-macabres',
     sellerId: 's8',
     sellerName: 'CryptaWorks',
@@ -181,6 +173,6 @@ export const mockProducts: Product[] = [
     sellerReviews: 69,
     location: 'Strasbourg',
     status: 'available',
-    createdAt: '2024-11-27'
+    createdAt: '2025-10-30'
   }
 ];

@@ -83,6 +83,7 @@ export function SignUpModal({ onClose, onRegister }: SignUpModalProps) {
               className="w-full px-3 py-2 border border-slate-700 bg-slate-900 text-slate-100 rounded-lg text-sm focus:ring-2 focus:ring-rose-500 focus:border-transparent"
               required
             />
+            <p className="text-slate-500 text-xs mt-1">Minimum 6 caracteres.</p>
           </div>
 
           <div>
@@ -148,7 +149,7 @@ export function SignUpModal({ onClose, onRegister }: SignUpModalProps) {
           </button>
 
           <p className="text-slate-500 text-xs mt-2">
-            Votre compte sera soumis a validation par un administrateur avant d'etre active.
+            Le compte est actif immediatement apres creation.
             Les vendeurs peuvent publier des objets apres approbation.
           </p>
         </form>

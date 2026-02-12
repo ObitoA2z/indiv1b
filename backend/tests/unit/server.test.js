@@ -4,24 +4,16 @@ process.env.JWT_SECRET = 'test-secret';
 process.env.FRONTEND_URL = 'http://localhost:5173';
 
 describe('Registration validation', () => {
-  test('rejects password shorter than 8 characters', () => {
-    const password = 'Ab!1234';
-    const hasMinLength = password.length >= 8;
+  test('rejects password shorter than 6 characters', () => {
+    const password = 'Ab123';
+    const hasMinLength = password.length >= 6;
     expect(hasMinLength).toBe(false);
   });
 
-  test('rejects password without special character', () => {
-    const password = 'Abcdefgh1';
-    const hasSpecialChar = /[^A-Za-z0-9]/.test(password);
-    expect(hasSpecialChar).toBe(false);
-  });
-
-  test('accepts valid password with 8+ chars and special char', () => {
-    const password = 'Abcdef!1';
-    const hasMinLength = password.length >= 8;
-    const hasSpecialChar = /[^A-Za-z0-9]/.test(password);
+  test('accepts password with 6+ characters', () => {
+    const password = 'Abcdef';
+    const hasMinLength = password.length >= 6;
     expect(hasMinLength).toBe(true);
-    expect(hasSpecialChar).toBe(true);
   });
 });
 

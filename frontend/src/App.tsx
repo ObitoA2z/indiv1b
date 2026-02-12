@@ -78,17 +78,7 @@ function App() {
     phone?: string,
     gender?: string,
   ) => {
-    const { user: apiUser, message } = await registerUser({ name, email, password, role, address, phone, gender });
-
-    // Tous les nouveaux comptes sont inactifs tant qu'un admin ne les a pas validés
-    if (!apiUser.active) {
-      alert(
-        message ||
-          "Votre compte a été créé et est en attente de validation par un administrateur. Vous pourrez vous connecter une fois votre compte activé.",
-      );
-      setShowSignUpModal(false);
-      return;
-    }
+    const { user: apiUser, token, message } = await registerUser({ name, email, password, role, address, phone, gender });
 
     setUser({
       id: apiUser.id,
@@ -96,12 +86,15 @@ function App() {
       email: apiUser.email,
       role: apiUser.role as UserRole,
       interests: ['grimoires', 'poupees-hantees', 'affiches-horreur'],
-      token: undefined,
+      token: token || undefined,
       active: apiUser.active,
       address: apiUser.address ?? null,
       phone: apiUser.phone ?? null,
       gender: apiUser.gender ?? null,
     });
+    if (message) {
+      alert(message);
+    }
     setShowSignUpModal(false);
   };
 

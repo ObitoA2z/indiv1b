@@ -32,7 +32,8 @@ async function main() {
   const dbPath = path.join(tmpDir, 'test.db');
 
   // Prisma accepts absolute paths with the sqlite "file:" scheme
-  process.env.DATABASE_URL = `file:${dbPath}`;
+  const normalizedDbPath = dbPath.replace(/\\/g, '/');
+  process.env.DATABASE_URL = `file:${normalizedDbPath}`;
 
   console.log(`Integration tests using DATABASE_URL=${process.env.DATABASE_URL}`);
 
@@ -66,20 +67,28 @@ async function main() {
     throw new Error('Health check failed');
   }
 
-  // Register a buyer (account should be inactive by policy)
+  // Register a buyer (account is active immediately)
   const buyerEmail = 'buyer@test.local';
   const buyerPassword = 'Buyer!234';
 
-  await request(app)
+  const registerRes = await request(app)
     .post('/api/auth/register')
     .send({ name: 'Buyer', email: buyerEmail, password: buyerPassword })
     .expect(201);
 
-  // Login should be forbidden until admin approval
-  await request(app)
+  if (!registerRes.body?.token) {
+    throw new Error('Missing JWT token after registration');
+  }
+
+  // Login should succeed directly
+  const buyerLoginRes = await request(app)
     .post('/api/auth/login')
     .send({ email: buyerEmail, password: buyerPassword })
-    .expect(403);
+    .expect(200);
+
+  if (!buyerLoginRes.body?.token) {
+    throw new Error('Missing JWT token for buyer login');
+  }
 
   // Admin can login
   const loginRes = await request(app)

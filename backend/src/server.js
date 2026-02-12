@@ -67,12 +67,11 @@ app.post('/api/auth/register', async (req, res) => {
       return res.status(400).json({ error: 'Email et mot de passe sont obligatoires' });
     }
 
-    // Password strength: at least 8 chars and one special character
-    const hasMinLength = password.length >= 8;
-    const hasSpecialChar = /[^A-Za-z0-9]/.test(password);
-    if (!hasMinLength || !hasSpecialChar) {
+    // Password strength: keep registration friction low for demo usage
+    const hasMinLength = password.length >= 6;
+    if (!hasMinLength) {
       return res.status(400).json({
-        error: 'Le mot de passe doit contenir au moins 8 caractères et au moins un caractère spécial',
+        error: 'Le mot de passe doit contenir au moins 6 caractères',
       });
     }
 
@@ -82,8 +81,7 @@ app.post('/api/auth/register', async (req, res) => {
     }
 
     const hash = await bcrypt.hash(password, 10);
-    // New policy: all new accounts are inactive until approved by an admin.
-    // Le rôle demandé est enregistré (SELLER ou BUYER) mais le compte reste inactif tant qu'il n'est pas validé.
+    // Comptes actifs immédiatement pour permettre inscription + connexion directe.
     const normalizedRole = typeof role === 'string' ? role.toUpperCase() : undefined;
     const initialRole = normalizedRole === 'SELLER' ? 'SELLER' : 'BUYER';
 
@@ -93,7 +91,7 @@ app.post('/api/auth/register', async (req, res) => {
         email,
         password: hash,
         role: initialRole,
-        active: false,
+        active: true,
         address: address || null,
         phone: phone || null,
         gender: gender || null,
@@ -109,8 +107,10 @@ app.post('/api/auth/register', async (req, res) => {
       });
     }
 
+    const token = signToken(user);
+
     return res.status(201).json({
-      // No token until approved to avoid active sessions on inactive accounts
+      token,
       user: {
         id: user.id,
         name: user.name,
@@ -121,7 +121,7 @@ app.post('/api/auth/register', async (req, res) => {
         phone: user.phone,
         gender: user.gender,
       },
-      message: "Votre compte a été créé et est en attente de validation par un administrateur.",
+      message: "Votre compte a été créé avec succès.",
     });
   } catch (err) {
     console.error(err);
@@ -144,10 +144,6 @@ app.post('/api/auth/login', async (req, res) => {
     const ok = await bcrypt.compare(password, user.password);
     if (!ok) {
       return res.status(401).json({ error: 'Identifiants invalides' });
-    }
-
-    if (!user.active) {
-      return res.status(403).json({ error: 'Compte en attente de validation par un administrateur' });
     }
 
     const token = signToken(user);

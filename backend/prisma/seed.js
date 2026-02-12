@@ -7,21 +7,21 @@ const prisma = new PrismaClient();
 function categoryNameFromId(id) {
   switch (id) {
     case 'grimoires':
-      return 'Grimoires';
+      return 'Citrouilles maudites';
     case 'poupees-hantees':
-      return 'Poupees hantees';
+      return 'Visages possedes';
     case 'affiches-horreur':
-      return "Affiches d'horreur";
+      return 'Citrouilles peintes';
     case 'masques-rituels':
-      return 'Masques rituels';
+      return 'Masques de peste';
     case 'vinyles-hantes':
-      return 'Vinyles hantes';
+      return 'Grimoires arachnides';
     case 'photographies-paranormales':
-      return 'Photographies paranormales';
+      return 'Scenes macabres';
     case 'objets-maudits':
-      return 'Objets maudits';
+      return 'Araignees decoratives';
     case 'figurines-macabres':
-      return 'Figurines macabres';
+      return 'Enseignes fantomes';
     default:
       return id;
   }
@@ -35,7 +35,9 @@ async function main() {
   for (const id of categoryIds) {
     await prisma.category.upsert({
       where: { id },
-      update: {},
+      update: {
+        name: categoryNameFromId(id),
+      },
       create: {
         id,
         name: categoryNameFromId(id),
@@ -50,8 +52,11 @@ async function main() {
     await prisma.user.upsert({
       where: { id: sellerId },
       update: {
+        name: sample.sellerName,
+        email: `${sellerId}@example.com`,
         role: 'SELLER',
         password: passwordHash,
+        active: true,
       },
       create: {
         id: sellerId,
@@ -59,6 +64,7 @@ async function main() {
         email: `${sellerId}@example.com`,
         role: 'SELLER',
         password: passwordHash,
+        active: true,
       },
     });
   }
@@ -67,42 +73,51 @@ async function main() {
   await prisma.user.upsert({
     where: { email: 'buyer@example.com' },
     update: {
+      name: 'Demo Buyer',
       role: 'BUYER',
       password: passwordHash,
+      active: true,
     },
     create: {
       name: 'Demo Buyer',
       email: 'buyer@example.com',
       role: 'BUYER',
       password: passwordHash,
+      active: true,
     },
   });
 
   await prisma.user.upsert({
     where: { email: 'seller@example.com' },
     update: {
+      name: 'Demo Seller',
       role: 'SELLER',
       password: passwordHash,
+      active: true,
     },
     create: {
       name: 'Demo Seller',
       email: 'seller@example.com',
       role: 'SELLER',
       password: passwordHash,
+      active: true,
     },
   });
 
   await prisma.user.upsert({
     where: { email: 'admin@example.com' },
     update: {
+      name: 'Demo Admin',
       role: 'ADMIN',
       password: passwordHash,
+      active: true,
     },
     create: {
       name: 'Demo Admin',
       email: 'admin@example.com',
       role: 'ADMIN',
       password: passwordHash,
+      active: true,
     },
   });
 
@@ -110,7 +125,23 @@ async function main() {
   for (const p of products) {
     await prisma.product.upsert({
       where: { id: p.id },
-      update: {},
+      update: {
+        title: p.title,
+        description: p.description,
+        price: p.price,
+        shipping: p.shipping,
+        image: p.image,
+        images: [p.image],
+        categoryId: p.category,
+        sellerId: p.sellerId,
+        sellerName: p.sellerName,
+        sellerRating: p.sellerRating,
+        sellerReviews: p.sellerReviews,
+        location: p.location,
+        status: p.status,
+        createdAt: new Date(p.createdAt),
+        priceHistory: p.priceHistory || undefined,
+      },
       create: {
         id: p.id,
         title: p.title,
