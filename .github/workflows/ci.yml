@@ -55,9 +55,16 @@ jobs:
       - name: Run backend tests (unit + integration)
         run: npm test
 
-      - name: NPM audit (backend)
+      - name: NPM audit (backend, JSON report)
         continue-on-error: true
-        run: npm audit --audit-level=high --omit=dev
+        run: npm audit --omit=dev --json > backend-audit.json || true
+
+      - name: Upload backend audit report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-audit-report
+          path: backend/backend-audit.json
 
   frontend:
     name: Frontend
@@ -86,9 +93,16 @@ jobs:
       - name: Build frontend
         run: npm run build
 
-      - name: NPM audit (frontend)
+      - name: NPM audit (frontend, JSON report)
         continue-on-error: true
-        run: npm audit --audit-level=high --omit=dev
+        run: npm audit --omit=dev --json > frontend-audit.json || true
+
+      - name: Upload frontend audit report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-audit-report
+          path: frontend/frontend-audit.json
 
   build-and-push-images:
     name: Build, Scan & Push Docker images
@@ -126,7 +140,8 @@ jobs:
         uses: aquasecurity/trivy-action@0.28.0
         with:
           image-ref: ${{ env.IMAGE_BACKEND }}:${{ env.IMAGE_TAG }}
-          format: table
+          format: json
+          output: trivy-backend.json
           vuln-type: os,library
           severity: CRITICAL,HIGH
           ignore-unfixed: true
@@ -136,11 +151,21 @@ jobs:
         uses: aquasecurity/trivy-action@0.28.0
         with:
           image-ref: ${{ env.IMAGE_FRONTEND }}:${{ env.IMAGE_TAG }}
-          format: table
+          format: json
+          output: trivy-frontend.json
           vuln-type: os,library
           severity: CRITICAL,HIGH
           ignore-unfixed: true
           exit-code: '0'
+
+      - name: Upload image scan reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: trivy-image-reports
+          path: |
+            trivy-backend.json
+            trivy-frontend.json
 
       - name: Push images
         run: |

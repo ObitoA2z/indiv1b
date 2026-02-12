@@ -64,3 +64,20 @@ Application web full-stack pour publier, consulter et acheter des produits epouv
 - CORS sur origine frontend configuree
 - Headers de securite de base
 - Limitation des tentatives de login
+
+## Dossier de conformite V1
+- Backlog + criteres d acceptation: `docs/backlog.md`
+- Exigences qualite ISO 25010: `docs/quality-requirements.md`
+- Metriques et seuils: `docs/metrics.md`
+- Dette technique liee aux metriques: `docs/tech-debt-register.md`
+- DevSecOps lifecycle: `docs/devsecops-lifecycle.md`
+- Schema CI/CD detaille: `docs/cicd-schema.md`
+- Script de charge + resultats: `load/k6-smoke.js`, `docs/load-test-results.md`
+- Audit securite V1: `docs/security-audit-v1.md`
+- Plan de remediation: `docs/remediation-plan.md`
+- Sandbox + POC: `docs/sandbox-experiment.md`, `docs/poc-feasibility.md`
+- Cartographie competences + formation: `docs/skills-matrix.md`, `docs/training-plan.md`
+
+## Infra complementaire
+- TLS ingress manifest: `k8s/ingress-tls.yaml`, `k8s-aks/ingress-tls.yaml`
+- Autoscaling manifests: `k8s/backend-hpa.yaml`, `k8s/frontend-hpa.yaml`, `k8s-aks/backend-hpa.yaml`, `k8s-aks/frontend-hpa.yaml`
