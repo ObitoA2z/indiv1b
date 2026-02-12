@@ -1,9 +1,0 @@
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: petite-maison-config
-  namespace: petite-maison-epouvante
-data:
-  DATABASE_URL: "file:./dev.db"
-  FRONTEND_URL: "http://9.223.210.37"
-  RABBITMQ_URL: "amqp://admin:admin123@rabbitmq.petite-maison-epouvante.svc.cluster.local:5672"

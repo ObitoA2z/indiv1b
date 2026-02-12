@@ -18,4 +18,4 @@ Version: V1
 - API routes: `backend/src/routes/*.js`
 - Auth middleware: `backend/src/auth.js`
 - CI execution: `.github/workflows/ci.yml`
-- Infrastructure descriptors: `docker-compose.yml`, `k8s/*.yaml`, `k8s-aks/*.yaml`
+- Infrastructure descriptors: `docker-compose.yml`, `k8s/*.yaml`
