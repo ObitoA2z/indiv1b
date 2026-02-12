@@ -21,7 +21,7 @@ spec:
         fsGroup: 1000
       containers:
         - name: backend
-          image: ghcr.io/obitoa2z/collector-shop-full-backend:46567aae8654670324a2dd39ca9afec8175c85b9
+          image: ghcr.io/obitoa2z/collector-shop-full-backend:a57fd987dd7a2f43d50e2a80b6aae9c5517f4e97
           imagePullPolicy: IfNotPresent
           env:
             - name: NODE_ENV
