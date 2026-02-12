@@ -21,7 +21,7 @@ spec:
         fsGroup: 1000
       containers:
         - name: backend
-          image: ghcr.io/obitoa2z/petite-maison-epouvante-backend:a46a3e8f14214097eca7049b30122052966e46ce
+          image: ghcr.io/obitoa2z/petite-maison-epouvante-backend:515022fd6f60cc99805a9deea8dea14afac7e9c6
           imagePullPolicy: IfNotPresent
           env:
             - name: NODE_ENV
