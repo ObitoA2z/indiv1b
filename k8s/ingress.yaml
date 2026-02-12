@@ -11,6 +11,10 @@ spec:
   tls:
     - hosts:
         - petite-maison-epouvante.local
+        - api.petite-maison-epouvante.local
+        - grafana.petite-maison-epouvante.local
+        - prometheus.petite-maison-epouvante.local
+        - rabbitmq.petite-maison-epouvante.local
       secretName: petite-maison-epouvante-tls
   rules:
     - host: petite-maison-epouvante.local
@@ -23,3 +27,43 @@ spec:
                 name: petite-maison-frontend
                 port:
                   number: 80
+    - host: api.petite-maison-epouvante.local
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: petite-maison-backend
+                port:
+                  number: 4003
+    - host: grafana.petite-maison-epouvante.local
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: grafana
+                port:
+                  number: 3000
+    - host: prometheus.petite-maison-epouvante.local
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: prometheus
+                port:
+                  number: 9090
+    - host: rabbitmq.petite-maison-epouvante.local
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: rabbitmq
+                port:
+                  number: 15672

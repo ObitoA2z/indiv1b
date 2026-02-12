@@ -84,3 +84,10 @@ Application web full-stack pour publier, consulter et acheter des produits epouv
 ## Infra complementaire
 - TLS ingress manifest: `k8s/ingress.yaml`, `k8s-aks/ingress-tls.yaml`
 - Autoscaling manifests: `k8s/backend-hpa.yaml`, `k8s/frontend-hpa.yaml`, `k8s-aks/backend-hpa.yaml`, `k8s-aks/frontend-hpa.yaml`
+
+## URLs HTTPS locales (Kubernetes)
+- Frontend: `https://petite-maison-epouvante.local`
+- API backend: `https://api.petite-maison-epouvante.local`
+- Grafana: `https://grafana.petite-maison-epouvante.local`
+- Prometheus: `https://prometheus.petite-maison-epouvante.local`
+- RabbitMQ UI: `https://rabbitmq.petite-maison-epouvante.local`
