@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-const { execSync } = require('child_process');
+const { execSync, spawnSync } = require('child_process');
 const path = require('path');
 const fs = require('fs');
 
@@ -44,13 +44,53 @@ function run(command) {
 cleanupTestDatabase();
 run('npx prisma generate --schema prisma/schema.prisma');
 
-try {
-  run('npx prisma migrate deploy --schema prisma/schema.prisma');
-} catch (err) {
-  try {
-    run('npx prisma db push --force-reset --skip-generate --schema prisma/schema.prisma');
-  } catch (pushErr) {
-    console.error(`Integration tests require a dedicated test DB. Init failed: ${pushErr.message}`);
-    process.exit(1);
+function applySqlMigrationsWithPython(dbFile) {
+  const migrationsRoot = path.join(backendRoot, 'prisma', 'migrations');
+  const script = `
+import pathlib
+import sqlite3
+import sys
+
+db_file = pathlib.Path(sys.argv[1])
+migrations_root = pathlib.Path(sys.argv[2])
+
+conn = sqlite3.connect(db_file)
+try:
+    conn.execute("PRAGMA foreign_keys = ON;")
+    dirs = sorted([p for p in migrations_root.iterdir() if p.is_dir()], key=lambda p: p.name)
+    for d in dirs:
+        sql_path = d / "migration.sql"
+        if not sql_path.exists():
+            continue
+        sql = sql_path.read_text(encoding="utf-8")
+        if sql.strip():
+            conn.executescript(sql)
+    conn.commit()
+finally:
+    conn.close()
+`;
+
+  const candidates = ['python', 'python3'];
+  let lastError = 'Python runtime not available';
+
+  for (const cmd of candidates) {
+    const result = spawnSync(cmd, ['-c', script, dbFile, migrationsRoot], {
+      cwd: backendRoot,
+      encoding: 'utf8',
+    });
+
+    if (result.status === 0) {
+      return;
+    }
+    lastError = (result.stderr || result.stdout || '').trim() || lastError;
   }
+
+  throw new Error(lastError);
+}
+
+try {
+  applySqlMigrationsWithPython(TEST_DB_FILE);
+} catch (err) {
+  console.error(`Integration tests require a dedicated test DB. Init failed: ${err.message}`);
+  process.exit(1);
 }

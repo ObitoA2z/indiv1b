@@ -4,6 +4,9 @@ FROM node:20-alpine
 # Set working directory
 WORKDIR /app
 
+# Keep base OS packages patched
+RUN apk upgrade --no-cache
+
 # Configure npm to be resilient to registry hiccups and allow registry override
 ARG NPM_REGISTRY=https://registry.npmjs.org/
 ENV \
@@ -26,7 +29,7 @@ COPY . .
 ENV DATABASE_URL=file:./dev.db
 
 # Generate Prisma client (needed after schema changes)
-RUN npx prisma generate
+RUN npx prisma generate && npm prune --omit=dev && npm cache clean --force
 
 # Expose backend port
 EXPOSE 4003

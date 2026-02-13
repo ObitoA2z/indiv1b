@@ -5,7 +5,7 @@ WORKDIR /app
 
 # Install dependencies
 COPY package*.json ./
-RUN npm install
+RUN npm ci
 
 # Copy source code
 COPY . .
@@ -18,7 +18,10 @@ ENV VITE_API_URL=${VITE_API_URL}
 RUN npm run build
 
 # Frontend service - runtime stage
-FROM nginx:alpine
+FROM nginx:stable-alpine
+
+# Keep runtime OS packages patched
+RUN apk upgrade --no-cache
 
 # Copy built assets into Nginx html directory
 COPY --from=build /app/dist /usr/share/nginx/html

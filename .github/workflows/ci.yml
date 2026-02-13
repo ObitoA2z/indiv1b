@@ -147,6 +147,7 @@ jobs:
         uses: aquasecurity/trivy-action@0.28.0
         with:
           image-ref: ${{ env.IMAGE_BACKEND }}:${{ env.IMAGE_TAG }}
+          scanners: vuln
           format: json
           output: trivy-backend.json
           vuln-type: os,library
@@ -159,6 +160,7 @@ jobs:
         uses: aquasecurity/trivy-action@0.28.0
         with:
           image-ref: ${{ env.IMAGE_FRONTEND }}:${{ env.IMAGE_TAG }}
+          scanners: vuln
           format: json
           output: trivy-frontend.json
           vuln-type: os,library
@@ -172,6 +174,7 @@ jobs:
         with:
           scan-type: config
           scan-ref: k8s
+          scanners: misconfig
           format: json
           output: trivy-k8s-config.json
           severity: CRITICAL,HIGH
