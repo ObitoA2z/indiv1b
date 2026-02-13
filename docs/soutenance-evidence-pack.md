@@ -13,6 +13,7 @@
 ## 3) CI/CD + quality gates
 - **GitHub CI (tests + scans + gates):** `.github/workflows/ci.yml`
 - **GitLab CI harmonise (scans bloquants HIGH/CRITICAL):** `.gitlab-ci.yml`
+- **Schema CI/CD versionne:** `docs/ci-cd-diagram.md`
 - **Preuves attendues:** jobs verts + artefacts `*audit*.json`, `trivy-*.json`
 
 ## 4) Securite V1 + remediations

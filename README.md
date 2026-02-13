@@ -48,6 +48,12 @@ Application web full-stack pour publier, consulter et acheter des produits epouv
   - `npm --prefix frontend run build`
   - `npm --prefix frontend run typecheck`
 
+## Quality Gates CI/CD
+- **Dependances npm (backend/frontend):** blocage sur vulnerabilites `HIGH/CRITICAL`.
+- **Scans Trivy images + manifests K8s:** blocage sur `HIGH/CRITICAL`.
+- **Jobs references:** `.github/workflows/ci.yml`, `.gitlab-ci.yml`.
+- **Artefacts de preuve:** rapports `backend-audit.json`, `frontend-audit.json`, `trivy-*.json`.
+
 ## Comptes et roles
 - Roles: `BUYER`, `SELLER`, `ADMIN`
 - Les comptes se creent via `POST /api/auth/register`

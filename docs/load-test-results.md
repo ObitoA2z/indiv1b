@@ -9,12 +9,14 @@ docker run --rm -v "$PWD/load:/scripts" -e BASE_URL=http://host.docker.internal:
 ```
 
 ## Environment
+- Date execution: `2026-02-13`
 - Target API: `http://localhost:4004`
 - Profile: 10 VUs, 60 seconds
 - Endpoints: `GET /api/health`, `GET /api/products`
 
 ## Result snapshot
 - Total HTTP requests: 1200
+- Throughput (RPS): `1200 / 60 = 20 req/s`
 - Request failure rate: 0.00%
 - Average duration: 5.5 ms
 - P95 duration: 11.34 ms

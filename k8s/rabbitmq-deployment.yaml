@@ -27,9 +27,15 @@ spec:
               containerPort: 15692
           env:
             - name: RABBITMQ_DEFAULT_USER
-              value: "admin"
+              valueFrom:
+                secretKeyRef:
+                  name: petite-maison-secrets
+                  key: RABBITMQ_DEFAULT_USER
             - name: RABBITMQ_DEFAULT_PASS
-              value: "admin123"
+              valueFrom:
+                secretKeyRef:
+                  name: petite-maison-secrets
+                  key: RABBITMQ_DEFAULT_PASS
           resources:
             requests:
               cpu: "100m"

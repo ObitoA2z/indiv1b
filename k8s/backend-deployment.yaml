@@ -62,8 +62,8 @@ spec:
                   key: STRIPE_SECRET_KEY
             - name: RABBITMQ_URL
               valueFrom:
-                configMapKeyRef:
-                  name: petite-maison-config
+                secretKeyRef:
+                  name: petite-maison-secrets
                   key: RABBITMQ_URL
           ports:
             - name: http

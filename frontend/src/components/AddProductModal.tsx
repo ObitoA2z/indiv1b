@@ -6,6 +6,7 @@ import { uploadImage } from '../api/client';
 interface AddProductModalProps {
   onClose: () => void;
   onSubmit: (productData: ProductFormData) => void;
+  uploadToken?: string;
 }
 
 export interface ProductFormData {
@@ -17,7 +18,7 @@ export interface ProductFormData {
   images: string[];
 }
 
-export function AddProductModal({ onClose, onSubmit }: AddProductModalProps) {
+export function AddProductModal({ onClose, onSubmit, uploadToken }: AddProductModalProps) {
   const [formData, setFormData] = useState<ProductFormData>({
     title: '',
     description: '',
@@ -62,12 +63,18 @@ export function AddProductModal({ onClose, onSubmit }: AddProductModalProps) {
   const handleFilesSelected = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
     if (!files || files.length === 0) return;
+    if (!uploadToken) {
+      const msg = 'Connexion requise pour uploader une image';
+      setErrors((prev) => ({ ...prev, images: msg }));
+      alert(msg);
+      return;
+    }
 
     setUploading(true);
     try {
       const uploadedUrls: string[] = [];
       for (const file of Array.from(files)) {
-        const url = await uploadImage(file);
+        const url = await uploadImage(file, uploadToken);
         uploadedUrls.push(url);
       }
       setFormData((prev) => ({ ...prev, images: [...prev.images, ...uploadedUrls] }));

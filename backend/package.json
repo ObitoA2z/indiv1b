@@ -9,6 +9,7 @@
     "fix:images": "node scripts/fix-image-urls.js",
     "test": "npm run test:unit && npm run test:integration",
     "test:unit": "jest --runInBand tests/unit",
+    "pretest:integration": "node pretest-integration.js",
     "test:integration": "node scripts/test-integration.js",
     "test:smoke": "node scripts/smoke-routes.js"
   },

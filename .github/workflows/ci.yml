@@ -55,9 +55,8 @@ jobs:
       - name: Run backend tests (unit + integration)
         run: npm test
 
-      - name: NPM audit (backend, JSON report)
-        continue-on-error: true
-        run: npm audit --omit=dev --json > backend-audit.json || true
+      - name: NPM audit (backend, JSON report, block high/critical)
+        run: npm audit --audit-level=high --omit=dev --json > backend-audit.json
 
       - name: Upload backend audit report
         if: always()
@@ -97,9 +96,8 @@ jobs:
       - name: Build frontend
         run: npm run build
 
-      - name: NPM audit (frontend, JSON report)
-        continue-on-error: true
-        run: npm audit --omit=dev --json > frontend-audit.json || true
+      - name: NPM audit (frontend, JSON report, block high/critical)
+        run: npm audit --audit-level=high --omit=dev --json > frontend-audit.json
 
       - name: Upload frontend audit report
         if: always()
@@ -144,7 +142,8 @@ jobs:
       - name: Build frontend image
         run: docker build -t $IMAGE_FRONTEND:$IMAGE_TAG frontend
 
-      - name: Scan backend image (Trivy)
+      - name: Scan backend image (Trivy JSON, block high/critical)
+        if: always()
         uses: aquasecurity/trivy-action@0.28.0
         with:
           image-ref: ${{ env.IMAGE_BACKEND }}:${{ env.IMAGE_TAG }}
@@ -153,9 +152,10 @@ jobs:
           vuln-type: os,library
           severity: CRITICAL,HIGH
           ignore-unfixed: true
-          exit-code: '0'
+          exit-code: '1'
 
-      - name: Scan frontend image (Trivy)
+      - name: Scan frontend image (Trivy JSON, block high/critical)
+        if: always()
         uses: aquasecurity/trivy-action@0.28.0
         with:
           image-ref: ${{ env.IMAGE_FRONTEND }}:${{ env.IMAGE_TAG }}
@@ -164,9 +164,10 @@ jobs:
           vuln-type: os,library
           severity: CRITICAL,HIGH
           ignore-unfixed: true
-          exit-code: '0'
+          exit-code: '1'
 
-      - name: Scan Kubernetes manifests (Trivy config)
+      - name: Scan Kubernetes manifests (Trivy JSON, block high/critical)
+        if: always()
         uses: aquasecurity/trivy-action@0.28.0
         with:
           scan-type: config
@@ -174,7 +175,7 @@ jobs:
           format: json
           output: trivy-k8s-config.json
           severity: CRITICAL,HIGH
-          exit-code: '0'
+          exit-code: '1'
 
       - name: Upload image scan reports
         if: always()
@@ -185,35 +186,6 @@ jobs:
             trivy-backend.json
             trivy-frontend.json
             trivy-k8s-config.json
-
-      - name: Fail on backend image CRITICAL vulnerabilities
-        uses: aquasecurity/trivy-action@0.28.0
-        with:
-          image-ref: ${{ env.IMAGE_BACKEND }}:${{ env.IMAGE_TAG }}
-          format: table
-          vuln-type: os,library
-          severity: CRITICAL
-          ignore-unfixed: true
-          exit-code: '1'
-
-      - name: Fail on frontend image CRITICAL vulnerabilities
-        uses: aquasecurity/trivy-action@0.28.0
-        with:
-          image-ref: ${{ env.IMAGE_FRONTEND }}:${{ env.IMAGE_TAG }}
-          format: table
-          vuln-type: os,library
-          severity: CRITICAL
-          ignore-unfixed: true
-          exit-code: '1'
-
-      - name: Fail on Kubernetes manifest CRITICAL misconfigurations
-        uses: aquasecurity/trivy-action@0.28.0
-        with:
-          scan-type: config
-          scan-ref: k8s
-          format: table
-          severity: CRITICAL
-          exit-code: '1'
 
       - name: Push images
         run: |

@@ -12,10 +12,23 @@
 - **Scans dependances/images/config:** npm audit + Trivy dans GH Actions et GitLab CI.
 - **Transport:** TLS Ingress configure (secret `petite-maison-epouvante-tls` requis).
 
+## Preuves (fichiers + artefacts)
+- **Artefacts CI attendus:** `backend-audit.json`, `frontend-audit.json`, `trivy-backend.json`, `trivy-frontend.json`, `trivy-k8s-config.json` (publies par `.github/workflows/ci.yml` et `.gitlab-ci.yml`).
+- **Sortie locale npm audit backend (extrait):**
+  - `2 low severity vulnerabilities`
+  - `npm audit --audit-level=high --omit=dev` retourne `exit code 0`.
+- **Sortie locale npm audit frontend (extrait):**
+  - `found 0 vulnerabilities`.
+- **Sortie locale tests backend (extrait):**
+  - `test:unit => 17 passed`
+  - `test:integration => Integration tests: OK`
+  - `test:smoke => Smoke test OK`.
+- **Charge k6 (preuve documentaire):** `docs/load-test-results.md` contient `date`, `p95`, `throughput`, `error rate` et commande de reproduction.
+
 ## Top 5 risques (impact x probabilite)
 | # | Risque | Probabilite | Impact | Niveau |
 |---|---|---|---|---|
-| R1 | Secrets de dev en clair dans manifests (`k8s/secrets.yaml`, creds Grafana/RabbitMQ) | Elevee | Eleve | **Critique** |
+| R1 | Gestion manuelle des secrets locaux (placeholders versionnes, injection hors repo) | Moyenne | Eleve | **Eleve** |
 | R2 | Upload image expose au DoS/abus si limites mal calibrees | Moyenne | Eleve | **Eleve** |
 | R3 | Persistance `emptyDir` (perte donnees, reprise service fragile) | Elevee | Moyen | **Eleve** |
 | R4 | Absence de SAST/DAST et tests front auto | Moyenne | Moyen | **Moyen** |
@@ -23,8 +36,9 @@
 
 ## Observations techniques V1
 - Correctifs securite integres: `PATCH /api/products/:id` restreint, `POST /api/upload` authentifie + role + rate limit + restrictions MIME/taille.
-- CI GitHub bloque deja sur vuln deps high/critical et Trivy critical; GitLab aligne maintenant sur gates bloquants HIGH/CRITICAL.
-- Aucune evidence de stockage secret externe (vault/kms) n’est versionnee dans ce repo.
+- CI GitHub et GitLab bloquent sur vulnerabilites/severites `HIGH/CRITICAL` (quality gates).
+- Les manifests n'embarquent plus de credentials en clair; seuls des placeholders sont versionnes dans `k8s/secrets.yaml`.
+- Aucune evidence de stockage secret externe (vault/kms) n'est versionnee dans ce repo.
 
 ## Recommandation immediate
 Prioriser la remediaton R1 (secrets), puis R2/R3. Plan detaille dans `docs/remediation-plan.md`.

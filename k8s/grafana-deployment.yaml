@@ -23,9 +23,15 @@ spec:
               containerPort: 3000
           env:
             - name: GF_SECURITY_ADMIN_USER
-              value: "admin"
+              valueFrom:
+                secretKeyRef:
+                  name: petite-maison-secrets
+                  key: GRAFANA_ADMIN_USER
             - name: GF_SECURITY_ADMIN_PASSWORD
-              value: "admin123"
+              valueFrom:
+                secretKeyRef:
+                  name: petite-maison-secrets
+                  key: GRAFANA_ADMIN_PASSWORD
           readinessProbe:
             httpGet:
               path: /api/health

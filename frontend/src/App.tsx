@@ -315,6 +315,7 @@ function App() {
         <AddProductModal
           onClose={() => setShowAddProduct(false)}
           onSubmit={handleAddProduct}
+          uploadToken={user?.token}
         />
       )}
     </div>

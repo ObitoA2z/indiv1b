@@ -2,32 +2,58 @@
 import type { ProductFormData } from '../components/AddProductModal';
 
 // Helper pour construire les URLs d'API sans doubler "/api".
-// Principe :
-// - En local, on passe une URL complÃ¨te (ex: http://localhost:4004)
-//   et on joint le chemin REST dessus.
-// - En production Kubernetes, on ne dÃ©finit PAS VITE_API_URL et on garde
-//   des chemins relatifs (ex: /api/products) qui sont proxyfiÃ©s par Nginx.
+// - En dev local, VITE_API_URL peut etre en HTTP.
+// - En prod, une base absolue en HTTP est forcee en HTTPS.
 const RAW_API_BASE = (import.meta.env.VITE_API_URL as string | undefined) ?? '';
+const IS_PROD = Boolean(import.meta.env.PROD);
+
+function normalizeApiBase(rawBase: string): string {
+  if (!rawBase) return '';
+
+  try {
+    const parsed = new URL(rawBase);
+    if (IS_PROD && parsed.protocol === 'http:') {
+      parsed.protocol = 'https:';
+    }
+    return parsed.toString().replace(/\/$/, '');
+  } catch {
+    return rawBase.replace(/\/$/, '');
+  }
+}
+
+const API_BASE = normalizeApiBase(RAW_API_BASE);
 
 function buildApiUrl(path: string): string {
   const normalizedPath = path.startsWith('/') ? path : `/${path}`;
 
-  if (RAW_API_BASE) {
+  if (API_BASE) {
     try {
-      const u = new URL(RAW_API_BASE);
+      const u = new URL(API_BASE);
       // Nettoie le trailing slash Ã©ventuel et concatÃ¨ne le chemin
       const basePath = u.pathname.replace(/\/$/, '');
       u.pathname = `${basePath}${normalizedPath}`;
       return u.toString();
     } catch {
-      // Si RAW_API_BASE n'est pas une URL absolue, on la traite comme prÃ©fixe de chemin
-      const base = RAW_API_BASE.replace(/\/$/, '');
+      // Si API_BASE n'est pas une URL absolue, on la traite comme prÃ©fixe de chemin
+      const base = API_BASE.replace(/\/$/, '');
       return `${base}${normalizedPath}`;
     }
   }
 
   // Aucun RAW_API_BASE : on utilise un chemin relatif (utile en Kube avec Nginx proxy /api)
   return normalizedPath;
+}
+
+function getStoredAuthToken(): string | undefined {
+  if (typeof window === 'undefined') return undefined;
+  try {
+    const raw = window.localStorage.getItem('epouvante_user');
+    if (!raw) return undefined;
+    const parsed = JSON.parse(raw) as { token?: unknown };
+    return typeof parsed?.token === 'string' && parsed.token.length > 0 ? parsed.token : undefined;
+  } catch {
+    return undefined;
+  }
 }
 
 export interface AuthUser {
@@ -217,12 +243,20 @@ export interface CreateProductPayload extends ProductFormData {
   location?: string;
 }
 
-export async function uploadImage(file: File): Promise<string> {
+export async function uploadImage(file: File, token?: string): Promise<string> {
+  const authToken = token || getStoredAuthToken();
+  if (!authToken) {
+    throw new Error('Connexion requise pour uploader une image');
+  }
+
   const formData = new FormData();
   formData.append('image', file);
 
   const res = await fetch(buildApiUrl('/api/upload'), {
     method: 'POST',
+    headers: {
+      Authorization: `Bearer ${authToken}`,
+    },
     body: formData,
   });
 
