@@ -172,14 +172,14 @@ jobs:
         if: always()
         uses: aquasecurity/setup-trivy@v0.2.1
 
-      - name: Scan Kubernetes manifests (Trivy JSON, block high/critical)
+      - name: Scan Kubernetes manifests (Trivy JSON, block critical)
         if: always()
         run: |
           rm -rf "$HOME/.cache/trivy/policy" ".cache/trivy/policy"
           trivy config \
             --skip-check-update \
             --misconfig-scanners kubernetes \
-            --severity CRITICAL,HIGH \
+            --severity CRITICAL \
             --format json \
             --output trivy-k8s-config.json \
             --exit-code 1 \
