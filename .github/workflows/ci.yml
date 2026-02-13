@@ -178,7 +178,7 @@ jobs:
           rm -rf "$HOME/.cache/trivy/policy" ".cache/trivy/policy"
           trivy config \
             --skip-check-update \
-            --scanners misconfig \
+            --misconfig-scanners kubernetes \
             --severity CRITICAL,HIGH \
             --format json \
             --output trivy-k8s-config.json \
