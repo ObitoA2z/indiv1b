@@ -17,10 +17,20 @@ spec:
         app: petite-maison-frontend
         tier: frontend
     spec:
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
       containers:
         - name: frontend
           image: ghcr.io/obitoa2z/petite-maison-epouvante-frontend:76d155e7e9950a96f6fc6a9d4259806a3bb1e7a5
           imagePullPolicy: IfNotPresent
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+              add:
+                - NET_BIND_SERVICE
           ports:
             - name: http
               containerPort: 80

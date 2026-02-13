@@ -2,6 +2,8 @@ require('dotenv').config();
 
 const express = require('express');
 const cors = require('cors');
+const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
 const path = require('path');
 const fs = require('fs');
 const multer = require('multer');
@@ -40,6 +42,8 @@ function configureApp(appInstance) {
   const uploadDir = ensureUploadDir();
   const upload = createUploadMiddleware(uploadDir);
 
+  appInstance.set('trust proxy', 1);
+
   const allowedOrigins = [process.env.FRONTEND_URL || 'http://localhost:5173'];
 
   appInstance.use(
@@ -49,6 +53,20 @@ function configureApp(appInstance) {
       allowedHeaders: ['Content-Type', 'Authorization'],
     })
   );
+
+  appInstance.use(
+    helmet({
+      crossOriginResourcePolicy: false,
+    })
+  );
+
+  const authLimiter = rateLimit({
+    windowMs: 10 * 60 * 1000,
+    limit: 30,
+    standardHeaders: true,
+    legacyHeaders: false,
+    message: { error: 'Too many authentication attempts, try again later.' },
+  });
 
   appInstance.disable('x-powered-by');
   appInstance.use((req, res, next) => {
@@ -61,6 +79,7 @@ function configureApp(appInstance) {
 
   appInstance.use(express.json());
   appInstance.use('/uploads', express.static(uploadDir));
+  appInstance.use('/api/auth', authLimiter);
   appInstance.use(normalizeApiPrefix);
 
   registerRoutes(appInstance, { upload });

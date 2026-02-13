@@ -66,9 +66,9 @@ jobs:
           name: backend-audit-report
           path: backend/backend-audit.json
 
-      - name: Fail on backend critical vulnerabilities
+      - name: Fail on backend high/critical vulnerabilities
         run: |
-          node -e "const fs=require('fs');const p='backend-audit.json';const j=JSON.parse(fs.readFileSync(p,'utf8'));const v=j.vulnerabilities||{};const critical=Object.values(v).filter(x=>x&&x.severity==='critical').length;console.log('backend_critical_vulns='+critical);if(critical>0){process.exit(1);}"
+          node -e "const fs=require('fs');const p='backend-audit.json';const j=JSON.parse(fs.readFileSync(p,'utf8'));const v=j.vulnerabilities||{};const high=Object.values(v).filter(x=>x&&x.severity==='high').length;const critical=Object.values(v).filter(x=>x&&x.severity==='critical').length;console.log('backend_high_vulns='+high);console.log('backend_critical_vulns='+critical);if(high+critical>0){process.exit(1);}"
 
   frontend:
     name: Frontend
@@ -108,9 +108,9 @@ jobs:
           name: frontend-audit-report
           path: frontend/frontend-audit.json
 
-      - name: Fail on frontend critical vulnerabilities
+      - name: Fail on frontend high/critical vulnerabilities
         run: |
-          node -e "const fs=require('fs');const p='frontend-audit.json';const j=JSON.parse(fs.readFileSync(p,'utf8'));const v=j.vulnerabilities||{};const critical=Object.values(v).filter(x=>x&&x.severity==='critical').length;console.log('frontend_critical_vulns='+critical);if(critical>0){process.exit(1);}"
+          node -e "const fs=require('fs');const p='frontend-audit.json';const j=JSON.parse(fs.readFileSync(p,'utf8'));const v=j.vulnerabilities||{};const high=Object.values(v).filter(x=>x&&x.severity==='high').length;const critical=Object.values(v).filter(x=>x&&x.severity==='critical').length;console.log('frontend_high_vulns='+high);console.log('frontend_critical_vulns='+critical);if(high+critical>0){process.exit(1);}"
 
   build-and-push-images:
     name: Build, Scan & Push Docker images
@@ -166,6 +166,16 @@ jobs:
           ignore-unfixed: true
           exit-code: '0'
 
+      - name: Scan Kubernetes manifests (Trivy config)
+        uses: aquasecurity/trivy-action@0.28.0
+        with:
+          scan-type: config
+          scan-ref: k8s
+          format: json
+          output: trivy-k8s-config.json
+          severity: CRITICAL,HIGH
+          exit-code: '0'
+
       - name: Upload image scan reports
         if: always()
         uses: actions/upload-artifact@v4
@@ -174,25 +184,35 @@ jobs:
           path: |
             trivy-backend.json
             trivy-frontend.json
+            trivy-k8s-config.json
 
-      - name: Fail on backend image CRITICAL vulnerabilities
+      - name: Fail on backend image HIGH/CRITICAL vulnerabilities
         uses: aquasecurity/trivy-action@0.28.0
         with:
           image-ref: ${{ env.IMAGE_BACKEND }}:${{ env.IMAGE_TAG }}
           format: table
           vuln-type: os,library
-          severity: CRITICAL
+          severity: HIGH,CRITICAL
           ignore-unfixed: true
           exit-code: '1'
 
-      - name: Fail on frontend image CRITICAL vulnerabilities
+      - name: Fail on frontend image HIGH/CRITICAL vulnerabilities
         uses: aquasecurity/trivy-action@0.28.0
         with:
           image-ref: ${{ env.IMAGE_FRONTEND }}:${{ env.IMAGE_TAG }}
           format: table
           vuln-type: os,library
-          severity: CRITICAL
+          severity: HIGH,CRITICAL
           ignore-unfixed: true
+          exit-code: '1'
+
+      - name: Fail on Kubernetes manifest HIGH/CRITICAL misconfigurations
+        uses: aquasecurity/trivy-action@0.28.0
+        with:
+          scan-type: config
+          scan-ref: k8s
+          format: table
+          severity: HIGH,CRITICAL
           exit-code: '1'
 
       - name: Push images
