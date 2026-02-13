@@ -7,7 +7,6 @@
 
 const path = require('path');
 const fs = require('fs');
-const { DatabaseSync } = require('node:sqlite');
 
 const bcrypt = require('bcryptjs');
 const request = require('supertest');
@@ -47,39 +46,12 @@ function enforceDedicatedDbUrl() {
   }
 }
 
-function applySqlMigrations(dbFile) {
-  const migrationsRoot = path.join(backendRoot, 'prisma', 'migrations');
-  const migrationDirs = fs
-    .readdirSync(migrationsRoot, { withFileTypes: true })
-    .filter((entry) => entry.isDirectory())
-    .map((entry) => entry.name)
-    .sort();
-
-  const db = new DatabaseSync(dbFile);
-  try {
-    db.exec('PRAGMA foreign_keys = ON;');
-    for (const dir of migrationDirs) {
-      const sqlPath = path.join(migrationsRoot, dir, 'migration.sql');
-      if (!fs.existsSync(sqlPath)) continue;
-      const sql = fs.readFileSync(sqlPath, 'utf8');
-      if (sql.trim()) {
-        db.exec(sql);
-      }
-    }
-  } finally {
-    db.close();
-  }
-}
-
 function initDedicatedTestDb() {
-  cleanupTestDatabase();
   process.env.DATABASE_URL = TEST_DB_URL;
   enforceDedicatedDbUrl();
 
-  try {
-    applySqlMigrations(TEST_DB_FILE);
-  } catch (err) {
-    console.error(`Integration tests require a dedicated test DB. Init failed: ${err.message}`);
+  if (!fs.existsSync(TEST_DB_FILE)) {
+    console.error('Integration tests require a dedicated test DB. Init failed: missing prisma/test.integration.db');
     process.exit(1);
   }
 }
