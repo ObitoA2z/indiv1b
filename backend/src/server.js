@@ -24,6 +24,15 @@ function ensureUploadDir() {
 }
 
 function createUploadMiddleware(uploadDir) {
+  const maxFileSizeMb = Number(process.env.UPLOAD_MAX_FILE_MB || 5);
+  const maxFileSize = Number.isFinite(maxFileSizeMb) ? maxFileSizeMb * 1024 * 1024 : 5 * 1024 * 1024;
+  const allowedMimeTypes = new Set([
+    'image/jpeg',
+    'image/png',
+    'image/webp',
+    'image/gif',
+  ]);
+
   const storage = multer.diskStorage({
     destination: (req, file, cb) => {
       cb(null, uploadDir);
@@ -35,7 +44,18 @@ function createUploadMiddleware(uploadDir) {
     },
   });
 
-  return multer({ storage });
+  return multer({
+    storage,
+    limits: {
+      fileSize: maxFileSize,
+    },
+    fileFilter: (req, file, cb) => {
+      if (!allowedMimeTypes.has(file.mimetype)) {
+        return cb(new Error('UNSUPPORTED_FILE_TYPE'));
+      }
+      return cb(null, true);
+    },
+  });
 }
 
 function configureApp(appInstance) {

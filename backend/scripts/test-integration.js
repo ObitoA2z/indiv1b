@@ -27,16 +27,21 @@ function run(cmd) {
 }
 
 async function main() {
-  // Use a temporary SQLite DB in repo workspace for cross-platform Prisma stability
-  if (!fs.existsSync(tmpRoot)) {
-    fs.mkdirSync(tmpRoot, { recursive: true });
-  }
-  const tmpDir = fs.mkdtempSync(path.join(tmpRoot, 'epouvante-backend-it-'));
-  const dbPath = path.join(tmpDir, 'test.db');
+  const runId = Date.now();
 
-  // Prisma accepts absolute paths with the sqlite "file:" scheme
-  const relativeDbPath = path.relative(backendRoot, dbPath).replace(/\\/g, '/');
-  process.env.DATABASE_URL = `file:./${relativeDbPath}`;
+  // Use a temporary SQLite DB by default. Allow override for debugging.
+  let tmpDir = null;
+  if (!process.env.INTEGRATION_DATABASE_URL) {
+    if (!fs.existsSync(tmpRoot)) {
+      fs.mkdirSync(tmpRoot, { recursive: true });
+    }
+    tmpDir = fs.mkdtempSync(path.join(tmpRoot, 'epouvante-backend-it-'));
+    const dbPath = path.join(tmpDir, 'test.db');
+    const relativeDbPath = path.relative(backendRoot, dbPath).replace(/\\/g, '/');
+    process.env.DATABASE_URL = `file:./${relativeDbPath}`;
+  } else {
+    process.env.DATABASE_URL = process.env.INTEGRATION_DATABASE_URL;
+  }
 
   console.log(`Integration tests using DATABASE_URL=${process.env.DATABASE_URL}`);
 
@@ -45,7 +50,14 @@ async function main() {
     run('npx prisma migrate deploy --schema prisma/schema.prisma');
   } catch (err) {
     console.warn('migrate deploy failed, fallback to db push --force-reset');
-    run('npx prisma db push --force-reset --skip-generate --schema prisma/schema.prisma');
+    try {
+      run('npx prisma db push --force-reset --skip-generate --schema prisma/schema.prisma');
+    } catch (pushErr) {
+      // Last-resort fallback for environments where Prisma schema engine fails on fresh temp SQLite.
+      console.warn('db push on temp DB failed, fallback to file:./dev.db');
+      process.env.DATABASE_URL = 'file:./dev.db';
+      run('npx prisma db push --skip-generate --schema prisma/schema.prisma');
+    }
   }
 
   // Import after DATABASE_URL is set so Prisma uses the right DB
@@ -55,7 +67,7 @@ async function main() {
   const { prisma } = require('../src/prisma');
 
   // Create an active admin account directly in DB (simplifies auth flow for tests)
-  const adminEmail = 'admin@test.local';
+  const adminEmail = `admin.${runId}@test.local`;
   const adminPassword = 'Admin!234';
   const adminHash = await bcrypt.hash(adminPassword, 10);
 
@@ -76,9 +88,9 @@ async function main() {
   }
 
   // Register a buyer (account is active immediately)
-  const buyerEmail = 'buyer@test.local';
+  const buyerEmail = `buyer.${runId}@test.local`;
   const buyerPassword = 'Buyer!234';
-  const sellerEmail = 'seller@test.local';
+  const sellerEmail = `seller.${runId}@test.local`;
   const sellerPassword = 'Seller!234';
 
   const registerRes = await request(app)
@@ -100,6 +112,19 @@ async function main() {
     throw new Error('Missing JWT token for buyer login');
   }
   const buyerToken = buyerLoginRes.body.token;
+
+  // Buyer can create a seller request through both supported endpoints
+  await request(app)
+    .post('/api/users/me/request-seller')
+    .set('Authorization', `Bearer ${buyerToken}`)
+    .send({ message: 'Please review my seller request' })
+    .expect(201);
+
+  await request(app)
+    .post('/api/users/me/upgrade-to-seller')
+    .set('Authorization', `Bearer ${buyerToken}`)
+    .send({ message: 'Backward-compatible endpoint test' })
+    .expect(201);
 
   // Register/login a seller for product publication flow
   const sellerRegisterRes = await request(app)
@@ -148,6 +173,28 @@ async function main() {
     throw new Error('Unexpected response shape from /api/admin/users');
   }
 
+  // Upload endpoint security checks
+  await request(app)
+    .post('/api/upload')
+    .attach('image', Buffer.from('fake image data'), 'no-auth.png')
+    .expect(401);
+
+  await request(app)
+    .post('/api/upload')
+    .set('Authorization', `Bearer ${sellerToken}`)
+    .attach('image', Buffer.from('not-an-image'), 'script.txt')
+    .expect(400);
+
+  const uploadRes = await request(app)
+    .post('/api/upload')
+    .set('Authorization', `Bearer ${sellerToken}`)
+    .attach('image', Buffer.from('fake image data'), 'valid.png')
+    .expect(201);
+
+  if (!uploadRes.body?.url) {
+    throw new Error('Upload should return a file URL');
+  }
+
   // End-to-end business flow:
   // seller publishes -> admin approves -> buyer consults -> buyer orders
   const productPayload = {
@@ -172,6 +219,38 @@ async function main() {
   }
   if (createProductRes.body?.status !== 'pending') {
     throw new Error('Product should be pending after seller publication');
+  }
+
+  // PATCH security: auth required, owner seller or admin only
+  await request(app)
+    .patch(`/api/products/${productId}`)
+    .send({ title: 'Should fail without auth' })
+    .expect(401);
+
+  await request(app)
+    .patch(`/api/products/${productId}`)
+    .set('Authorization', `Bearer ${buyerToken}`)
+    .send({ title: 'Should fail for non-owner buyer' })
+    .expect(403);
+
+  const sellerPatchRes = await request(app)
+    .patch(`/api/products/${productId}`)
+    .set('Authorization', `Bearer ${sellerToken}`)
+    .send({ title: 'Masque spectral integration - edited by seller' })
+    .expect(200);
+
+  if (!sellerPatchRes.body?.title?.includes('edited by seller')) {
+    throw new Error('Owner seller patch should update product');
+  }
+
+  const adminPatchRes = await request(app)
+    .patch(`/api/products/${productId}`)
+    .set('Authorization', `Bearer ${token}`)
+    .send({ shipping: 6.5 })
+    .expect(200);
+
+  if (Number(adminPatchRes.body?.shipping) !== 6.5) {
+    throw new Error('Admin patch should update product');
   }
 
   const approveRes = await request(app)
@@ -214,7 +293,9 @@ async function main() {
 
   // Cleanup temp DB folder (best-effort)
   try {
-    fs.rmSync(tmpDir, { recursive: true, force: true });
+    if (tmpDir) {
+      fs.rmSync(tmpDir, { recursive: true, force: true });
+    }
     if (fs.existsSync(tmpRoot) && fs.readdirSync(tmpRoot).length === 0) {
       fs.rmdirSync(tmpRoot);
     }

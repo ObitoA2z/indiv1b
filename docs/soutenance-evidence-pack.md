@@ -1,69 +1,47 @@
-# Pack Preuves Soutenance
+# Pack Preuves Soutenance — DevSecOps / Qualite V1
 
-Ce document liste les preuves a produire pendant la soutenance pour valider les criteres du bloc.
+## 1) Backlog + couverture fonctionnelle
+- **Backlog court et traceable:** `docs/backlog.md`
+- **Preuves code:** `backend/src/routes/*.js`, `frontend/src/components/*.tsx`
+- **Preuves tests:** `backend/scripts/test-integration.js`, `backend/scripts/smoke-routes.js`
 
-## 1) Fonctionnalite metier E2E
-- Commande:
-  - `npm --prefix backend run test:integration`
-- Preuve attendue:
-  - sortie `Integration tests: OK`
-  - scenario inclus: publication vendeur, approbation admin, consultation produit, creation commande.
+## 2) Exigences qualite (ISO/IEC 25010)
+- **Mapping exigences mesurables:** `docs/quality-requirements.md`
+- **Metriques de suivi:** `docs/metrics.md`
+- **Dette associee:** `docs/tech-debt-register.md`
 
-## 2) Qualite et tests
-- Commandes:
-  - `npm --prefix backend run test:unit`
-  - `npm --prefix backend run test:integration`
-  - `npm --prefix backend run test:smoke`
-  - `npm --prefix frontend run typecheck`
-  - `npm --prefix frontend run build`
-- Preuves attendues:
-  - tous les jobs en succes.
+## 3) CI/CD + quality gates
+- **GitHub CI (tests + scans + gates):** `.github/workflows/ci.yml`
+- **GitLab CI harmonise (scans bloquants HIGH/CRITICAL):** `.gitlab-ci.yml`
+- **Preuves attendues:** jobs verts + artefacts `*audit*.json`, `trivy-*.json`
 
-## 3) CI/CD et securite
-- Fichier pipeline:
-  - `.github/workflows/ci.yml`
-- Preuves attendues:
-  - `npm audit` backend/frontend en artifact JSON.
-  - Trivy backend/frontend en artifact JSON.
-  - gate CI bloquant sur vulnerabilites CRITICAL (dependances + images).
+## 4) Securite V1 + remediations
+- **Audit securite date:** `docs/security-audit-v1.md`
+- **Plan remediations P1/P2/P3:** `docs/remediation-plan.md`
+- **Correctifs techniques integres:** `backend/src/routes/products.routes.js`, `backend/src/routes/upload.routes.js`, `backend/src/routes/users.routes.js`
 
-## 4) Deploiement Kubernetes
-- Manifestes:
-  - `k8s/*.yaml`
-- Commandes de preuve (cluster):
-  - `kubectl get ns`
-  - `kubectl get deploy,svc,ingress,hpa -n petite-maison-epouvante`
-  - `kubectl describe hpa petite-maison-backend-hpa -n petite-maison-epouvante`
-- Preuves attendues:
-  - ressources presentes et HPA actif.
+## 5) Deploiement, TLS, observabilite
+- **Manifests K8s:** `k8s/*.yaml`
+- **Ingress TLS:** `k8s/ingress.yaml` (secret `petite-maison-epouvante-tls`)
+- **Prometheus/Grafana:** `k8s/prometheus-*.yaml`, `k8s/grafana-*.yaml`, `grafana/dashboards/petite-maison-overview.json`
+- **Guide start/stop:** `docs/start-stop-local.md`
 
-## 5) HTTPS / TLS
-- Manifestes:
-  - `k8s/ingress.yaml`
-- Commande de preuve:
-  - `curl -I https://<host>`
-- Preuve attendue:
-  - certificat valide + redirection HTTPS active.
+## 6) Charge et performance
+- **Scripts:** `load/k6-smoke.js`, `load/k6-stress.js`, `load/order-stress.js`
+- **Resultat de reference:** `docs/load-test-results.md`
 
-## 6) Observabilite
-- Services Kubernetes:
-  - `kubectl -n petite-maison-epouvante get deploy,svc`
-- URLs:
-  - `https://prometheus.petite-maison-epouvante.local:9443` (Prometheus)
-  - `https://grafana.petite-maison-epouvante.local:9443` (Grafana)
-- Dashboard:
-  - `grafana/dashboards/petite-maison-overview.json`
-- Preuve attendue:
-  - dashboard avec metriques vivantes (`up`, RabbitMQ rates, queue depth, connections).
+## 7) Bac a sable / POC / competences
+- **Experiment sandbox:** `docs/sandbox-experiment.md`
+- **POC faisabilite:** `docs/poc-feasibility.md`
+- **Matrice competences:** `docs/skills-matrix.md`
+- **Plan formation:** `docs/training-plan.md`
 
-## 7) Charge
-- Scripts:
-  - `load/k6-smoke.js`
-  - `load/k6-stress.js`
-  - `load/order-stress.js`
-- Commandes:
-  - `docker run --rm -e BASE_URL=http://host.docker.internal:4004 -v "$PWD/load:/scripts" grafana/k6 run /scripts/k6-smoke.js`
-  - `docker run --rm -e BASE_URL=http://host.docker.internal:4004 -v "$PWD/load:/scripts" grafana/k6 run /scripts/k6-stress.js`
-  - `node load/order-stress.js`
-- Preuve attendue:
-  - captures resultats + courbes Grafana qui evoluent.
+## 8) Commandes minimales a montrer en demo
+```powershell
+npm --prefix backend run test
+npm --prefix frontend run typecheck
+npm --prefix frontend run build
+docker run --rm -e BASE_URL=http://host.docker.internal:4004 -v "$PWD/load:/scripts" grafana/k6 run /scripts/k6-smoke.js
+kubectl -n petite-maison-epouvante get deploy,svc,ingress,hpa,networkpolicy
+kubectl -n argocd get application petite-maison-epouvante-full
+```
