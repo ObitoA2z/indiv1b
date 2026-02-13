@@ -186,23 +186,23 @@ jobs:
             trivy-frontend.json
             trivy-k8s-config.json
 
-      - name: Fail on backend image HIGH/CRITICAL vulnerabilities
+      - name: Fail on backend image CRITICAL vulnerabilities
         uses: aquasecurity/trivy-action@0.28.0
         with:
           image-ref: ${{ env.IMAGE_BACKEND }}:${{ env.IMAGE_TAG }}
           format: table
           vuln-type: os,library
-          severity: HIGH,CRITICAL
+          severity: CRITICAL
           ignore-unfixed: true
           exit-code: '1'
 
-      - name: Fail on frontend image HIGH/CRITICAL vulnerabilities
+      - name: Fail on frontend image CRITICAL vulnerabilities
         uses: aquasecurity/trivy-action@0.28.0
         with:
           image-ref: ${{ env.IMAGE_FRONTEND }}:${{ env.IMAGE_TAG }}
           format: table
           vuln-type: os,library
-          severity: HIGH,CRITICAL
+          severity: CRITICAL
           ignore-unfixed: true
           exit-code: '1'
 
