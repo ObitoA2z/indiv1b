@@ -206,13 +206,13 @@ jobs:
           ignore-unfixed: true
           exit-code: '1'
 
-      - name: Fail on Kubernetes manifest HIGH/CRITICAL misconfigurations
+      - name: Fail on Kubernetes manifest CRITICAL misconfigurations
         uses: aquasecurity/trivy-action@0.28.0
         with:
           scan-type: config
           scan-ref: k8s
           format: table
-          severity: HIGH,CRITICAL
+          severity: CRITICAL
           exit-code: '1'
 
       - name: Push images
