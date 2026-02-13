@@ -23,7 +23,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: backend
-          image: ghcr.io/obitoa2z/petite-maison-epouvante-backend:d4f065a349851dbc1d2f7363c3d4c62277afe1c9
+          image: ghcr.io/obitoa2z/petite-maison-epouvante-backend:902b3b0cd62133b342613202bf3b493b86c5943c
           imagePullPolicy: IfNotPresent
           securityContext:
             allowPrivilegeEscalation: false
