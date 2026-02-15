@@ -7,8 +7,11 @@
 
 const path = require('path');
 const fs = require('fs');
+const net = require('net');
+const { execFileSync } = require('child_process');
 
 const bcrypt = require('bcryptjs');
+const amqp = require('amqplib');
 const request = require('supertest');
 
 process.env.JWT_SECRET = process.env.JWT_SECRET || 'test-secret';
@@ -56,16 +59,116 @@ function initDedicatedTestDb() {
   }
 }
 
+function sleep(ms) {
+  return new Promise((r) => setTimeout(r, ms));
+}
+
+async function waitForTcp(host, port, timeoutMs) {
+  const deadline = Date.now() + timeoutMs;
+  // eslint-disable-next-line no-constant-condition
+  while (true) {
+    try {
+      // eslint-disable-next-line no-await-in-loop
+      await new Promise((resolve, reject) => {
+        const socket = net.connect({ host, port });
+        socket.setTimeout(1500);
+        socket.on('connect', () => {
+          socket.end();
+          resolve();
+        });
+        socket.on('timeout', () => {
+          socket.destroy();
+          reject(new Error('timeout'));
+        });
+        socket.on('error', reject);
+      });
+      return;
+    } catch (e) {
+      if (Date.now() > deadline) {
+        throw new Error(`timeout waiting for tcp ${host}:${port}`);
+      }
+      // eslint-disable-next-line no-await-in-loop
+      await sleep(400);
+    }
+  }
+}
+
+async function waitForAmqp(url, timeoutMs) {
+  const deadline = Date.now() + timeoutMs;
+  // eslint-disable-next-line no-constant-condition
+  while (true) {
+    try {
+      // eslint-disable-next-line no-await-in-loop
+      const conn = await amqp.connect(url);
+      // eslint-disable-next-line no-await-in-loop
+      const ch = await conn.createChannel();
+      // eslint-disable-next-line no-await-in-loop
+      await ch.close();
+      // eslint-disable-next-line no-await-in-loop
+      await conn.close();
+      return;
+    } catch (e) {
+      if (Date.now() > deadline) {
+        throw new Error(`timeout waiting for AMQP readiness: ${e.message}`);
+      }
+      // eslint-disable-next-line no-await-in-loop
+      await sleep(600);
+    }
+  }
+}
+
+function startRabbitMqContainer(name) {
+  try {
+    execFileSync('docker', ['version'], { stdio: 'ignore' });
+  } catch (e) {
+    console.error('Integration tests require Docker to start a RabbitMQ container. Is Docker Desktop running?');
+    process.exit(1);
+  }
+
+  // Map AMQP port to a random localhost port.
+  execFileSync(
+    'docker',
+    ['run', '-d', '--rm', '--name', name, '-p', '127.0.0.1::5672', 'rabbitmq:3-alpine'],
+    { stdio: 'inherit' },
+  );
+
+  const portLine = execFileSync('docker', ['port', name, '5672/tcp'], { encoding: 'utf8' }).trim();
+  const match = portLine.match(/:(\d+)\s*$/);
+  if (!match) {
+    console.error(`Unable to detect mapped RabbitMQ port from: ${portLine}`);
+    process.exit(1);
+  }
+  const hostPort = Number(match[1]);
+  process.env.RABBITMQ_URL = `amqp://127.0.0.1:${hostPort}`;
+  return { host: '127.0.0.1', port: hostPort };
+}
+
+function stopRabbitMqContainer(name) {
+  try {
+    execFileSync('docker', ['rm', '-f', name], { stdio: 'ignore' });
+  } catch (e) {
+    // ignore
+  }
+}
+
 async function main() {
   const runId = Date.now();
+  const rabbitName = `pm-it-rabbitmq-${runId}`;
 
   initDedicatedTestDb();
+
+  // Ensure RabbitMQ is actually reachable to avoid noisy logs and validate event publishing.
+  const rabbit = startRabbitMqContainer(rabbitName);
+  await waitForTcp(rabbit.host, rabbit.port, 30_000);
+  await waitForAmqp(process.env.RABBITMQ_URL, 30_000);
 
   // Import after DATABASE_URL is set so Prisma uses dedicated test DB
   // eslint-disable-next-line global-require
   const { app } = require('../src/server');
   // eslint-disable-next-line global-require
   const { prisma } = require('../src/prisma');
+  // eslint-disable-next-line global-require
+  const rabbitmq = require('../src/services/rabbitmq');
 
   try {
     // Create an active admin account directly in DB (simplifies auth flow for tests)
@@ -288,7 +391,9 @@ async function main() {
     console.log('Integration tests: OK');
   } finally {
     await prisma.$disconnect();
+    await rabbitmq.close().catch(() => undefined);
     cleanupTestDatabase();
+    stopRabbitMqContainer(rabbitName);
   }
 }
 
