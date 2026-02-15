@@ -22,7 +22,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: frontend
-          image: ghcr.io/obitoa2z/petite-maison-epouvante-frontend:91e00dbcdd50113ec206b13234f1c29d7308b32b
+          image: ghcr.io/obitoa2z/petite-maison-epouvante-frontend:3393861aacd42c1818189b66afb69d8072cc3163
           imagePullPolicy: IfNotPresent
           securityContext:
             runAsUser: 0
