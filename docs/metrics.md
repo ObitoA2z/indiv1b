@@ -8,6 +8,10 @@
 | M4 | **API Smoke Error Rate** | `http_req_failed rate` sur test smoke | `< 1%` | `load/k6-smoke.js`, checks k6 | Avant release + incident | Analyser logs backend/rabbitmq, corriger reponses 5xx/4xx inattendues. |
 
 ## Mapping metriques -> jobs/scripts
-- **M1:** `.github/workflows/ci.yml` jobs `backend` / `frontend`, `.gitlab-ci.yml` jobs `backend:test` / `frontend:test`.
-- **M2:** `.github/workflows/ci.yml` job `build-and-push-images`, `.gitlab-ci.yml` jobs `scan:backend` / `scan:frontend`.
+- **M1:** `.github/workflows/ci.yml` jobs `backend` (Backend) / `frontend` (Frontend), `.gitlab-ci.yml` jobs `backend:test` / `frontend:test`.
+- **M2:** `.github/workflows/ci.yml` job `build-and-push-images` (Build, Scan & Push Docker images), `.gitlab-ci.yml` jobs `scan:backend` / `scan:frontend` / `scan:k8s-config`.
 - **M3/M4:** scripts `load/k6-smoke.js` + historique `docs/load-test-results.md`.
+
+## Quality gates (bloquants)
+- Dependances: `npm audit --audit-level=high --omit=dev` + step "Fail on * high/critical vulnerabilities" dans `.github/workflows/ci.yml`.
+- Images: Trivy `exit-code: '1'` sur `HIGH,CRITICAL` pour backend/frontend dans `.github/workflows/ci.yml` et `--exit-code 1` dans `.gitlab-ci.yml`.

@@ -8,6 +8,11 @@
 docker run --rm -v "$PWD/load:/scripts" -e BASE_URL=http://host.docker.internal:4004 grafana/k6 run /scripts/k6-smoke.js
 ```
 
+Option Kubernetes HTTPS (mkcert / self-signed) :
+```bash
+docker run --rm -v "$PWD/load:/scripts" -e BASE_URL=https://api.petite-maison-epouvante.local:9443 grafana/k6 run --insecure-skip-tls-verify /scripts/k6-smoke.js
+```
+
 ## Environment
 - Date execution: `2026-02-13`
 - Target API: `http://localhost:4004`

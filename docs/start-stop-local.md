@@ -65,6 +65,7 @@ winget install --id FiloSottile.mkcert -e --accept-source-agreements --accept-pa
 Generer un certif multi-domaines puis creer le secret K8s:
 
 ```powershell
+# Si `mkcert` est dans le PATH, vous pouvez utiliser directement `mkcert ...` sans definir $mkcert.
 $mkcert = "$env:LOCALAPPDATA\Microsoft\WinGet\Packages\FiloSottile.mkcert_Microsoft.Winget.Source_8wekyb3d8bbwe\mkcert.exe"
 $certDir = "$env:TEMP\pm-tls"
 New-Item -ItemType Directory -Force $certDir | Out-Null

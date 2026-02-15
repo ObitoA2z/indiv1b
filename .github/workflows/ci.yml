@@ -175,14 +175,13 @@ jobs:
       - name: Scan Kubernetes manifests (Trivy JSON, block critical)
         if: always()
         run: |
-          rm -rf "$HOME/.cache/trivy/policy" ".cache/trivy/policy"
           trivy config \
-            --skip-check-update \
             --misconfig-scanners kubernetes \
             --severity CRITICAL \
             --format json \
             --output trivy-k8s-config.json \
             --exit-code 1 \
+            --timeout 10m \
             k8s
 
       - name: Upload image scan reports

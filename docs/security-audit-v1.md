@@ -13,7 +13,9 @@
 - **Transport:** TLS Ingress configure (secret `petite-maison-epouvante-tls` requis).
 
 ## Preuves (fichiers + artefacts)
-- **Artefacts CI attendus:** `backend-audit.json`, `frontend-audit.json`, `trivy-backend.json`, `trivy-frontend.json`, `trivy-k8s-config.json` (publies par `.github/workflows/ci.yml` et `.gitlab-ci.yml`).
+- **Artefacts CI attendus (contenu JSON):** `backend-audit.json`, `frontend-audit.json`, `trivy-backend.json`, `trivy-frontend.json`, `trivy-k8s-config.json`.
+  - GitHub Actions (artefacts): `backend-audit-report`, `frontend-audit-report`, `trivy-image-reports` (`.github/workflows/ci.yml`).
+  - GitLab CI (artefacts): `backend-audit.json`, `frontend-audit.json`, `trivy-*.json` (`.gitlab-ci.yml`).
 - **Sortie locale npm audit backend (extrait):**
   - `2 low severity vulnerabilities`
   - `npm audit --audit-level=high --omit=dev` retourne `exit code 0`.
