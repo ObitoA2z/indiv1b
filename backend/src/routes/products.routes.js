@@ -4,9 +4,79 @@ const { authMiddleware, requireRole } = require('../auth');
 
 const router = express.Router();
 
+function escapeHtml(value) {
+  return String(value ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+function renderProductsTable(products) {
+  const rows = products.map((p) => `
+    <tr>
+      <td>${escapeHtml(p.id)}</td>
+      <td>${escapeHtml(p.title)}</td>
+      <td>${escapeHtml(p.status)}</td>
+      <td>${escapeHtml(p.sellerName)}</td>
+      <td>${escapeHtml(p.location)}</td>
+      <td>${Number(p.price).toFixed(2)}</td>
+      <td>${Number(p.shipping).toFixed(2)}</td>
+      <td>${escapeHtml(new Date(p.createdAt).toISOString())}</td>
+    </tr>`).join('');
+
+  return `<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Produits API</title>
+  <style>
+    body { font-family: system-ui, sans-serif; margin: 24px; background: #f7f8fb; color: #111827; }
+    h1 { margin: 0 0 8px; }
+    p { margin: 0 0 16px; color: #4b5563; }
+    table { width: 100%; border-collapse: collapse; background: white; }
+    th, td { border: 1px solid #e5e7eb; padding: 8px; text-align: left; vertical-align: top; }
+    th { background: #f3f4f6; position: sticky; top: 0; }
+    tr:nth-child(even) td { background: #fafafa; }
+    .wrap { overflow: auto; border: 1px solid #e5e7eb; border-radius: 8px; }
+    .code { font-family: ui-monospace, SFMono-Regular, Consolas, monospace; }
+  </style>
+</head>
+<body>
+  <h1>Produits (${products.length})</h1>
+  <p>Vue HTML de <span class="code">GET /api/products</span>. Les clients API continuent a recevoir du JSON.</p>
+  <div class="wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Titre</th>
+          <th>Statut</th>
+          <th>Vendeur</th>
+          <th>Lieu</th>
+          <th>Prix</th>
+          <th>Livraison</th>
+          <th>Cree le</th>
+        </tr>
+      </thead>
+      <tbody>${rows}</tbody>
+    </table>
+  </div>
+</body>
+</html>`;
+}
+
 router.get('/api/products', async (req, res) => {
   try {
     const products = await prisma.product.findMany({ orderBy: { createdAt: 'desc' } });
+    const accept = String(req.headers.accept || '').toLowerCase();
+    const wantsHtml = accept.includes('text/html');
+    const wantsJson = String(req.query.format || '').toLowerCase() === 'json';
+    if (wantsHtml && !wantsJson) {
+      return res.type('html').send(renderProductsTable(products));
+    }
     return res.json(products);
   } catch (err) {
     console.error(err);
