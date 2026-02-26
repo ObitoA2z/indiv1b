@@ -82,5 +82,9 @@ spec:
               - key: dashboards.yml
                 path: dashboards.yml
         - name: grafana-dashboards
-          configMap:
-            name: grafana-dashboards
+          projected:
+            sources:
+              - configMap:
+                  name: grafana-dashboards
+              - configMap:
+                  name: grafana-k6-dashboards
